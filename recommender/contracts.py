@@ -77,3 +77,12 @@ def recommend(algorithm: Algorithm, request: RecommendationRequest) -> Recommend
     data = FrozenData()
     model = check_model(model_path, request.runtime_mode, algorithm.value, data)
     return check_result(provider.recommend(request), request, algorithm, data.catalog(), model.model_version)
+
+
+# Lab 1: content-based provider.  Registration is explicit; other algorithms
+# stay unimplemented until their own lab is submitted.
+from .student.content import ContentProvider  # noqa: E402
+
+PROVIDERS[Algorithm.content] = ContentProvider(
+    Path(__file__).resolve().parents[1] / "models" / "business" / "content-v1" / "manifest.json"
+)
