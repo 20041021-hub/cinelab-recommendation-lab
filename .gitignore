@@ -47,6 +47,12 @@ ibdata*
 !/models/business/README.md
 !/models/business/content-v1/
 !/models/business/content-v1/**
+!/models/business/popular-v1/
+!/models/business/popular-v1/**
+!/models/business/itemcf-v1/
+!/models/business/itemcf-v1/**
+!/models/business/cold-start-v1/
+!/models/business/cold-start-v1/**
 /models/evaluation/
 # Teacher material never belongs in a student repository.
 /teacher/

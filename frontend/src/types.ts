@@ -12,5 +12,5 @@ export interface Algorithm { algorithm: string; status: string }
 export interface AlgorithmResult {
   status: string; algorithm: string; model_version: string | null; batch_id: string | null
   dataset_version: string; split_version: string; runtime_mode: string
-  items: { movie_id: string; rank: number; algorithm: string; model_version: string; score: number | null }[]
+  items: { movie_id: string; rank: number; algorithm: string; model_version: string; score: number | null; recall_sources?: string[] }[]
 }

@@ -79,10 +79,16 @@ def recommend(algorithm: Algorithm, request: RecommendationRequest) -> Recommend
     return check_result(provider.recommend(request), request, algorithm, data.catalog(), model.model_version)
 
 
-# Lab 1: content-based provider.  Registration is explicit; other algorithms
-# stay unimplemented until their own lab is submitted.
+# Lab 1/2 providers. Registration is explicit; ALS stays unimplemented until
+# its own lab is submitted.
+from .student.cold_start import ColdStartProvider  # noqa: E402
 from .student.content import ContentProvider  # noqa: E402
+from .student.itemcf import ItemCFProvider  # noqa: E402
+from .student.popular import PopularProvider  # noqa: E402
 
-PROVIDERS[Algorithm.content] = ContentProvider(
-    Path(__file__).resolve().parents[1] / "models" / "business" / "content-v1" / "manifest.json"
-)
+MODEL_ROOT = Path(__file__).resolve().parents[1] / "models" / "business"
+
+PROVIDERS[Algorithm.content] = ContentProvider(MODEL_ROOT / "content-v1" / "manifest.json")
+PROVIDERS[Algorithm.popular] = PopularProvider(MODEL_ROOT / "popular-v1" / "manifest.json")
+PROVIDERS[Algorithm.itemcf] = ItemCFProvider(MODEL_ROOT / "itemcf-v1" / "manifest.json")
+PROVIDERS[Algorithm.cold_start] = ColdStartProvider(MODEL_ROOT / "cold-start-v1" / "manifest.json")

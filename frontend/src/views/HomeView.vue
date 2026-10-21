@@ -20,7 +20,7 @@ onMounted(fetchMovies)
       <div class="hero-art" aria-hidden="true"><div class="orbital orbital-one" /><div class="orbital orbital-two" /><div class="film-ticket"><div class="ticket-top"><span>CINELAB</span><span>ADMIT ONE</span></div><div class="ticket-reel"><span /><span /><span /><span /><i /></div><div class="ticket-caption">THE NEXT<br /><em>discovery.</em></div><div class="ticket-bottom"><span>留一点时间，给电影。</span><span>▶</span></div></div><span class="art-label">YOUR TASTE. YOUR NEXT FILM.</span></div>
     </section>
     <div class="intro-strip"><p><el-icon aria-hidden="true"><Reading /></el-icon><strong>真实片库</strong><span>保留原始 MovieLens 电影标识</span></p><p><el-icon aria-hidden="true"><Search /></el-icon><strong>自由探索</strong><span>按片名与类型发现电影</span></p><RouterLink to="/movies">开始浏览 <span aria-hidden="true">↗</span></RouterLink></div>
-    <section class="recommendation-section"><div class="section-heading"><div><p class="eyebrow">MADE FOR YOUR TASTE</p><h2>你的下一部<span class="heading-dot">.</span></h2><p class="muted">评分留下口味线索，内容推荐会据此生成类型偏好结果。</p></div><RouterLink to="/experiments" class="text-link">查看实验室 →</RouterLink></div><div class="recommendation-columns"><AlgorithmPanel label="为你推荐" :endpoint="auth.account ? '/me/recommendations/content' : null" /><AlgorithmPanel label="热门推荐" :endpoint="auth.account ? '/me/recommendations/popular' : null" /></div></section>
+    <section class="recommendation-section"><div class="section-heading"><div><p class="eyebrow">MADE FOR YOUR TASTE</p><h2>你的下一部<span class="heading-dot">.</span></h2><p class="muted">评分留下口味线索；没有评分时，也可以从全站热门榜开始。</p></div><RouterLink to="/experiments" class="text-link">查看实验室 →</RouterLink></div><div class="recommendation-columns"><AlgorithmPanel label="为你推荐" :endpoint="auth.account ? '/me/recommendations/content' : null" /><AlgorithmPanel label="热门推荐" :endpoint="auth.account ? '/me/recommendations/popular' : null" /></div><div class="cold-start-callout"><div><p class="eyebrow">NEW TO CINELAB?</p><h3>第一次来，也能从热门开始</h3><p>没有评分时先看全站正反馈热门榜；当你的评分达到 4 分，冷启动会自动切换成你的类型画像。</p></div><RouterLink class="button subtle" to="/cold-start">进入冷启动 →</RouterLink></div></section>
     <section class="browse-section"><div class="section-heading"><div><p class="eyebrow">THE FILM ARCHIVE</p><h2>从片库出发<span class="heading-dot">.</span></h2><p class="muted">按原始电影编号展示，探索属于你的下一部。</p></div><RouterLink to="/movies" class="text-link">查看全部 <el-icon aria-hidden="true"><ArrowRight /></el-icon></RouterLink></div><StatePanel :loading="loading" :error="error" :empty="!!data && !data.items.length" @retry="fetchMovies"><div class="movie-grid"><MovieCard v-for="movie in data?.items" :key="movie.movie_id" :movie="movie" /></div></StatePanel></section>
   </div>
 </template>
@@ -38,6 +38,10 @@ onMounted(fetchMovies)
 .orbital-two { width: 280px; height: 190px; }
 .art-label { display: none; }
 .recommendation-section { margin-top: 30px; }
+.cold-start-callout { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 18px; padding: 22px 24px; border: 1px solid var(--border); border-radius: 10px; background: linear-gradient(120deg, #1a2a28, #14201f 65%); }
+.cold-start-callout h3 { margin: 5px 0 7px; font-size: 19px; font-weight: 500; }
+.cold-start-callout p:not(.eyebrow) { max-width: 650px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.cold-start-callout .button { flex: none; }
 @media (max-width: 780px) {
   .hero { grid-template-columns: 1fr 160px; padding: 24px; gap: 12px; }
   .hero-art { height: 190px; }
@@ -50,5 +54,6 @@ onMounted(fetchMovies)
   .hero-actions { gap: 10px; }
   .hero-actions .button { padding: 10px 12px; }
   .recommendation-section { margin-top: 26px; }
+  .cold-start-callout { align-items: flex-start; flex-direction: column; gap: 14px; padding: 18px; }
 }
 </style>

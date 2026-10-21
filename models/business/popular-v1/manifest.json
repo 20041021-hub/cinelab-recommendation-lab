@@ -1,0 +1,31 @@
+{
+  "algorithm": "popular",
+  "artifacts": {
+    "popular.json": "43e4ffa34e4798c7d7456e206f5bb74a2777601ee78b9dcf6cb23784a4352397"
+  },
+  "dataset_version": "rec-course-v3-train5-1.0.0",
+  "feature_files": {
+    "movies.csv": "99f7951a528890bc6ca088b65987790e926adc8f595971346b5b606e4c71454e",
+    "training-catalog.csv": "3fbb145fdaad3f66e3ca17d0e1c32f385a90c1a465c6a905f17be9fc6a08460c"
+  },
+  "manifest_sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e",
+  "model_version": "popular-business-v1",
+  "parameters": {
+    "max_recommendations": 10,
+    "min_positive_support": 20,
+    "ordering": "positive_support desc, mean_rating desc, movie_id asc",
+    "positive_rating_threshold": 4.0
+  },
+  "runtime_mode": "business",
+  "schema_version": "student-eight-v3",
+  "split_version": "temporal-v1-cold500-train5-v3",
+  "tool_versions": {
+    "generator": "scripts/build_lab2_models.py",
+    "numpy": "2.4.3",
+    "python": "3.11.8",
+    "scipy": "1.17.1"
+  },
+  "training_files": {
+    "business/history_ratings.csv": "b73992a5390d668e80d777bc7425404dd3a850dd5b7eaad5abc7f4cac21ff438"
+  }
+}

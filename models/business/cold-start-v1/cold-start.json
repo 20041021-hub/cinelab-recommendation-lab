@@ -1,0 +1,1 @@
+{"content_model_version":"content-genre-tfidf-v1","max_recommendations":10,"model_version":"coldstart-popular-content-v1","popular_model_version":"popular-business-v1","positive_rating_threshold":4.0,"strategy":"popular_without_positive_history_then_content","strategy_note":"No positive history -> popular; otherwise genre content profile."}
