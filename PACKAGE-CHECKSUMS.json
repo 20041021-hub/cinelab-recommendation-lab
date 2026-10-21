@@ -1,0 +1,647 @@
+{
+  "schema": "cinelab-student-package-v1",
+  "release": "cinelab-win-x64-1.3.0-a1",
+  "studentCandidate": "CineLab-Student-Windows-1.3.0-rc1",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 536,
+      "sha256": "a0ed340c01c07e9ed3d64ee22dec490354a65a46787b6798cb9da39050572fc0"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 937,
+      "sha256": "ebbde8abfa8f8c120b9ed743fac46e6857f1b7528d609991014802c1c114d838"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1466,
+      "sha256": "96400ed35bb78445064571a19fd4d2b34176a0ddd97e76bdb06bab0c7c01a80d"
+    },
+    {
+      "path": "Verify-Package.ps1",
+      "bytes": 1094,
+      "sha256": "eabeab1bf1b55f4ff95b1513d4d397bee280c1fe0fc9f8b6c3c0e9c225f699d7"
+    },
+    {
+      "path": "backend/app/__init__.py",
+      "bytes": 58,
+      "sha256": "14db12a879167f8a24a3e188926fc10237651efa7678a89801d77f1881f5cbad"
+    },
+    {
+      "path": "backend/app/activity.py",
+      "bytes": 4771,
+      "sha256": "39f82858a1d5a55d9fcc1dffff2c7ade28f0ac674f5195992933d36b78ffb719"
+    },
+    {
+      "path": "backend/app/auth.py",
+      "bytes": 3194,
+      "sha256": "aeab2d52189873b932cd60cab2e3305d684af12dd7fbbfd1c52bab61b5e1b9bc"
+    },
+    {
+      "path": "backend/app/catalog.py",
+      "bytes": 5229,
+      "sha256": "43f3a80fe9e32c3d851d962e5ebeffd398e8848292c383148f4a485476fa69d0"
+    },
+    {
+      "path": "backend/app/config.py",
+      "bytes": 2073,
+      "sha256": "1bf118160dace19853fa8aabc75269f0a6a5723c0dd400900605760bcde2c907"
+    },
+    {
+      "path": "backend/app/db.py",
+      "bytes": 5408,
+      "sha256": "eccbd1e8a49a154c507d794955752ebff794ae92945d9f525fa7cd51e726b817"
+    },
+    {
+      "path": "backend/app/errors.py",
+      "bytes": 897,
+      "sha256": "bfe1595a0bad36b769475f19b458b0999cdc6d3f105ff0ff6dbcb47fcc9cbf06"
+    },
+    {
+      "path": "backend/app/experiments.py",
+      "bytes": 2824,
+      "sha256": "5f7ce01d2a2cb9f1769df93d8303c39a70c0861df1a934a64d8dae0a105e6b4e"
+    },
+    {
+      "path": "backend/app/main.py",
+      "bytes": 4776,
+      "sha256": "814fc16127fd42cd91764534e0a79a8affff9e1da23bb94a685403a313096e43"
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "bytes": 1619,
+      "sha256": "a8a75bf1d22792969a0cccda23653c5587bbab5d4f5ec041b1af34f107e87e5c"
+    },
+    {
+      "path": "backend/app/security.py",
+      "bytes": 6347,
+      "sha256": "2e0df48bf4e33c0cc4c68f1a4d5275139b85d021405118037334d2f15f6be6aa"
+    },
+    {
+      "path": "backend/bootstrap.py",
+      "bytes": 2840,
+      "sha256": "614a8915284a84eb236e3d460bfd2948ccefc159d04d6ab4a7ddd8001a86de59"
+    },
+    {
+      "path": "backend/migrate.py",
+      "bytes": 2477,
+      "sha256": "18eb0ba098a3843a8e6d3dca6cb68e8f8e528ca817c5f47045da91dc1f628712"
+    },
+    {
+      "path": "backend/migrations/001_auth_version.sql",
+      "bytes": 164,
+      "sha256": "20e87a8c0fddf5c0b83ff4c2adbacbbc3d03dfa7a05735fc11954061079487f1"
+    },
+    {
+      "path": "backend/requirements.lock.txt",
+      "bytes": 589,
+      "sha256": "a862a580a50ff31b5b828f254838ba7990d3add8058652ac5f782484bbc95dd3"
+    },
+    {
+      "path": "compose.yaml",
+      "bytes": 3135,
+      "sha256": "a3009408ea9500a24afdf0ea4bb889ad6da12b58a8ba84b677443a1736fbc341"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/DATA-DICTIONARY.md",
+      "bytes": 9127,
+      "sha256": "62a64c741fd7d82df8e78517731e85d6a838b199b6d1547e6a840b191bb707d4"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/INTERFACE-CONTRACT.md",
+      "bytes": 4520,
+      "sha256": "9f85b4cd2fc65e215dda41bded932963f82b0ee6725f95b4e11360c79e107b36"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/MOVIELENS-README.txt",
+      "bytes": 9227,
+      "sha256": "aadef501245798f04f085b1edc024bad41343e0f065b5e4682eff38d54e1cb32"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/NOTICE.txt",
+      "bytes": 400,
+      "sha256": "5ea810d0e2eace8eebe5de88b36ff8bf2c738ac006d148baa26c6d017d9e85c3"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/README.md",
+      "bytes": 5040,
+      "sha256": "fee98a7a56431271baeba469eb32b308d2bb3268c953fb2b444b3afcd98b15b1"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/business/history_ratings.csv",
+      "bytes": 21059902,
+      "sha256": "b73992a5390d668e80d777bc7425404dd3a850dd5b7eaad5abc7f4cac21ff438"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-history.csv",
+      "bytes": 2032833,
+      "sha256": "b5aaa994ec599ee94d63ab8cba7661510d36d5ac41bbb791232a3878e81594b7"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k0-query.csv",
+      "bytes": 2032833,
+      "sha256": "b5aaa994ec599ee94d63ab8cba7661510d36d5ac41bbb791232a3878e81594b7"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k0-support.csv",
+      "bytes": 32,
+      "sha256": "ec2d95743f1a2cd24347dc8c0fe5d9d7f8d806479996426925c9cc4531a5f9be"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k0-users.csv",
+      "bytes": 12090,
+      "sha256": "1d82beba0c0fd7f96e8bb9509377dc9ddaf9ea2ca0807f98bcbc349dc603a8f0"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k1-query.csv",
+      "bytes": 2010888,
+      "sha256": "b3e83042369794b9e3a3eb0f454374b638da6bc37fba3601aa1d0917bbd9a19a"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k1-support.csv",
+      "bytes": 12708,
+      "sha256": "16ee05ab50a5eb79abc58db628181b31e149c63774f6598d0134ae8dc7c9d483"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k1-users.csv",
+      "bytes": 12083,
+      "sha256": "18cc0f47ee61395b7f86c06504bdd5fa8c30c8e97cef1c0e00224c7439a7e06c"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k10-query.csv",
+      "bytes": 1896456,
+      "sha256": "29a37f9b2366c0d87018998f868640c1facfa3eb93e1578dabcb851fb2265db7"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k10-support.csv",
+      "bytes": 127318,
+      "sha256": "3769a892283c8668a74e6e0ee5c22a736c631ceabe0080153a3ee30a62a4f5ef"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k10-users.csv",
+      "bytes": 12971,
+      "sha256": "f23be0f4aea5a4e04da4f53dd1f7115ed381d19854fb95d48ab193b737e7f84f"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k5-query.csv",
+      "bytes": 1962863,
+      "sha256": "cc4ff44f22c63132bc2b996e49880d1bc8b3a20b352c967f25103e2af2a1cf89"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k5-support.csv",
+      "bytes": 63608,
+      "sha256": "9951f1af57dfa2bae39b4f8afc92ec9af57582864a126795a6c6c47419aebd12"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/cold-k5-users.csv",
+      "bytes": 12061,
+      "sha256": "ff4ecf0a1839e755bbe1ac337ec1cc2534d0dee9a80bd910910a6c9ae7182588"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/evaluation-eligibility.csv",
+      "bytes": 213063,
+      "sha256": "ff747b49e17e035ed6743815f51a9dffa733a64f3160ff278ea6f029ef987602"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/per-user-counts.csv",
+      "bytes": 107941,
+      "sha256": "f5f5c1b04d019a1082ba4100e047046aa9a6664f49cfe53ae78730e5c43e2221"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/test.csv",
+      "bytes": 1800046,
+      "sha256": "ce8009674bf727725bee410adb782dd7d8281c7b747160eec297ee42cedf7f90"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/train.csv",
+      "bytes": 15362974,
+      "sha256": "c07a4c82155b216751129ddf5716717e54bbe2cb772cdf3a44f24e1f3971c342"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/evaluation/validation.csv",
+      "bytes": 1864145,
+      "sha256": "c07a21a3f44e8e614eb7f8c48424eace9d63393cd18501a18e6d14708788c50a"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/excluded-movies.csv",
+      "bytes": 454845,
+      "sha256": "3552e229e6663cfd42cc6cc1b228fb0ff35e53f72d91d7b428930cb9ccb18692"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/history_users.csv",
+      "bytes": 57229,
+      "sha256": "efb19263d65a5def4ff5a8b6032f07f970e0fe2717a6b286174eff5e0d0ba9d2"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/manifest.json",
+      "bytes": 9641,
+      "sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/movies.csv",
+      "bytes": 651731,
+      "sha256": "99f7951a528890bc6ca088b65987790e926adc8f595971346b5b606e4c71454e"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/requirements.txt",
+      "bytes": 15,
+      "sha256": "0dcd6042f7da9f72cff53f86d67e50881983b8ea32b654b5dceca16851d17e56"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/sql/schema_business.sql",
+      "bytes": 7423,
+      "sha256": "b7eb062641fa74996838277aaab8ff0cce3956cb841c7565072bd80d2ca60c78"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/sql/schema_evaluation.sql",
+      "bytes": 7437,
+      "sha256": "96f58468871b828277d6d70623c30a901950a26ebb57f494121d9ca97e57cf66"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/sql/verify.sql",
+      "bytes": 1890,
+      "sha256": "f2f19971e7fb7a053cdfb6b7290d534315e5f20728d46e165eb164fd6ecb07e9"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/statistics.json",
+      "bytes": 11133,
+      "sha256": "12b4de38e222f934b7e705f3f2f6653f3ec108b122f8bc4ad80b9dbc16a3ade3"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/tools/student_import.ps1",
+      "bytes": 287,
+      "sha256": "95d33436b1d637d09a46ae00126b4e95b7b20a9710e9b30faded37da786b4f4e"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/tools/student_import.sh",
+      "bytes": 284,
+      "sha256": "5e0414553ed0049a499e4d03fb094c1d66b944ab6acce175053ed53e3622bad3"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/tools/student_package.py",
+      "bytes": 22960,
+      "sha256": "a7dfc168c89d1a8afccc8ddedbb7d19725a406c9649b13ffe3069a3f0ee62052"
+    },
+    {
+      "path": "data/packages/rec-course-v3-train5-1.0.0/training-catalog.csv",
+      "bytes": 70796,
+      "sha256": "3fbb145fdaad3f66e3ca17d0e1c32f385a90c1a465c6a905f17be9fc6a08460c"
+    },
+    {
+      "path": "deployment/__init__.py",
+      "bytes": 80,
+      "sha256": "9a25f32d7c60c99251b9b5edddec50bf72cf511a16601c1645c79d1b9503547d"
+    },
+    {
+      "path": "deployment/backend.Dockerfile",
+      "bytes": 712,
+      "sha256": "4a78b3c75853d657ba2f8b94c93c69c2146584f1987384e418e0dd2f592274ce"
+    },
+    {
+      "path": "deployment/build.ps1",
+      "bytes": 6551,
+      "sha256": "69467b456543d8fb88d8b0f012e7d454a452fedae6b0df42835a79b731e52a92"
+    },
+    {
+      "path": "deployment/course.ps1",
+      "bytes": 4157,
+      "sha256": "9c591b47a5f7119a4232bdc3f8f3b5dd22e4925c665b11aecc8f9d0631769bed"
+    },
+    {
+      "path": "deployment/frontend.Dockerfile",
+      "bytes": 511,
+      "sha256": "f63841b4ab6893a79dfb24cfbd5159e64ad7abb63a70f208b73f2f1ffd0ce693"
+    },
+    {
+      "path": "deployment/initialize.py",
+      "bytes": 6850,
+      "sha256": "5991e55b0a3fdf3c81fa38d444c51e4c0681be146544a7cabcb1fa75ec10c139"
+    },
+    {
+      "path": "deployment/nginx.conf",
+      "bytes": 1377,
+      "sha256": "69c4817994a795d07d5140fd10ddb935b78243cd98215a10a137a4817750dbf5"
+    },
+    {
+      "path": "deployment/offline/images.ps1",
+      "bytes": 2622,
+      "sha256": "8851eb832bfe594626c55a2af6ecfecac1ef3bc925a1f6a9dae34e3c20b6b1cf"
+    },
+    {
+      "path": "deployment/offline/release.json",
+      "bytes": 6805,
+      "sha256": "2aa90d060f869bc3e4ec62a868d0eee45f706f7d75f835fc0e8d3f024881275c"
+    },
+    {
+      "path": "deployment/offline/runtime.env",
+      "bytes": 68,
+      "sha256": "bdd7a4eb569f83c1a0ee11b70b776d07c48c2bd735176c2bb207aebc1617d520"
+    },
+    {
+      "path": "deployment/offline/runtime.ps1",
+      "bytes": 10478,
+      "sha256": "dbfed62556773c2918a68381e27c5d6d473223682f028cc5447d342c3dd6a9ce"
+    },
+    {
+      "path": "deployment/requirements.lock.txt",
+      "bytes": 100,
+      "sha256": "5a1d50a81aa753768c9875533fcebf62024b9f5cc6f3f8c2803fb865ca58554f"
+    },
+    {
+      "path": "deployment/serve.py",
+      "bytes": 1116,
+      "sha256": "20e3ba40d300cdd8d83a3e9a8e77da9bf0d1136a52dd1492c9e8a2462c01fbf5"
+    },
+    {
+      "path": "deployment/student-bat/01-检查电脑环境.bat",
+      "bytes": 964,
+      "sha256": "bf4393925e3174cefff24cd14165daeee473bad2ea7999a57ed9d1bcfe9be0ce"
+    },
+    {
+      "path": "deployment/student-bat/02-检查课程文件.bat",
+      "bytes": 958,
+      "sha256": "260b8e001d3d33ff8834017957ffcb6ff7a2b9ee3e819f8dc9d6ff6fb2f31e89"
+    },
+    {
+      "path": "deployment/student-bat/02a-导入离线镜像.bat",
+      "bytes": 959,
+      "sha256": "c4bb24fd2c18737d7c68040942b6b67ee1f31925dee853d7bda09ff7049e2d31"
+    },
+    {
+      "path": "deployment/student-bat/03-首次初始化.bat",
+      "bytes": 963,
+      "sha256": "cdd44f2c7617f47a54a2637515c80ff1e23e38060fdb0bdfb413a58320befc74"
+    },
+    {
+      "path": "deployment/student-bat/04-启动推荐系统.bat",
+      "bytes": 958,
+      "sha256": "d124a5798cb4a3c2e90a22919db9da36aa4d49f2409ce03b4248cf95b2578402"
+    },
+    {
+      "path": "deployment/student-bat/05-停止推荐系统.bat",
+      "bytes": 957,
+      "sha256": "eb132429eb0727221dcbccdde99404e01375ef8cacb437d88457a9c19a58113d"
+    },
+    {
+      "path": "deployment/student-bat/06-检查与诊断.bat",
+      "bytes": 961,
+      "sha256": "648318365d7a43d05b944714d5d595fed3d44d9d485ab53b9d0087da970f4141"
+    },
+    {
+      "path": "deployment/student-bat/student-tools.ps1",
+      "bytes": 9857,
+      "sha256": "35d9b7cbdb0a7c6a19e2e645379630335fd5796da98e456fab43857582a882ad"
+    },
+    {
+      "path": "deployment/verify.py",
+      "bytes": 1714,
+      "sha256": "382c1d829580980b20a1ed859f5836a20ac822aa37e8cc47318a6455a49e8682"
+    },
+    {
+      "path": "docs/Windows实验环境安装与启动指南.md",
+      "bytes": 18538,
+      "sha256": "d331eb0142f0bb21bafe7772265a614d6da057c20cfe8864a7cc1abdf117b7c6"
+    },
+    {
+      "path": "docs/evaluation-environment.md",
+      "bytes": 6036,
+      "sha256": "20db8a494d3320bf659a4b4a3f7e7114439182bda2f26fcd11c0b7cfffbfff96"
+    },
+    {
+      "path": "docs/starter-api-4b.md",
+      "bytes": 6908,
+      "sha256": "5301b6ea44f82a1d55abfaf5afa5f6e8ce51d1335ad45d05be06a0996942f5a7"
+    },
+    {
+      "path": "docs/starter-contract-v3.md",
+      "bytes": 4520,
+      "sha256": "9f85b4cd2fc65e215dda41bded932963f82b0ee6725f95b4e11360c79e107b36"
+    },
+    {
+      "path": "docs/student-algorithm-guide.md",
+      "bytes": 6406,
+      "sha256": "5fd0061021cc9a58efb90073e445cdc5756536ce99460d17018dd0036afc3a72"
+    },
+    {
+      "path": "docs/student-schema-v3.md",
+      "bytes": 9127,
+      "sha256": "62a64c741fd7d82df8e78517731e85d6a838b199b6d1547e6a840b191bb707d4"
+    },
+    {
+      "path": "docs/发行说明-Windows.md",
+      "bytes": 3104,
+      "sha256": "d32444fe64c711aaa6bf103908a04c650ad936ba2eaafe863df425ee3192624b"
+    },
+    {
+      "path": "docs/学生快速开始-Windows.md",
+      "bytes": 3600,
+      "sha256": "050b7b3382e6fe56a7d6a62d2ca1d6ae1ea46acc3348a5493e164b7baca21e04"
+    },
+    {
+      "path": "frontend/index.html",
+      "bytes": 515,
+      "sha256": "821fde23645ecceffab00035f4ea418d8686741f4c018c3db2a32d81238157c5"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "bytes": 75809,
+      "sha256": "cce0ddc5ca8da3c8a2bcb4fa3fbf5272ef2df74869a4ddb80ad448f9a1610e11"
+    },
+    {
+      "path": "frontend/package.json",
+      "bytes": 692,
+      "sha256": "d867572af3c2f59512e8ad7babcfab211f2b2be85b975ed04af97c4752423136"
+    },
+    {
+      "path": "frontend/public/favicon.svg",
+      "bytes": 163,
+      "sha256": "ea31925e24baee10dd49bffcd58fdf40de0fb48c8e6c39002bb7768030f5274d"
+    },
+    {
+      "path": "frontend/src/App.vue",
+      "bytes": 3014,
+      "sha256": "83bec9d96bf1152c9505d0b4e213794896d6b3c3c29f5c0898ce9547bed5eaf3"
+    },
+    {
+      "path": "frontend/src/api.ts",
+      "bytes": 3025,
+      "sha256": "86d0c3106cf574eb7c987c9412ff2c9261fe98a0038e107bf4126cdf0dc14085"
+    },
+    {
+      "path": "frontend/src/components/AlgorithmPanel.vue",
+      "bytes": 2640,
+      "sha256": "b7517537acd6a3467084cc0df83ef0dd20a5e541a338088f7d992d9a37afa3ff"
+    },
+    {
+      "path": "frontend/src/components/MovieCard.vue",
+      "bytes": 820,
+      "sha256": "f213318f09fa278246e737c80d052dd523c0def2241573edbb03fc6f379a1c77"
+    },
+    {
+      "path": "frontend/src/components/MoviePoster.vue",
+      "bytes": 918,
+      "sha256": "be3ab2d460c7b0d7259255fe93608ef489d0098aaf48229f9e4e0701f36d5074"
+    },
+    {
+      "path": "frontend/src/components/PageNav.vue",
+      "bytes": 493,
+      "sha256": "cf6a8cd832c5109e405cc3033db7465b8700bf5ff084e365c080a1d94dcc168c"
+    },
+    {
+      "path": "frontend/src/components/StatePanel.vue",
+      "bytes": 1785,
+      "sha256": "b587c735c11237f059da9b5d896ba8b6fd107083261c1886c5893ed5fb3b4e4e"
+    },
+    {
+      "path": "frontend/src/composables/useRemote.ts",
+      "bytes": 669,
+      "sha256": "44fde91a5c62ff4126f857d0c43ecbc1e4c13da684a9f6fc5ad4f938e4818174"
+    },
+    {
+      "path": "frontend/src/main.ts",
+      "bytes": 486,
+      "sha256": "aee6107bb53cde271a77b065411714e572a953196fc27a657264a374a0755fd0"
+    },
+    {
+      "path": "frontend/src/router.ts",
+      "bytes": 1675,
+      "sha256": "652e281ee9394a5e6b8ecf9eae00b262cacd0d9a1d14112b63066245e2ad8c28"
+    },
+    {
+      "path": "frontend/src/stores/auth.ts",
+      "bytes": 1330,
+      "sha256": "668f338dfc6c3887678bbd85958a1ae6c12eb462d29f91938578c67646ddc98e"
+    },
+    {
+      "path": "frontend/src/style.css",
+      "bytes": 20961,
+      "sha256": "1df0af1ed78539207a7d1b031d98899ff2b0f5cff33287ca7bc3ca3492e40ab9"
+    },
+    {
+      "path": "frontend/src/theme.css",
+      "bytes": 2080,
+      "sha256": "a8c161f9a0d0be9ef0589558e9ba707e86383744c5c6a8afdecffd29496d7840"
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "bytes": 1131,
+      "sha256": "6d31dae7a7e166da767e75ba73c467d5ae5b3df13f2b3c83b6bfeebea8d58c7b"
+    },
+    {
+      "path": "frontend/src/views/AuthView.vue",
+      "bytes": 4098,
+      "sha256": "767c3768380256a58a1e2829f5d497f55787518e9e95d956ac5c11b47083e685"
+    },
+    {
+      "path": "frontend/src/views/DetailView.vue",
+      "bytes": 6303,
+      "sha256": "7fc6fc21b2f1b5501dd2e26d0136b432edca20ca36238a4e61d3ba1f42351dee"
+    },
+    {
+      "path": "frontend/src/views/ExperimentsView.vue",
+      "bytes": 8377,
+      "sha256": "ac8a47cf833b94c5e8f0530e8f7b1a95c3718e994715574e8a15a1077ed05971"
+    },
+    {
+      "path": "frontend/src/views/HomeView.vue",
+      "bytes": 4672,
+      "sha256": "7c9d86e9cae6f21e4352f6f8eb91dcd2adcd0ea3cb6ead7109be2fc742f3c77d"
+    },
+    {
+      "path": "frontend/src/views/MoviesView.vue",
+      "bytes": 3264,
+      "sha256": "578dc240316e32bd47b591c5d2267972ced47ba963576311a9d52b95b1dec9cc"
+    },
+    {
+      "path": "frontend/src/views/NotFoundView.vue",
+      "bytes": 291,
+      "sha256": "4baf33d8c22e3e6d62f27a5e9925d9e2788db7e06cf45e6fda3a19f75ed5cd1f"
+    },
+    {
+      "path": "frontend/src/views/ProfileView.vue",
+      "bytes": 3499,
+      "sha256": "7ee2b8a81c358db130f54c952732b164c09ed8bdeac21274840c681f2614600c"
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "bytes": 388,
+      "sha256": "80cc7d213fa6340d9e8d0bbb3d28a5249295dc8ca5534bf0bad04b86fd2ff3d2"
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "bytes": 610,
+      "sha256": "636770107f99825dad8c230bd39fb76eeddcea074e3dd423178b5c7b0df9786e"
+    },
+    {
+      "path": "models/business/README.md",
+      "bytes": 287,
+      "sha256": "47b84c06a30c216cc8e20ab80e03f0e1f64a01f7026093877f2c4eaa99d65f4c"
+    },
+    {
+      "path": "offline-images/SHA256SUMS.txt",
+      "bytes": 224,
+      "sha256": "11ebb554834fd31d88a32acedf2075afe07b7da7c9f26dd05a8627bb817f6d02"
+    },
+    {
+      "path": "offline-images/api.tar",
+      "bytes": 69030912,
+      "sha256": "2c597d8dac2c41162f7cb36e6349c3542b6dabd2fd481d2354407a399bdd251b"
+    },
+    {
+      "path": "offline-images/mysql.tar",
+      "bytes": 249084416,
+      "sha256": "2d1432478a37654e0ffe66cdf487b3e1c69f3b60e8d7dda3300dff2cb5afa500"
+    },
+    {
+      "path": "offline-images/web.tar",
+      "bytes": 21458432,
+      "sha256": "11d6b4b5636267a3e18335a173fda5e8debd6b9e674470e29c70034c7a62fb33"
+    },
+    {
+      "path": "recommender/__init__.py",
+      "bytes": 90,
+      "sha256": "04eb6caa0f4a3b216d030876bb22b1d58b5a3bc1cc703927653c6c278a89db6b"
+    },
+    {
+      "path": "recommender/business.py",
+      "bytes": 2053,
+      "sha256": "db76927d1eb93cc617f309cc8bb513ec086f2d4d9770a28dd1c43a45882267b3"
+    },
+    {
+      "path": "recommender/check.py",
+      "bytes": 7152,
+      "sha256": "28d6cd1eb1d0a4c765468f8d5410329d9f4fe4f3ebb2a59f6a4b04f6304a45ae"
+    },
+    {
+      "path": "recommender/contracts.py",
+      "bytes": 2538,
+      "sha256": "627f59773ef6ec58f9e133171d9ae29cab29dc34e5b9bd91a8d9e03578995c8a"
+    },
+    {
+      "path": "recommender/data.py",
+      "bytes": 3640,
+      "sha256": "1b3facee6a70e44d6375f231b70f7c7ad33759857364c93af92e251a0f3cc0aa"
+    },
+    {
+      "path": "recommender/evaluation.py",
+      "bytes": 7268,
+      "sha256": "51f2eb4266e5b840ac3319a7b9aa928553805de6bbc6efe968412cc0534a5e64"
+    },
+    {
+      "path": "recommender/student/__init__.py",
+      "bytes": 79,
+      "sha256": "f51f4c61650d2d8a0b426dd3351ab4ac56c142b4795f018fec71ed6217cf6c57"
+    },
+    {
+      "path": "recommender/validation.py",
+      "bytes": 6322,
+      "sha256": "e4732881d131737bed66791126e8fb979ec154bf881f19a006520af8d3ae0f9a"
+    },
+    {
+      "path": "scripts/student_package.py",
+      "bytes": 22960,
+      "sha256": "a7dfc168c89d1a8afccc8ddedbb7d19725a406c9649b13ffe3069a3f0ee62052"
+    }
+  ]
+}

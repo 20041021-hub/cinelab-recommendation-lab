@@ -1,0 +1,115 @@
+name: cinelab
+
+x-package: &package
+  type: bind
+  source: ./data/packages/rec-course-v3-train5-1.0.0
+  target: /app/data/packages/rec-course-v3-train5-1.0.0
+  read_only: true
+  bind:
+    create_host_path: false
+
+x-backend: &backend
+  image: cinelab-offline/api:1.3.0-a1
+  platform: linux/amd64
+  pull_policy: never
+  read_only: true
+  tmpfs: [/tmp]
+  security_opt: [no-new-privileges:true]
+
+services:
+  db:
+    image: cinelab-offline/mysql:8.0.46-a1
+    platform: linux/amd64
+    pull_policy: never
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      # Only the explicit initializer receives this credential; no host port.
+      MYSQL_ROOT_HOST: "%"
+    secrets: [mysql_root_password]
+    volumes: [mysql_data:/var/lib/mysql]
+    networks: [database]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, 'MYSQL_PWD="$$(cat /run/secrets/mysql_root_password)" mysql -uroot --protocol=socket -Nse "SELECT 1" >/dev/null']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  api:
+    <<: *backend
+    environment:
+      APP_ENV: development
+      APP_COOKIE_SECURE: "false"
+      APP_ORIGIN: http://127.0.0.1:${COURSE_WEB_PORT:-8080}
+      APP_DB_HOST: db
+      APP_DB_NAME: rec_course_v3_fcfb9a195a_business
+      APP_DB_USER: course_app
+      APP_ENV_FILE: /dev/null
+    secrets: [app_password, jwt_secret]
+    volumes:
+      - *package
+      - type: bind
+        source: ./models/business
+        target: /app/models/business
+        read_only: true
+        bind:
+          create_host_path: false
+    networks: [database, edge]
+    depends_on:
+      db: {condition: service_healthy}
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=20)"]
+      interval: 15s
+      timeout: 25s
+      retries: 10
+      start_period: 30s
+
+  web:
+    image: cinelab-offline/web:1.3.0-a1
+    platform: linux/amd64
+    pull_policy: never
+    ports: ["127.0.0.1:${COURSE_WEB_PORT:-8080}:8080"]
+    networks: [edge]
+    depends_on:
+      api: {condition: service_healthy}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, http://127.0.0.1:8080/nginx-health]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # One-shot tool, excluded from ordinary `docker compose up -d`.
+  initialize:
+    <<: *backend
+    profiles: [tools]
+    entrypoint: [python, -m, deployment.initialize]
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+    secrets: [mysql_root_password, app_password]
+    volumes: [*package]
+    networks: [database]
+    depends_on:
+      db: {condition: service_healthy}
+
+volumes:
+  mysql_data:
+
+networks:
+  database:
+    internal: true
+  edge:
+
+secrets:
+  mysql_root_password:
+    file: ${COURSE_SECRET_DIR:-./deployment/private}/mysql-root-password
+  app_password:
+    file: ${COURSE_SECRET_DIR:-./deployment/private}/app-password
+  jwt_secret:
+    file: ${COURSE_SECRET_DIR:-./deployment/private}/jwt-secret

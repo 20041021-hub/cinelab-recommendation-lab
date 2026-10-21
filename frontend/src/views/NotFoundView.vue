@@ -1,0 +1,1 @@
+<template><div class="page not-found"><p class="eyebrow">404 / LOST IN THE ARCHIVE</p><h1>这一页，暂未上映。</h1><p class="muted">访问的页面不存在，回片库继续探索吧。</p><RouterLink to="/movies" class="button primary">返回电影库</RouterLink></div></template>

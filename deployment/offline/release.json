@@ -1,0 +1,143 @@
+{
+  "schema": "cinelab-offline-release-v1",
+  "release": "cinelab-win-x64-1.3.0-a1",
+  "status": "student-release-candidate-pending-final-teacher-review",
+  "platform": "linux/amd64",
+  "capabilities": {
+    "A": "Windows-10-and-11-functional-acceptance-confirmed-by-teacher-2026-10-19",
+    "onlineSourceBuild": "static-checked-only-not-Windows11-tested",
+    "B": "stopped-not-implemented"
+  },
+  "datasetManifestSha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e",
+  "sourceSha256": "ec6fdca8cea5b0156a733616bcaf797b6f6cc952bdb5c76e950cc63e7e94c084",
+  "images": [
+    {
+      "role": "api",
+      "reference": "cinelab-offline/api:1.3.0-a1",
+      "id": "sha256:619cca738cbd9d119a0d9d7d4f640b4eded5354990c9fb8a2e159545a97e4dc3",
+      "platform": "linux/amd64",
+      "layers": [
+        "sha256:9eb9a78eeb101ab215acf43ffb2a709d5fca9ca2a22178564c7ee5cc30774c60",
+        "sha256:9a0912b10e7336b5032c96abfaaad92f0fba6c03cbb315ea5f9ff37442520911",
+        "sha256:78a4eeeff9630145665d0439c75b49eb0fb4ae92de07a5fa541365d8587ac5aa",
+        "sha256:1f6b48d1b8f31d448ca0c4f981b51eaec48e38809d015e7d941534aa12c452b6",
+        "sha256:4e6d069256964d54607360e8afb9dc9785600e59912e17c622dc6f889415bece",
+        "sha256:733ba1bdfba563df1576ea394bb023d0b837e7d379e4d8ef7aba689a77848823",
+        "sha256:16110234b48efa107c5d9364fadd92cb89bd0542d185ee662c0a711c2990f805",
+        "sha256:8433cb2e81fa2e62ee9fa435fe04529f98d3d6ffaa5bfbb18aac0182c50181d6",
+        "sha256:d75f029914efb292b9f913781d7282cd3b06efe4c5f28df4dd403510adb2df5e",
+        "sha256:847d1f8f3ae596d09519294bc42205b6059938ce5ee1e75997519784329f93e8",
+        "sha256:d9d4dae2b071e0663b4e0500229a320a64eb91411879cd0d4d3cd527932fcdae",
+        "sha256:6617373396f3c58acf8514d5e3550d6198a82c090633f2a8bdc10d1b17636a51",
+        "sha256:d7142f437a86d2489638eb2d69400e871c151047183b1c351b9f6873ee84bd87"
+      ],
+      "archive": "api.tar",
+      "archiveBytes": 69030912,
+      "archiveSha256": "2c597d8dac2c41162f7cb36e6349c3542b6dabd2fd481d2354407a399bdd251b",
+      "inspectSizeBytes": 69013548
+    },
+    {
+      "role": "web",
+      "reference": "cinelab-offline/web:1.3.0-a1",
+      "id": "sha256:9a7b5f18760b6ffd76f8a5b8eeeb23d52acf9b93da51d20135e5bcd912b979f4",
+      "platform": "linux/amd64",
+      "layers": [
+        "sha256:922ec217407c0fd31cb18b46090bf62e439fb53ecd01f09406d62e25a906e09b",
+        "sha256:412e147b334cddb83eedf352f7f2ea40844abceb3614a5d9c9726d076e5c3b6f",
+        "sha256:570a1c87f279a67fc5509cf76c4b57cf722c8de9f9cdaa214c787d0fb0e1e7a5",
+        "sha256:34034c5235653389adbf8982e9fc868561e62e5d88c58c878331ed89abfd1a6f",
+        "sha256:7d9abb9ab3b7a473c37818aee5eb0f4637716ef9d8b28989ebab09d29f987246",
+        "sha256:5f23a9cf34f1103f7564dfb3f036e877efedde5372cb2190285418008372fdde",
+        "sha256:a231a657395e32fc50a9dd243cbf8476a246468d0faf68dacfd9a9a1befbb456",
+        "sha256:90ec271303985395afe0c2966824bb392d291365e94b87df2c4582c30b0bc18a",
+        "sha256:97e59e4536058e25e50a05e6efad6dc040dcd3594eb907d3a469970d2f088927",
+        "sha256:3e726ba15604f90e9139ce6d938e0a99b23ac7334d97a14b4cf1a7ff4f3437d5"
+      ],
+      "archive": "web.tar",
+      "archiveBytes": 21458432,
+      "archiveSha256": "11d6b4b5636267a3e18335a173fda5e8debd6b9e674470e29c70034c7a62fb33",
+      "inspectSizeBytes": 21443850
+    },
+    {
+      "role": "mysql",
+      "reference": "cinelab-offline/mysql:8.0.46-a1",
+      "id": "sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b",
+      "platform": "linux/amd64",
+      "layers": [
+        "sha256:d43f07c40901aa317d5983f2084bdfedcfdafb83efc894804d2ddf5b0dc70dd0",
+        "sha256:afe04ba8686ce64bfea34ddc7141624b2283e652a46bfef54e58877ac6cb4554",
+        "sha256:4a5079cdf3cbf6e76ff9c4bb289a811e22088d276d99cba23fd808b23d09d0e5",
+        "sha256:ac8332d12fa091d775ced250af571b8a335d09c84253fd5027b21dbca54a467b",
+        "sha256:b7ee228f4507526e6dac1e2b34ebc0a803d38735f9f0e8154934c2c9cc275919",
+        "sha256:1700d9acc2ce175bac397265a07b34cb231897f2a907255ef3decfb58092511c",
+        "sha256:e6e1a47306adeeff2686d1c5e3a677e8432495b3de5a8dc7a732d29fadea6059",
+        "sha256:16d50f7c95c0f19a1b00722decd4bd42dbd3462066a7ac666903ba642164a821",
+        "sha256:1bc63e2ed476381a326f74411ed09fcce6b9ec053e7906d95d7cb53d6fd4c794",
+        "sha256:04024da0550125ac09240a62a6ee005a8e27b418dae88a85001bddde6526003b",
+        "sha256:cdb99ca7755b4e597db7d8153ec9324a8c6db3cf3972b51f9e05964590919bd4"
+      ],
+      "archive": "mysql.tar",
+      "archiveBytes": 249084416,
+      "archiveSha256": "2d1432478a37654e0ffe66cdf487b3e1c69f3b60e8d7dda3300dff2cb5afa500",
+      "inspectSizeBytes": 233594134
+    }
+  ],
+  "files": [
+    {
+      "path": "compose.yaml",
+      "sha256": "a3009408ea9500a24afdf0ea4bb889ad6da12b58a8ba84b677443a1736fbc341"
+    },
+    {
+      "path": "deployment/course.ps1",
+      "sha256": "9c591b47a5f7119a4232bdc3f8f3b5dd22e4925c665b11aecc8f9d0631769bed"
+    },
+    {
+      "path": "deployment/build.ps1",
+      "sha256": "69467b456543d8fb88d8b0f012e7d454a452fedae6b0df42835a79b731e52a92"
+    },
+    {
+      "path": "deployment/offline/images.ps1",
+      "sha256": "8851eb832bfe594626c55a2af6ecfecac1ef3bc925a1f6a9dae34e3c20b6b1cf"
+    },
+    {
+      "path": "deployment/offline/runtime.ps1",
+      "sha256": "dbfed62556773c2918a68381e27c5d6d473223682f028cc5447d342c3dd6a9ce"
+    },
+    {
+      "path": "deployment/offline/runtime.env",
+      "sha256": "bdd7a4eb569f83c1a0ee11b70b776d07c48c2bd735176c2bb207aebc1617d520"
+    },
+    {
+      "path": "deployment/student-bat/student-tools.ps1",
+      "sha256": "35d9b7cbdb0a7c6a19e2e645379630335fd5796da98e456fab43857582a882ad"
+    },
+    {
+      "path": "deployment/student-bat/01-检查电脑环境.bat",
+      "sha256": "bf4393925e3174cefff24cd14165daeee473bad2ea7999a57ed9d1bcfe9be0ce"
+    },
+    {
+      "path": "deployment/student-bat/02-检查课程文件.bat",
+      "sha256": "260b8e001d3d33ff8834017957ffcb6ff7a2b9ee3e819f8dc9d6ff6fb2f31e89"
+    },
+    {
+      "path": "deployment/student-bat/02a-导入离线镜像.bat",
+      "sha256": "c4bb24fd2c18737d7c68040942b6b67ee1f31925dee853d7bda09ff7049e2d31"
+    },
+    {
+      "path": "deployment/student-bat/03-首次初始化.bat",
+      "sha256": "cdd44f2c7617f47a54a2637515c80ff1e23e38060fdb0bdfb413a58320befc74"
+    },
+    {
+      "path": "deployment/student-bat/04-启动推荐系统.bat",
+      "sha256": "d124a5798cb4a3c2e90a22919db9da36aa4d49f2409ce03b4248cf95b2578402"
+    },
+    {
+      "path": "deployment/student-bat/05-停止推荐系统.bat",
+      "sha256": "eb132429eb0727221dcbccdde99404e01375ef8cacb437d88457a9c19a58113d"
+    },
+    {
+      "path": "deployment/student-bat/06-检查与诊断.bat",
+      "sha256": "648318365d7a43d05b944714d5d595fed3d44d9d485ab53b9d0087da970f4141"
+    }
+  ]
+}
