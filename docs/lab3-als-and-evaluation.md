@@ -246,3 +246,53 @@ curl.exe -s "http://127.0.0.1:8080/api/v1/demo/history-users/14/recommendations/
 ![测试集离线指标](images/lab3-metrics-test.png)
 
 ![冷启动分区离线指标](images/lab3-metrics-cold.png)
+
+## 8. 课堂任务提交说明（简短）
+
+提交位置：私有仓库 `https://github.com/20041021-hub/cinelab-recommendation-lab`
+（`a22c239` 代码与模型、`dffcb01` 文档与截图；本节与 ml:55、算法注册表两张图在后续 docs 提交里）。
+
+### 8.1 任务一 · 真实 Spark ALS 训练与个性化 Top-10
+
+- 训练脚本 `scripts/build_lab3_als.py`：`pyspark==3.5.3` + JDK 11.0.16.1，`spark.ml.recommendation.ALS`
+  显式评分（`implicitPrefs=False`、`seed=20261022`），拟合文件是冻结的 `evaluation/train.csv`（583,502 行）。
+- 选定参数：**rank=32、regParam=0.05、maxIter=15、candidate_support_floor=500**。选择过程与全部候选分数写在
+  `models/evaluation/als-v1/manifest.json` 的 `parameters.tuning`（rank×regParam 网格 9 组 + 支持度下限网格 5 组，均在验证集上比较）。
+- 工件：`models/evaluation/als-v1/als-factors.json`（4,137,412 B，sha256 `2499ba37…`）、
+  `models/business/als-v1/als-factors.json`（4,212,640 B）；两个清单都通过 `python -m recommender.check model …`。
+- 个性化结果（`GET /api/v1/demo/history-users/{id}/recommendations/als?limit=10`，模型版本 `als-mllib-v1`）：
+  - **ml:14**（warm，15 条历史）→ `1246 / 318 / 2329 / 4011 / 356 / 2324 / 1704 / 1197 / 7147 / 6874`，
+    预测分 5.631 / 5.505 / 5.408 …，与本人已评分的交集 **0**。
+  - **ml:55**（cold，19 条历史）→ `593 / 318 / 110 / 3578 / 527 / 356 / 1198 / 4306 / 1 / 1036`，
+    预测分 5.410 / 5.284 / 5.208 …，与本人已评分的交集 **0**。
+  - 两个用户的列表不同，说明结果随历史变化；ml:55 属于冷启动分区，模型里没有它的隐向量，走的是折叠（fold-in）路径，
+    没有退化成“热门榜”。
+  - 证据：`images/lab3-als-ml14.png`、`images/lab3-als-ml55.png`。
+
+### 8.2 任务二 · 统一协议下的四算法离线评价
+
+完整表格见 §4.1 与 `docs/lab3-evaluation-table.md`（同一口径：正反馈 ≥ 4.0、Top-10、宏平均、
+Precision@10 分母恒为 10、Recall@10 分母为该用户候选集内相关目标数、无结果用户保留在分母中）。
+
+| 分区 | itemcf | als | popular | content | cold_start |
+| --- | --- | --- | --- | --- | --- |
+| validation（4,209 人） | **0.055263 / 0.097830** | 0.041388 / 0.067163 | 0.034165 / 0.057788 | 0.004134 / 0.007459 | 同 content |
+| test（4,198 人，冻结后只报一次） | **0.051715 / 0.090174** | 0.039590 / 0.059773 | 0.031205 / 0.051600 | 0.003740 / 0.006956 | 同 content |
+
+（每格为 Precision@10 / Recall@10；各分区有效用户数与空结果数在 §4.1 表内列出，ALS 在验证集有 1 位空结果用户，
+没有被剔除。）
+
+### 8.3 任务三 · 对比与解释（两条，均来自上面的真实数字）
+
+1. **ItemCF 明显最好，ALS 第二**：ItemCF 直接建模“被同一批用户高分评价”的共现关系，而验证集候选规则恰好是
+   “目录减 train”，共现证据密集；ALS 优化的是评分预测目标（内积拟合观测评分），对从未被交互的电影只能靠隐向量外推，
+   噪声更大。把候选支持度下限从 0 提到 500，ALS 的 P@10 才从 0.005393 升到 0.041601（候选池 8,459 → 193 部），
+   这也说明“评分预测好 ≠ Top-N 排序好”。
+2. **Content 最低，但冷启动场景不可替代**：内容推荐只用类型多热向量，粒度太粗，无法区分同一类型内的强弱偏好，
+   所以在有历史的用户上垫底；但在冷启动 k=1 分区它就能出分（0.023848 / 0.003930），而热门榜单、ItemCF、ALS
+   在 k=0 分区都无法个性化（ALS 在该分区 499 人全部空结果）。
+
+### 8.4 任务四 · 集中检查基础版
+
+见 §7 的 12 行检查记录与 5 张截图；本次另外补拍了下拉框证据 `images/lab3-algorithms-registry.png`
+（核心算法 content / itemcf / als 与配套策略 popular / cold_start 五个都在系统里可选）。
