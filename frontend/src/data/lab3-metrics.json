@@ -1,0 +1,283 @@
+{
+  "dataset_version": "rec-course-v3-train5-1.0.0",
+  "split_version": "temporal-v1-cold500-train5-v3",
+  "generated_at": "2026-10-22T09:18:50+08:00",
+  "source": "scripts/run_lab3_evaluation.py",
+  "note": "由 scripts/publish_lab3_metrics.py 从 reports/lab3/summary.json 生成；评价在独立进程执行，业务 API 不连接 evaluation 数据库。",
+  "validation": [
+    {
+      "algorithm": "popular",
+      "partition": "validation",
+      "model_version": "popular-support-eval-v1",
+      "users": 4209,
+      "empty": 0,
+      "precision_at_10": 0.034165,
+      "recall_at_10": 0.057788
+    },
+    {
+      "algorithm": "content",
+      "partition": "validation",
+      "model_version": "content-genre-tfidf-eval-v1",
+      "users": 4209,
+      "empty": 0,
+      "precision_at_10": 0.004134,
+      "recall_at_10": 0.007459
+    },
+    {
+      "algorithm": "itemcf",
+      "partition": "validation",
+      "model_version": "itemcf-cooccurrence-eval-v1",
+      "users": 4209,
+      "empty": 0,
+      "precision_at_10": 0.055263,
+      "recall_at_10": 0.09783
+    },
+    {
+      "algorithm": "als",
+      "partition": "validation",
+      "model_version": "als-mllib-eval-v1",
+      "users": 4209,
+      "empty": 1,
+      "precision_at_10": 0.041388,
+      "recall_at_10": 0.067163
+    },
+    {
+      "algorithm": "cold_start",
+      "partition": "validation",
+      "model_version": "coldstart-popular-content-eval-v1",
+      "users": 4209,
+      "empty": 0,
+      "precision_at_10": 0.004134,
+      "recall_at_10": 0.007459
+    }
+  ],
+  "test": [
+    {
+      "algorithm": "popular",
+      "partition": "test",
+      "model_version": "popular-support-eval-v1",
+      "users": 4198,
+      "empty": 0,
+      "precision_at_10": 0.031205,
+      "recall_at_10": 0.0516
+    },
+    {
+      "algorithm": "content",
+      "partition": "test",
+      "model_version": "content-genre-tfidf-eval-v1",
+      "users": 4198,
+      "empty": 1,
+      "precision_at_10": 0.00374,
+      "recall_at_10": 0.006956
+    },
+    {
+      "algorithm": "itemcf",
+      "partition": "test",
+      "model_version": "itemcf-cooccurrence-eval-v1",
+      "users": 4198,
+      "empty": 2,
+      "precision_at_10": 0.051715,
+      "recall_at_10": 0.090174
+    },
+    {
+      "algorithm": "als",
+      "partition": "test",
+      "model_version": "als-mllib-eval-v1",
+      "users": 4198,
+      "empty": 1,
+      "precision_at_10": 0.03959,
+      "recall_at_10": 0.059773
+    },
+    {
+      "algorithm": "cold_start",
+      "partition": "test",
+      "model_version": "coldstart-popular-content-eval-v1",
+      "users": 4198,
+      "empty": 0,
+      "precision_at_10": 0.00374,
+      "recall_at_10": 0.006956
+    }
+  ],
+  "cold": [
+    {
+      "algorithm": "popular",
+      "partition": "cold-k0",
+      "model_version": "popular-support-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.336874,
+      "recall_at_10": 0.073159
+    },
+    {
+      "algorithm": "content",
+      "partition": "cold-k0",
+      "model_version": "content-genre-tfidf-eval-v1",
+      "users": 499,
+      "empty": 499,
+      "precision_at_10": 0.0,
+      "recall_at_10": 0.0
+    },
+    {
+      "algorithm": "itemcf",
+      "partition": "cold-k0",
+      "model_version": "itemcf-cooccurrence-eval-v1",
+      "users": 499,
+      "empty": 499,
+      "precision_at_10": 0.0,
+      "recall_at_10": 0.0
+    },
+    {
+      "algorithm": "als",
+      "partition": "cold-k0",
+      "model_version": "als-mllib-eval-v1",
+      "users": 499,
+      "empty": 499,
+      "precision_at_10": 0.0,
+      "recall_at_10": 0.0
+    },
+    {
+      "algorithm": "cold_start",
+      "partition": "cold-k0",
+      "model_version": "coldstart-popular-content-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.336874,
+      "recall_at_10": 0.073159
+    },
+    {
+      "algorithm": "popular",
+      "partition": "cold-k1",
+      "model_version": "popular-support-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.323246,
+      "recall_at_10": 0.072178
+    },
+    {
+      "algorithm": "content",
+      "partition": "cold-k1",
+      "model_version": "content-genre-tfidf-eval-v1",
+      "users": 499,
+      "empty": 192,
+      "precision_at_10": 0.023848,
+      "recall_at_10": 0.00393
+    },
+    {
+      "algorithm": "itemcf",
+      "partition": "cold-k1",
+      "model_version": "itemcf-cooccurrence-eval-v1",
+      "users": 499,
+      "empty": 198,
+      "precision_at_10": 0.185772,
+      "recall_at_10": 0.043895
+    },
+    {
+      "algorithm": "als",
+      "partition": "cold-k1",
+      "model_version": "als-mllib-eval-v1",
+      "users": 499,
+      "empty": 220,
+      "precision_at_10": 0.137876,
+      "recall_at_10": 0.029692
+    },
+    {
+      "algorithm": "cold_start",
+      "partition": "cold-k1",
+      "model_version": "coldstart-popular-content-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.140481,
+      "recall_at_10": 0.032277
+    },
+    {
+      "algorithm": "popular",
+      "partition": "cold-k5",
+      "model_version": "popular-support-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.301002,
+      "recall_at_10": 0.070312
+    },
+    {
+      "algorithm": "content",
+      "partition": "cold-k5",
+      "model_version": "content-genre-tfidf-eval-v1",
+      "users": 499,
+      "empty": 35,
+      "precision_at_10": 0.030461,
+      "recall_at_10": 0.004946
+    },
+    {
+      "algorithm": "itemcf",
+      "partition": "cold-k5",
+      "model_version": "itemcf-cooccurrence-eval-v1",
+      "users": 499,
+      "empty": 39,
+      "precision_at_10": 0.27495,
+      "recall_at_10": 0.066152
+    },
+    {
+      "algorithm": "als",
+      "partition": "cold-k5",
+      "model_version": "als-mllib-eval-v1",
+      "users": 499,
+      "empty": 133,
+      "precision_at_10": 0.197595,
+      "recall_at_10": 0.048369
+    },
+    {
+      "algorithm": "cold_start",
+      "partition": "cold-k5",
+      "model_version": "coldstart-popular-content-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.051102,
+      "recall_at_10": 0.011428
+    },
+    {
+      "algorithm": "popular",
+      "partition": "cold-k10",
+      "model_version": "popular-support-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.269739,
+      "recall_at_10": 0.065806
+    },
+    {
+      "algorithm": "content",
+      "partition": "cold-k10",
+      "model_version": "content-genre-tfidf-eval-v1",
+      "users": 499,
+      "empty": 12,
+      "precision_at_10": 0.028657,
+      "recall_at_10": 0.006713
+    },
+    {
+      "algorithm": "itemcf",
+      "partition": "cold-k10",
+      "model_version": "itemcf-cooccurrence-eval-v1",
+      "users": 499,
+      "empty": 14,
+      "precision_at_10": 0.266733,
+      "recall_at_10": 0.06822
+    },
+    {
+      "algorithm": "als",
+      "partition": "cold-k10",
+      "model_version": "als-mllib-eval-v1",
+      "users": 499,
+      "empty": 107,
+      "precision_at_10": 0.208617,
+      "recall_at_10": 0.053299
+    },
+    {
+      "algorithm": "cold_start",
+      "partition": "cold-k10",
+      "model_version": "coldstart-popular-content-eval-v1",
+      "users": 499,
+      "empty": 0,
+      "precision_at_10": 0.036673,
+      "recall_at_10": 0.009352
+    }
+  ]
+}
