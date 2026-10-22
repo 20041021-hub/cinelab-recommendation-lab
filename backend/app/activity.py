@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Query, Request, Response
 from sqlalchemy import text
 
+from .behavior import publish_event
 from .catalog import page_result, public_row, require_movie
 from .schemas import IdPath, Input, Page, RatingInput, identifier
 from .security import ActorDependency, authenticated_write
@@ -15,11 +16,14 @@ def rate_movie(movie_id: IdPath, body: RatingInput, request: Request, actor: Act
     mid = identifier(movie_id)
     with authenticated_write(request, actor) as conn:
         require_movie(conn, mid)
+        genres = conn.execute(text("SELECT genres FROM movies WHERE movie_id=:id"), {"id": mid}).scalar_one()
         conn.execute(text("INSERT INTO account_ratings(account_id,movie_id,rating) VALUES(:uid,:mid,:rating) "
             "ON DUPLICATE KEY UPDATE rating=:rating,updated_at=UTC_TIMESTAMP(6)"),
             {"uid": actor.account_id, "mid": mid, "rating": body.rating})
         row = conn.execute(text("SELECT movie_id,rating,created_at,updated_at FROM account_ratings WHERE account_id=:uid AND movie_id=:mid"),
             {"uid": actor.account_id, "mid": mid}).mappings().one()
+    # 事务提交成功后才投递事件（实验五 S3）：Kafka 里的评分事件一定对应库里真实的一行。
+    publish_event("rating", actor.account_id, mid, rating=f"{body.rating:.1f}", genres=genres)
     return {**public_row(row), "subject_key": "app:" + str(actor.account_id)}
 
 
@@ -50,11 +54,13 @@ def favorite(movie_id: IdPath, request: Request, actor: ActorDependency, body: I
     with authenticated_write(request, actor) as conn:
         require_movie(conn, mid)
         values = {"uid": actor.account_id, "mid": mid}
+        genres = conn.execute(text("SELECT genres FROM movies WHERE movie_id=:id"), {"id": mid}).scalar_one()
         # Current reads avoid an earlier REPEATABLE READ snapshot hiding a concurrent insert.
         row = conn.execute(text("SELECT created_at FROM account_favorites WHERE account_id=:uid AND movie_id=:mid FOR UPDATE"), values).first()
         if row is None:
             conn.execute(text("INSERT INTO account_favorites(account_id,movie_id) VALUES(:uid,:mid)"), values)
         when = conn.execute(text("SELECT created_at FROM account_favorites WHERE account_id=:uid AND movie_id=:mid FOR UPDATE"), values).scalar_one()
+    publish_event("favorite", actor.account_id, mid, genres=genres)
     return {"movie_id": str(mid), "favorited": True, "created_at": when.isoformat(timespec="microseconds") + "Z"}
 
 
@@ -63,7 +69,9 @@ def unfavorite(movie_id: IdPath, request: Request, actor: ActorDependency, body:
     mid = identifier(movie_id)
     with authenticated_write(request, actor) as conn:
         require_movie(conn, mid)
+        genres = conn.execute(text("SELECT genres FROM movies WHERE movie_id=:id"), {"id": mid}).scalar_one()
         conn.execute(text("DELETE FROM account_favorites WHERE account_id=:uid AND movie_id=:mid"), {"uid": actor.account_id, "mid": mid})
+    publish_event("unfavorite", actor.account_id, mid, genres=genres)
     return Response(status_code=204)
 
 

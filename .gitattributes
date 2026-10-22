@@ -18,3 +18,6 @@ Dockerfile text eol=lf
 # 这两条必须放在最后：.gitattributes 以最后一条匹配规则为准。
 /models/business/** -text
 /models/evaluation/** -text
+
+# 实验五的离线安装包是二进制 wheel，按二进制提交（zip 里含 NUL，text=auto 也会放过，这里显式声明）
+/deployment/lab5/vendor/** -text

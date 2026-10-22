@@ -18,11 +18,31 @@ export interface FusionSourceStat {
   algorithm: string; weight: number; model_version: string
   candidate_count: number; contributed: number; best_rank: number | null
 }
+export interface InterestBlock {
+  requested: boolean; enabled: boolean; reason: string | null; source: string
+  alpha: number | null; state_version: number | null; updated_at: string | null
+  age_seconds: number | null; stale: boolean; half_life_minutes: number | null
+  events: number | null; top_genres: { genre: string; weight: number }[]; rule: string
+}
 export interface FusionResult {
   status: string; algorithm: string; model_version: string; method: string; rrf_k: number
   dataset_version: string; split_version: string; runtime_mode: string; subject_key: string
   generated_at: string; requested_limit: number; candidate_depth: number
   pool_size: number; delivered: number; filtered_seen: number; filtered_out_of_catalog: number
-  weights: Record<string, number>; sources: FusionSourceStat[]
-  items: { movie_id: string; rank: number; algorithm: string; model_version: string; score: number; recall_sources: string[]; recall_ranks: Record<string, number> }[]
+  weights: Record<string, number>; sources: FusionSourceStat[]; interest: InterestBlock
+  items: { movie_id: string; rank: number; algorithm: string; model_version: string; score: number; recall_sources: string[]; recall_ranks: Record<string, number>; interest_match?: number | null; interest_boost?: number | null }[]
+}
+export interface BehaviorStatus {
+  producer: {
+    state: string; enabled: boolean; bootstrap: string; topic: string; sent: number
+    failed: number; skipped: number; last_sent_at: string | null; last_error: string | null
+    last_skipped_reason: string | null; timeout_seconds: number
+  }
+  consumer: {
+    status: string; state_path: string; state_version: number; subjects: string[]
+    consumed?: number; applied?: number; events_applied?: number; events_path?: string
+    group?: string; topic?: string; half_life_minutes?: number; alpha?: number
+    offsets?: Record<string, number>; state_available?: boolean; max_age_seconds?: number
+    enabled?: boolean; generated_at?: string
+  }
 }

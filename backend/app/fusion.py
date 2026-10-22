@@ -22,6 +22,7 @@ from recommender.business import read_history
 from recommender.contracts import AlgorithmNotImplemented, PROVIDERS, RecommendationRequest, recommend
 from recommender.data import ContractError, FrozenData
 from recommender.student import rrf
+from . import interest
 from .config import DATASET, SPLIT
 from .errors import APIError
 from .schemas import IdPath, identifier
@@ -37,6 +38,8 @@ class FusionQuery(BaseModel):
     algorithms: str | None = Field(default=None, max_length=120)
     weights: str | None = Field(default=None, max_length=120)
     limit: int = Field(default=10, ge=1, le=50)
+    # 实验五 S3：1=按短期兴趣重排（默认），0=纯 RRF（对照实验用，便于证明"行为真的改变了推荐"）
+    interest: int = Field(default=1, ge=0, le=1)
 
 
 class FusionItem(BaseModel):
@@ -47,6 +50,31 @@ class FusionItem(BaseModel):
     score: float
     recall_sources: list[str]
     recall_ranks: dict[str, int]
+    interest_match: float | None = None
+    interest_boost: float | None = None
+
+
+class InterestGenre(BaseModel):
+    genre: str
+    weight: float
+
+
+class InterestBlock(BaseModel):
+    """融合结果里对"为什么这样排"的交代：状态来自哪个 topic/账号、衰减后最强的类型、是否过期。"""
+
+    requested: bool
+    enabled: bool
+    reason: str | None = None
+    source: str = "kafka:cinelab.behavior.business"
+    alpha: float | None = None
+    state_version: int | None = None
+    updated_at: str | None = None
+    age_seconds: float | None = None
+    stale: bool = False
+    half_life_minutes: float | None = None
+    events: int | None = None
+    top_genres: list[InterestGenre] = []
+    rule: str = "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重"
 
 
 class FusionSourceStat(BaseModel):
@@ -78,6 +106,7 @@ class FusionResult(BaseModel):
     filtered_out_of_catalog: int
     weights: dict[str, float]
     sources: list[FusionSourceStat]
+    interest: InterestBlock
     items: list[FusionItem]
 
 
@@ -114,8 +143,38 @@ def fusion_result(kind: str, uid: int, query: FusionQuery, database=None) -> Fus
     history = read_history(_request(kind, uid, query.limit), database=database)
     outcome = rrf.fuse(results, weight_map, query.limit, rrf.exclusion_ids(history), _catalog())
 
+    # 实验五 S3：真实行为事件推出的短期兴趣，按固定规则重排（无状态/过期时不加分并说明原因）
+    subject_key = f"{kind}:{uid}"
+    state = interest.snapshot(subject_key) if query.interest else None
+    block = InterestBlock(
+        requested=bool(query.interest),
+        enabled=bool(state),
+        reason=None if state else ("未启用（interest=0）" if not query.interest else
+                                   ("短期兴趣状态未就绪（消费端尚未写出该账号的兴趣）" if interest.wanted()
+                                    else "短期兴趣功能未启用（CINELAB_INTEREST_ENABLED=0）")),
+        alpha=interest.alpha() if state else None,
+        state_version=state.get("state_version") if state else None,
+        updated_at=state.get("updated_at") if state else None,
+        age_seconds=state.get("age_seconds") if state else None,
+        stale=bool(state.get("stale")) if state else False,
+        half_life_minutes=state.get("half_life_minutes") if state else None,
+        events=state.get("events") if state else None,
+        top_genres=[InterestGenre(**row) for row in state.get("top_genres", [])] if state else [],
+    )
+    if state:
+        genres = interest.genres_for(database, [item.movie_id for item in outcome.items])
+        rows = interest.rerank(outcome.items, genres, state)
+        items = [FusionItem(movie_id=row["item"].movie_id, rank=row["rank"], score=row["score"],
+                            recall_sources=list(row["item"].sources), recall_ranks=row["item"].ranks,
+                            interest_match=row["interest_match"], interest_boost=row["interest_boost"])
+                 for row in rows]
+    else:
+        items = [FusionItem(movie_id=item.movie_id, rank=item.rank, score=item.score,
+                            recall_sources=list(item.sources), recall_ranks=item.ranks)
+                 for item in outcome.items]
+
     return FusionResult(
-        subject_key=f"{kind}:{uid}",
+        subject_key=subject_key,
         generated_at=datetime.now(timezone.utc),
         requested_limit=query.limit,
         candidate_depth=depth,
@@ -125,9 +184,8 @@ def fusion_result(kind: str, uid: int, query: FusionQuery, database=None) -> Fus
         filtered_out_of_catalog=outcome.filtered_out_of_catalog,
         weights=weight_map,
         sources=[FusionSourceStat(**stat.__dict__) for stat in outcome.stats],
-        items=[FusionItem(movie_id=item.movie_id, rank=item.rank, score=item.score,
-                          recall_sources=list(item.sources), recall_ranks=item.ranks)
-               for item in outcome.items],
+        interest=block,
+        items=items,
     )
 
 
@@ -138,6 +196,9 @@ def fusion_sources():
             "default_sources": [algorithm.value for algorithm in rrf.DEFAULT_SOURCES],
             "default_weights": list(rrf.DEFAULT_WEIGHTS),
             "candidate_depth_rule": "max(20, min(50, limit*3))",
+            "interest_rerank": {"query_param": "interest=1|0", "alpha": interest.alpha(),
+                                "rule": "score' = score × (1 + alpha × match)",
+                                "state_source": "Kafka 事件 → 消费端 → reports/lab5/state/interest.json"},
             "items": rrf.describe_sources(rrf.SOURCE_ORDER)}
 
 

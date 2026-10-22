@@ -68,6 +68,16 @@ const configLabel = computed(() => {
 })
 const multiSourceCount = computed(() => (result.value?.items || []).filter(item => (item.recall_sources?.length || 0) > 1).length)
 const sourceStats = computed(() => result.value?.sources || [])
+const interest = computed(() => result.value?.interest ?? null)
+const interestApplied = computed(() => Boolean(interest.value?.enabled && !interest.value?.stale))
+const interestGenres = computed(() => (interest.value?.top_genres || []).slice(0, 5))
+const boostedCount = computed(() => (result.value?.items || []).filter(item => (item.interest_boost ?? 1) > 1).length)
+function boostLabel(item: FusionResult['items'][number]) {
+  const boost = item.interest_boost ?? 1
+  if (boost <= 1.0001) return null
+  const match = item.interest_match ? `匹配度 ${(item.interest_match * 100).toFixed(0)}%` : '类型命中'
+  return `${match} · 加权 ×${boost.toFixed(3)}`
+}
 </script>
 <template>
   <section class="fusion-panel" :aria-label="label">
@@ -84,8 +94,24 @@ const sourceStats = computed(() => result.value?.sources || [])
             <span class="strategy-pill">{{ result.sources.length }} 路召回</span>
             <span class="strategy-pill">候选池 {{ result.pool_size }}</span>
             <span class="strategy-pill">{{ multiSourceCount }} 部多路命中</span>
+            <span v-if="interestApplied" class="interest-pill">短期兴趣已生效 · {{ boostedCount }} 部加权</span>
             <span class="status-pill">{{ result.items.length }} 部推荐</span>
           </div>
+        </div>
+        <div v-if="interest?.requested" class="fusion-interest-panel">
+          <div class="fusion-interest-head">
+            <span class="source-name">S3 短期兴趣</span>
+            <span class="source-meta">{{ interest.source }}</span>
+            <span v-if="interestApplied" class="interest-pill">消费端事件 {{ interest.events }} 条 · 状态版本 {{ interest.state_version }}</span>
+            <span v-else class="status-pill">未生效</span>
+          </div>
+          <p v-if="!interestApplied" class="fusion-source-note">原因：{{ interest.reason || '短期兴趣状态不可用' }}；下面仍是未加权的加权 RRF 结果。</p>
+          <template v-else>
+            <div class="fusion-interest-genres">
+              <span v-for="row in interestGenres" :key="row.genre" class="source-chip">{{ row.genre }} {{ row.weight.toFixed(3) }}</span>
+            </div>
+            <p class="fusion-source-note">{{ interest.rule }}；alpha={{ interest.alpha }}，半衰期 {{ interest.half_life_minutes }} 分钟，状态更新于 {{ interest.updated_at }}（{{ interest.age_seconds?.toFixed(0) }} 秒前）。</p>
+          </template>
         </div>
         <div class="fusion-sources-panel">
           <div v-for="stat in sourceStats" :key="stat.algorithm" class="fusion-source-row">
@@ -113,6 +139,7 @@ const sourceStats = computed(() => result.value?.sources || [])
                   <span v-for="chip in sourceChips(item)" :key="chip.source" class="source-chip">{{ chip.source }}<template v-if="chip.rank"> #{{ chip.rank }}</template></span>
                 </div>
                 <div class="recommendation-score"><span>融合分</span><strong>{{ item.score.toFixed(4) }}</strong></div>
+                <p v-if="boostLabel(item)" class="fusion-boost">{{ boostLabel(item) }}</p>
               </div>
             </RouterLink>
           </li>
@@ -147,6 +174,11 @@ const sourceStats = computed(() => result.value?.sources || [])
 .recommendation-copy h4 { display: -webkit-box; overflow: hidden; margin: 6px 0 4px; font-size: 14px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .recommendation-genres { overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
 .fusion-sources { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
+.interest-pill { padding: 4px 9px; border: 1px solid #7a6a3f; border-radius: 999px; background: #2a2418; color: #f0dca8; font-size: 10px; line-height: 1.4; white-space: nowrap; }
+.fusion-interest-panel { display: grid; gap: 6px; padding: 12px 20px; border-bottom: 1px dashed var(--border); background: #1a1f16; }
+.fusion-interest-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 11px; }
+.fusion-interest-genres { display: flex; flex-wrap: wrap; gap: 4px; }
+.fusion-boost { margin-top: 3px; color: #d9c184; font-size: 10px; line-height: 1.5; }
 .source-chip { padding: 2px 6px; border: 1px solid var(--border); border-radius: 3px; color: var(--muted); font-size: 9px; letter-spacing: .04em; }
 .recommendation-score { display: flex; align-items: end; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--border); color: var(--muted); font-size: 10px; }
 .recommendation-score strong { color: var(--accent); font-size: 17px; font-weight: 500; letter-spacing: -.03em; line-height: 1; }

@@ -17,6 +17,7 @@ from .catalog import router as catalog_router
 from .activity import router as activity_router
 from .experiments import router as experiments_router
 from .fusion import router as fusion_router
+from .behavior_api import router as behavior_router
 
 log = logging.getLogger("course_api")
 
@@ -109,5 +110,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # Fusion is our own extension; register before experiments so "fusion" in
     # /me/recommendations/{algorithm} is not claimed by the frozen contract route.
     app.include_router(fusion_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
+    # 实验五 S3：行为事件与短期兴趣的只读接口（同样属于学生扩展）
+    app.include_router(behavior_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     app.include_router(experiments_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     return app

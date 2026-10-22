@@ -1,0 +1,82 @@
+# 实验五 S3：Kafka 事件驱动扩展（学生自备组件，不属于课程离线镜像）
+#
+# 课程 compose.yaml 不包含 Kafka（docs/starter-api-4b.md 第 65 行：S1 RRF、S2 LLM、S3 Kafka
+# 只保留原教学任务，不提供依赖、服务或额外业务表）。本文件是学生在课程 compose 之上的扩展，
+# 用同一 project 名叠加运行：
+#
+#   docker compose -f compose.yaml -f deployment/lab5/compose.lab5.yaml up -d kafka
+#   docker compose -f compose.yaml -f deployment/lab5/compose.lab5.yaml up -d --no-deps api
+#
+# 镜像来源：官方 apache/kafka:3.9.0，本机通过 daocloud 镜像站取得后打成本地标签
+# （Docker Hub 在本机不可达，课程离线镜像里没有 Kafka）。KRaft 单节点，无需 ZooKeeper。
+services:
+  kafka:
+    image: docker.m.daocloud.io/apache/kafka:3.9.0
+    platform: linux/amd64
+    pull_policy: never
+    container_name: cinelab-kafka-1
+    hostname: kafka
+    environment:
+      # KRaft 单节点：一个进程同时充当 broker 与 controller
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      # 容器内（api、consumer）用 kafka:9092，宿主脚本用 127.0.0.1:29092。
+      # 监听地址必须写主机名 kafka（绑容器自身 IP）：写 0.0.0.0 会被 Kafka 3.9 的
+      # advertised.listeners 校验拒绝（nonroutable meta-address）。因此容器内的命令行
+      # 工具与健康检查也要用 kafka:9092，不能用 localhost:9092。
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://127.0.0.1:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # 单节点开发配置
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+      KAFKA_NUM_PARTITIONS: "3"
+      # 事件量很小，自动建主题即可；主题名见 api 的 CINELAB_KAFKA_TOPIC
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: "24"
+      KAFKA_HEAP_OPTS: "-Xmx512m -Xms256m"
+    ports:
+      - "127.0.0.1:29092:29092"     # 只给宿主脚本（消费端、证据采集）用
+    networks: [edge]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --list >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  api:
+    # 生产端：真实的评分/收藏写入后向 Kafka 发事件；Kafka 不可用时业务不失败（见 backend/app/behavior.py）
+    image: cinelab-local/api:lab5
+    build:
+      context: .
+      dockerfile: deployment/lab5/Dockerfile.api
+    environment:
+      CINELAB_KAFKA_BOOTSTRAP: kafka:9092
+      CINELAB_KAFKA_TOPIC: cinelab.behavior.business
+      CINELAB_KAFKA_TIMEOUT: "2.0"
+      # 消费端写出的短期兴趣状态以只读方式挂进来，供 S1 融合排序规则读取
+      CINELAB_INTEREST_STATE: /app/lab5-state/interest.json
+      CINELAB_INTEREST_EVENTS: /app/lab5-state/events.jsonl
+    volumes:
+      - type: bind
+        source: ./reports/lab5/state
+        target: /app/lab5-state
+        read_only: true
+        bind:
+          create_host_path: true
+    depends_on:
+      kafka: {condition: service_started}
+
+  web:
+    # 前端产物：短期兴趣状态面板与融合结果里的兴趣因子徽标
+    image: cinelab-local/web:lab5
+    build:
+      context: .
+      dockerfile: deployment/lab5/Dockerfile.web
