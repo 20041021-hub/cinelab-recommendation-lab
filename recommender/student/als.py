@@ -28,7 +28,7 @@ from recommender.contracts import Algorithm, RecommendationItem, RecommendationR
 ALGORITHM = Algorithm.als
 MODEL_VERSION = "als-mllib-v1"
 RECALL_SOURCE = "als_factor_score"
-MAX_RECOMMENDATIONS = 10
+MAX_RECOMMENDATIONS = 50  # 契约上限：调用方按 limit 请求，默认 10 条；融合需要更深候选
 FOLD_IN_FLOOR = 0.5
 
 

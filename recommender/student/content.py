@@ -25,7 +25,7 @@ ALGORITHM = Algorithm.content
 MODEL_VERSION = "content-genre-tfidf-v1"
 RECALL_SOURCE = "genre_tfidf"
 POSITIVE_RATING = 4.0
-MAX_RECOMMENDATIONS = 10
+MAX_RECOMMENDATIONS = 50  # 契约上限：调用方按 limit 请求，默认 10 条；融合需要更深候选
 
 
 @lru_cache(maxsize=8)

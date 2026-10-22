@@ -18,7 +18,7 @@ ALGORITHM = Algorithm.popular
 MODEL_VERSION = "popular-business-v1"
 RECALL_SOURCE = "popular_positive_support"
 MIN_POSITIVE_SUPPORT = 20
-MAX_RECOMMENDATIONS = 10
+MAX_RECOMMENDATIONS = 50  # 契约上限：调用方按 limit 请求，默认 10 条；融合需要更深候选
 
 
 @lru_cache(maxsize=8)
