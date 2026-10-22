@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T08:36:30+00:00",
+  "generated_at": "2026-10-22T08:57:02+00:00",
   "base_url": "http://127.0.0.1:8080",
   "passed": true,
   "total": 31,
@@ -86,9 +86,9 @@
         "n": 10,
         "hit_rated": [],
         "top3": [
-          "2294",
-          "3114",
-          "3754"
+          "2139",
+          "2687",
+          "68954"
         ]
       }
     },
@@ -101,9 +101,9 @@
         "n": 10,
         "hit_rated": [],
         "top3": [
-          "364",
-          "3114",
-          "595"
+          "457",
+          "110",
+          "318"
         ]
       }
     },
@@ -309,7 +309,7 @@
         "consumer_summary": {
           "status": "consumer_stopped",
           "consumed": 4,
-          "state_version": 67,
+          "state_version": 73,
           "subjects": [
             "app:25",
             "app:28",
@@ -335,7 +335,7 @@
           200,
           200
         ],
-        "pool": 57,
+        "pool": 58,
         "sources": [
           {
             "algorithm": "itemcf",
@@ -350,12 +350,12 @@
             "weight": 1.0,
             "model_version": "als-mllib-v1",
             "candidate_count": 30,
-            "contributed": 1,
+            "contributed": 2,
             "best_rank": 1
           }
         ],
         "top1": [
-          "364"
+          "480"
         ]
       }
     },
@@ -369,32 +369,32 @@
           "reason": null,
           "source": "kafka:cinelab.behavior.business",
           "alpha": 0.5,
-          "state_version": 67,
-          "updated_at": "2026-10-22T08:36:02.854Z",
-          "age_seconds": 16.2,
+          "state_version": 73,
+          "updated_at": "2026-10-22T08:56:36.191Z",
+          "age_seconds": 16.7,
           "stale": false,
           "half_life_minutes": 30.0,
-          "events": 24,
+          "events": 30,
           "top_genres": [
             {
               "genre": "Adventure",
-              "weight": 10.910121
-            },
-            {
-              "genre": "Animation",
-              "weight": 9.23147
+              "weight": 10.502365
             },
             {
               "genre": "Children",
-              "weight": 9.23147
+              "weight": 9.440786
+            },
+            {
+              "genre": "Animation",
+              "weight": 8.788847
             },
             {
               "genre": "Comedy",
-              "weight": 8.392577
+              "weight": 7.990516
             },
             {
               "genre": "Fantasy",
-              "weight": 8.392577
+              "weight": 7.990516
             }
           ],
           "rule": "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重"
@@ -412,11 +412,11 @@
           "bootstrap": "kafka:9092",
           "topic": "cinelab.behavior.business",
           "timeout_seconds": 2.0,
-          "sent": 33,
+          "sent": 4,
           "failed": 0,
           "skipped": 0,
           "last_error": null,
-          "last_sent_at": "2026-10-22T08:36:02.854Z",
+          "last_sent_at": "2026-10-22T08:56:36.191Z",
           "last_skipped_reason": null
         },
         "consumer": {
@@ -426,8 +426,8 @@
           "state_path": "/app/lab5-state/interest.json",
           "events_path": "/app/lab5-state/events.jsonl",
           "state_available": true,
-          "state_version": 67,
-          "generated_at": "2026-10-22T08:36:06.569Z",
+          "state_version": 73,
+          "generated_at": "2026-10-22T08:56:40.315Z",
           "subjects": [
             "app:25",
             "app:28",
@@ -443,12 +443,12 @@
           "offsets": {
             "cinelab.behavior.business:0": 9,
             "cinelab.behavior.business:1": 10,
-            "cinelab.behavior.business:2": 48
+            "cinelab.behavior.business:2": 54
           },
           "half_life_minutes": 30.0,
           "topic": "cinelab.behavior.business",
           "group": "lab5-short-term-interest",
-          "events_applied": 67
+          "events_applied": 73
         }
       }
     },
@@ -521,7 +521,7 @@
         "status": 200,
         "answer_status": "no_result",
         "rejected_calls": 1,
-        "answer": "“Anime”在电影目录里并不是一个真实存在的类型，所以没法按这个类型检索。\n\n没有找到符合条件的电影。如果你想看动画类作品，可以用目录里真实存在的类型（例如 Animation）再试一次。",
+        "answer": "没有找到符合条件的电影——目录里并不存在“Anime”这个类型，因此无法按该类型检索。\n\n如果你想看动画类的影片，我可以改用目录中真实存在的类型（例如 Animation）来帮你找；需要的话告诉我大致年份范围，我这就去检索。",
         "warnings": [
           "有被拒绝的工具调用：search_movies",
           "工具没有返回任何电影（无结果状态）"
@@ -545,36 +545,36 @@
           "itemcf": 1.0
         },
         "weights_on": {
-          "popular": 1.182358,
-          "itemcf": 1.324091
+          "popular": 1.18697,
+          "itemcf": 1.304317
         },
         "ranking_off": [
           "260",
-          "1196",
           "1198",
-          "1210",
-          "1270",
           "296",
           "356",
           "318",
+          "593",
+          "589",
+          "110",
           "2571",
-          "593"
+          "50"
         ],
         "ranking_on": [
           "260",
-          "1196",
-          "1210",
           "1198",
-          "1270",
           "296",
           "356",
           "318",
-          "2571",
-          "593"
+          "593",
+          "589",
+          "110",
+          "50",
+          "457"
         ],
         "affinities": {
-          "popular": 0.364716,
-          "itemcf": 0.648183
+          "popular": 0.37394,
+          "itemcf": 0.608635
         }
       }
     },
@@ -588,7 +588,7 @@
           "enabled": false,
           "reason": "未启用（adaptive=0）",
           "beta": null,
-          "state_version": 67,
+          "state_version": 73,
           "stale": false,
           "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值",
           "sources": []
@@ -639,20 +639,20 @@
       "passed": true,
       "evidence": {
         "assets": [
-          "/assets/AlgorithmPanel-9fWz_bvo.js",
-          "/assets/ColdStartView-C2E4ZZ_o.js",
-          "/assets/DetailView-VNqHnwZ3.js",
-          "/assets/ExperimentsView-GEZRxKBh.js",
-          "/assets/HomeView-C8SjDt6D.js",
-          "/assets/MovieCard.vue_vue_type_script_setup_true_lang-D5feWZXS.js",
-          "/assets/MoviesView-BqKTfJcK.js",
-          "/assets/NotFoundView-MJluv-bN.js",
-          "/assets/PageNav.vue_vue_type_script_setup_true_lang-CtGVyJvC.js",
-          "/assets/ProfileView-Bdw2AkdM.js",
-          "/assets/StatePanel.vue_vue_type_script_setup_true_lang-B8eGNWYR.js",
+          "/assets/AlgorithmPanel-ChXJP0YT.js",
+          "/assets/ColdStartView-Cjd0qDQA.js",
+          "/assets/DetailView-CSGnt4XP.js",
+          "/assets/ExperimentsView-CuyxWVCZ.js",
+          "/assets/HomeView-5KJmAvYA.js",
+          "/assets/MovieCard.vue_vue_type_script_setup_true_lang-5boHR1Me.js",
+          "/assets/MoviesView-Cp4qGHCU.js",
+          "/assets/NotFoundView-uU-n4vBQ.js",
+          "/assets/PageNav.vue_vue_type_script_setup_true_lang-CJrH8IiP.js",
+          "/assets/ProfileView-BcLSzAVz.js",
+          "/assets/StatePanel.vue_vue_type_script_setup_true_lang-DghSjyLk.js",
           "/assets/_plugin-vue_export-helper-DlAUqK2U.js",
-          "/assets/index-YropLMss.js",
-          "/assets/useRemote-C2PPsfQc.js"
+          "/assets/index-CUrsoZTU.js",
+          "/assets/useRemote-BuFB5chQ.js"
         ],
         "markers": {
           "融合面板": true,
