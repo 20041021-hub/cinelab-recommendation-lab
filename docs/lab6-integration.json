@@ -1,0 +1,668 @@
+{
+  "generated_at": "2026-10-22T08:36:30+00:00",
+  "base_url": "http://127.0.0.1:8080",
+  "passed": true,
+  "total": 31,
+  "failed": [],
+  "checks": [
+    {
+      "check": "环境启动与数据身份",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "dataset_version": "rec-course-v3-train5-1.0.0",
+          "split_version": "temporal-v1-cold500-train5-v3",
+          "schema_version": "student-eight-v3",
+          "app_schema_version": "starter-auth-v1",
+          "manifest_sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e"
+        }
+      }
+    },
+    {
+      "check": "算法注册表五个都可用",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "registry": {
+          "popular": "registered",
+          "content": "registered",
+          "itemcf": "registered",
+          "als": "registered",
+          "cold_start": "registered"
+        }
+      }
+    },
+    {
+      "check": "注册/登录与会话",
+      "passed": true,
+      "evidence": {
+        "action": "login",
+        "status": 200,
+        "account": {
+          "account": {
+            "account_id": "36",
+            "subject_key": "app:36",
+            "login_name": "lab6check1022"
+          }
+        }
+      }
+    },
+    {
+      "check": "注册账号评分与收藏",
+      "passed": true,
+      "evidence": {
+        "catalog_status": 200,
+        "ratings": [
+          {
+            "movie_id": "1",
+            "rating": "5.0",
+            "status": 200
+          },
+          {
+            "movie_id": "13",
+            "rating": "4.5",
+            "status": 200
+          },
+          {
+            "movie_id": "48",
+            "rating": "2.0",
+            "status": 200
+          }
+        ],
+        "favorite": {
+          "movie_id": "1",
+          "status": 200
+        }
+      }
+    },
+    {
+      "check": "当前账号 content 推荐",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "content-genre-tfidf-v1",
+        "n": 10,
+        "hit_rated": [],
+        "top3": [
+          "2294",
+          "3114",
+          "3754"
+        ]
+      }
+    },
+    {
+      "check": "当前账号 itemcf 推荐",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "itemcf-cooccurrence-v1",
+        "n": 10,
+        "hit_rated": [],
+        "top3": [
+          "364",
+          "3114",
+          "595"
+        ]
+      }
+    },
+    {
+      "check": "当前账号 als 推荐",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "als-mllib-v1",
+        "n": 10,
+        "hit_rated": [],
+        "top3": [
+          "79132",
+          "55820",
+          "48780"
+        ]
+      }
+    },
+    {
+      "check": "当前账号 popular 推荐",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "popular-business-v1",
+        "n": 10,
+        "hit_rated": [],
+        "top3": [
+          "318",
+          "296",
+          "356"
+        ]
+      }
+    },
+    {
+      "check": "零历史账号冷启动",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "coldstart-popular-content-v1",
+        "sources": [
+          "cold_start_popular"
+        ]
+      }
+    },
+    {
+      "check": "ml:14 popular",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "popular-business-v1",
+        "n": 10,
+        "top3": [
+          "318",
+          "296",
+          "356"
+        ],
+        "history_rows": 15
+      }
+    },
+    {
+      "check": "ml:14 content",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "content-genre-tfidf-v1",
+        "n": 10,
+        "top3": [
+          "5",
+          "18",
+          "19"
+        ],
+        "history_rows": 15
+      }
+    },
+    {
+      "check": "ml:14 itemcf",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "itemcf-cooccurrence-v1",
+        "n": 10,
+        "top3": [
+          "2502",
+          "1079",
+          "3039"
+        ],
+        "history_rows": 15
+      }
+    },
+    {
+      "check": "ml:14 als",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "als-mllib-v1",
+        "n": 10,
+        "top3": [
+          "1246",
+          "318",
+          "2329"
+        ],
+        "history_rows": 15
+      }
+    },
+    {
+      "check": "ml:14 cold_start",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "coldstart-popular-content-v1",
+        "n": 10,
+        "top3": [
+          "5",
+          "18",
+          "19"
+        ],
+        "history_rows": 15
+      }
+    },
+    {
+      "check": "ml:55 popular",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "popular-business-v1",
+        "n": 10,
+        "top3": [
+          "318",
+          "296",
+          "356"
+        ],
+        "history_rows": 19
+      }
+    },
+    {
+      "check": "ml:55 content",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "content-genre-tfidf-v1",
+        "n": 10,
+        "top3": [
+          "5388",
+          "7445",
+          "8860"
+        ],
+        "history_rows": 19
+      }
+    },
+    {
+      "check": "ml:55 itemcf",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "itemcf-cooccurrence-v1",
+        "n": 10,
+        "top3": [
+          "2000",
+          "2194",
+          "1610"
+        ],
+        "history_rows": 19
+      }
+    },
+    {
+      "check": "ml:55 als",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "als-mllib-v1",
+        "n": 10,
+        "top3": [
+          "593",
+          "318",
+          "110"
+        ],
+        "history_rows": 19
+      }
+    },
+    {
+      "check": "ml:55 cold_start",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "model_version": "coldstart-popular-content-v1",
+        "n": 10,
+        "top3": [
+          "5388",
+          "7445",
+          "8860"
+        ],
+        "history_rows": 19
+      }
+    },
+    {
+      "check": "S3 消费端处理行为事件",
+      "passed": true,
+      "evidence": {
+        "command": "D:\\Python311\\python.exe D:\\Personal\\Desktop\\推荐系统\\CineLab-Student-Windows-1.3.0-rc1\\scripts\\run_behavior_consumer.py --max-messages 50 --idle-timeout 12.0 --half-life-minutes 30.0",
+        "exit_code": 0,
+        "applied": 0,
+        "last_applied": null,
+        "consumer_summary": {
+          "status": "consumer_stopped",
+          "consumed": 4,
+          "state_version": 67,
+          "subjects": [
+            "app:25",
+            "app:28",
+            "app:31",
+            "app:34",
+            "app:35",
+            "app:36",
+            "app:40",
+            "app:41",
+            "app:42",
+            "app:43"
+          ],
+          "state_path": "D:\\Personal\\Desktop\\推荐系统\\CineLab-Student-Windows-1.3.0-rc1\\reports\\lab5\\state\\interest.json"
+        },
+        "stderr_tail": []
+      }
+    },
+    {
+      "check": "S1 加权融合（含来源与名次）",
+      "passed": true,
+      "evidence": {
+        "status": [
+          200,
+          200
+        ],
+        "pool": 57,
+        "sources": [
+          {
+            "algorithm": "itemcf",
+            "weight": 6.0,
+            "model_version": "itemcf-cooccurrence-v1",
+            "candidate_count": 30,
+            "contributed": 10,
+            "best_rank": 1
+          },
+          {
+            "algorithm": "als",
+            "weight": 1.0,
+            "model_version": "als-mllib-v1",
+            "candidate_count": 30,
+            "contributed": 1,
+            "best_rank": 1
+          }
+        ],
+        "top1": [
+          "364"
+        ]
+      }
+    },
+    {
+      "check": "S3 短期兴趣状态与重排",
+      "passed": true,
+      "evidence": {
+        "interest": {
+          "requested": true,
+          "enabled": true,
+          "reason": null,
+          "source": "kafka:cinelab.behavior.business",
+          "alpha": 0.5,
+          "state_version": 67,
+          "updated_at": "2026-10-22T08:36:02.854Z",
+          "age_seconds": 16.2,
+          "stale": false,
+          "half_life_minutes": 30.0,
+          "events": 24,
+          "top_genres": [
+            {
+              "genre": "Adventure",
+              "weight": 10.910121
+            },
+            {
+              "genre": "Animation",
+              "weight": 9.23147
+            },
+            {
+              "genre": "Children",
+              "weight": 9.23147
+            },
+            {
+              "genre": "Comedy",
+              "weight": 8.392577
+            },
+            {
+              "genre": "Fantasy",
+              "weight": 8.392577
+            }
+          ],
+          "rule": "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重"
+        }
+      }
+    },
+    {
+      "check": "S3 生产端/消费端状态可见",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "producer": {
+          "enabled": true,
+          "state": "connected",
+          "bootstrap": "kafka:9092",
+          "topic": "cinelab.behavior.business",
+          "timeout_seconds": 2.0,
+          "sent": 33,
+          "failed": 0,
+          "skipped": 0,
+          "last_error": null,
+          "last_sent_at": "2026-10-22T08:36:02.854Z",
+          "last_skipped_reason": null
+        },
+        "consumer": {
+          "enabled": true,
+          "alpha": 0.5,
+          "max_age_seconds": 900.0,
+          "state_path": "/app/lab5-state/interest.json",
+          "events_path": "/app/lab5-state/events.jsonl",
+          "state_available": true,
+          "state_version": 67,
+          "generated_at": "2026-10-22T08:36:06.569Z",
+          "subjects": [
+            "app:25",
+            "app:28",
+            "app:31",
+            "app:34",
+            "app:35",
+            "app:36",
+            "app:40",
+            "app:41",
+            "app:42",
+            "app:43"
+          ],
+          "offsets": {
+            "cinelab.behavior.business:0": 9,
+            "cinelab.behavior.business:1": 10,
+            "cinelab.behavior.business:2": 48
+          },
+          "half_life_minutes": 30.0,
+          "topic": "cinelab.behavior.business",
+          "group": "lab5-short-term-interest",
+          "events_applied": 67
+        }
+      }
+    },
+    {
+      "check": "S2 助手状态可见（提供方与模型）",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "mode": "live",
+        "base_url": "https://api.deepseek.com",
+        "model": "deepseek-chat",
+        "key_configured": true,
+        "max_tool_rounds": 3,
+        "tools": [
+          "search_movies",
+          "similar_movies",
+          "recommend_movies",
+          "my_history"
+        ]
+      }
+    },
+    {
+      "check": "S2 助手真实调用并只用工具结果",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "answer_status": "ready",
+        "tools": [
+          "my_history",
+          "search_movies",
+          "similar_movies"
+        ],
+        "items": [
+          {
+            "movie_id": "3114",
+            "source_tool": "similar_movies"
+          },
+          {
+            "movie_id": "260",
+            "source_tool": "similar_movies"
+          },
+          {
+            "movie_id": "1270",
+            "source_tool": "similar_movies"
+          },
+          {
+            "movie_id": "364",
+            "source_tool": "similar_movies"
+          },
+          {
+            "movie_id": "1210",
+            "source_tool": "similar_movies"
+          }
+        ],
+        "guardrails": [
+          "工具白名单",
+          "参数取值域校验",
+          "只读工具",
+          "items 仅由工具输出构成",
+          "轮次上限 3"
+        ],
+        "model": "deepseek-chat",
+        "provider": "live"
+      }
+    },
+    {
+      "check": "S2 助手错误输入有明确状态（不静默编造）",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "answer_status": "no_result",
+        "rejected_calls": 1,
+        "answer": "“Anime”在电影目录里并不是一个真实存在的类型，所以没法按这个类型检索。\n\n没有找到符合条件的电影。如果你想看动画类作品，可以用目录里真实存在的类型（例如 Animation）再试一次。",
+        "warnings": [
+          "有被拒绝的工具调用：search_movies",
+          "工具没有返回任何电影（无结果状态）"
+        ]
+      }
+    },
+    {
+      "check": "创新点 A 自适应权重真实改写各路权重",
+      "passed": true,
+      "evidence": {
+        "status": [
+          200,
+          200
+        ],
+        "requested": true,
+        "enabled": true,
+        "beta": 0.5,
+        "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值",
+        "weights_off": {
+          "popular": 1.0,
+          "itemcf": 1.0
+        },
+        "weights_on": {
+          "popular": 1.182358,
+          "itemcf": 1.324091
+        },
+        "ranking_off": [
+          "260",
+          "1196",
+          "1198",
+          "1210",
+          "1270",
+          "296",
+          "356",
+          "318",
+          "2571",
+          "593"
+        ],
+        "ranking_on": [
+          "260",
+          "1196",
+          "1210",
+          "1198",
+          "1270",
+          "296",
+          "356",
+          "318",
+          "2571",
+          "593"
+        ],
+        "affinities": {
+          "popular": 0.364716,
+          "itemcf": 0.648183
+        }
+      }
+    },
+    {
+      "check": "创新点 A 关闭时有明确原因（不静默生效）",
+      "passed": true,
+      "evidence": {
+        "status": 200,
+        "adaptive": {
+          "requested": false,
+          "enabled": false,
+          "reason": "未启用（adaptive=0）",
+          "beta": null,
+          "state_version": 67,
+          "stale": false,
+          "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值",
+          "sources": []
+        }
+      }
+    },
+    {
+      "check": "离线评价表完整（validation/test/cold）",
+      "passed": true,
+      "evidence": {
+        "rows": 30,
+        "partitions": [
+          "cold-k0",
+          "cold-k1",
+          "cold-k10",
+          "cold-k5",
+          "test",
+          "validation"
+        ],
+        "frontend_counts": {
+          "validation": 5,
+          "test": 5,
+          "cold": 20
+        }
+      }
+    },
+    {
+      "check": "ALS 指标与模型清单一致",
+      "passed": true,
+      "evidence": {
+        "report": {
+          "precision_at_10": 0.041388,
+          "recall_at_10": 0.067163,
+          "users": 4209,
+          "empty_users": 1
+        },
+        "manifest": {
+          "maxIter": 15,
+          "partition": "validation",
+          "precision_at_10": 0.041388,
+          "recall_at_10": 0.067163,
+          "support_floor": 500
+        }
+      }
+    },
+    {
+      "check": "前端改造在运行中的网页可见",
+      "passed": true,
+      "evidence": {
+        "assets": [
+          "/assets/AlgorithmPanel-9fWz_bvo.js",
+          "/assets/ColdStartView-C2E4ZZ_o.js",
+          "/assets/DetailView-VNqHnwZ3.js",
+          "/assets/ExperimentsView-GEZRxKBh.js",
+          "/assets/HomeView-C8SjDt6D.js",
+          "/assets/MovieCard.vue_vue_type_script_setup_true_lang-D5feWZXS.js",
+          "/assets/MoviesView-BqKTfJcK.js",
+          "/assets/NotFoundView-MJluv-bN.js",
+          "/assets/PageNav.vue_vue_type_script_setup_true_lang-CtGVyJvC.js",
+          "/assets/ProfileView-Bdw2AkdM.js",
+          "/assets/StatePanel.vue_vue_type_script_setup_true_lang-B8eGNWYR.js",
+          "/assets/_plugin-vue_export-helper-DlAUqK2U.js",
+          "/assets/index-YropLMss.js",
+          "/assets/useRemote-C2PPsfQc.js"
+        ],
+        "markers": {
+          "融合面板": true,
+          "短期兴趣面板": true,
+          "离线评价表": true,
+          "冷启动入口": true,
+          "S2 助手面板": true,
+          "创新点 A 面板": true
+        }
+      }
+    }
+  ]
+}

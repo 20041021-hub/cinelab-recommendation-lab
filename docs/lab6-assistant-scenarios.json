@@ -1,0 +1,197 @@
+{
+  "status": "passed",
+  "passed": true,
+  "generated_at": "2026-10-22T08:19:17.257Z",
+  "guardrails": [
+    "工具白名单",
+    "参数取值域校验",
+    "只读工具",
+    "items 仅由工具输出构成",
+    "轮次上限"
+  ],
+  "scenarios": {
+    "normal": {
+      "question": "推荐几部动画电影",
+      "status_code": 200,
+      "account_action": "login",
+      "checks": {
+        "http_200": true,
+        "status_ready": true,
+        "provider_live": true,
+        "answer_not_empty": true,
+        "tools_called": true,
+        "items_from_tools": true,
+        "no_unverified_mentions": true,
+        "me_path_ok": true
+      },
+      "passed": true,
+      "evidence": {
+        "rounds": 2,
+        "tools": [
+          {
+            "tool": "search_movies",
+            "ok": true,
+            "matched": 10,
+            "arguments": {
+              "genres": [
+                "Animation"
+              ],
+              "limit": 10
+            },
+            "source": "business.movies（真实目录）"
+          }
+        ],
+        "items": [
+          {
+            "movie_id": "1",
+            "title": "Toy Story (1995)",
+            "source_tool": "search_movies"
+          },
+          {
+            "movie_id": "4306",
+            "title": "Shrek (2001)",
+            "source_tool": "search_movies"
+          },
+          {
+            "movie_id": "364",
+            "title": "Lion King, The (1994)",
+            "source_tool": "search_movies"
+          },
+          {
+            "movie_id": "588",
+            "title": "Aladdin (1992)",
+            "source_tool": "search_movies"
+          },
+          {
+            "movie_id": "6377",
+            "title": "Finding Nemo (2003)",
+            "source_tool": "search_movies"
+          }
+        ],
+        "answer": "我从目录里找到了这些动画电影，推荐给你：\n\n- **Toy Story (1995)**：玩具在孩子不在时拥有自己的世界，冒险与喜剧结合得十分巧妙。\n- **Shrek (2001)**：颠覆童话传统的冒险故事，幽默又带一点浪漫。\n- **Lion King, The (1994)**：成长与责任的经典故事，配有音乐与戏剧张力。\n- **Aladdin (1992)**：充满音乐与冒险的奇幻童话，节奏轻快。\n- **Finding Nemo (2003)**：海底寻亲的冒险故事，画面与情感都很打动人。\n- **Monsters, Inc. (2001)**：怪兽与人类小女孩的奇幻友谊，笑点密集。\n- **Beauty and the Beast (1991)**：音乐与浪漫兼具的经典童话动画。\n- **Incredibles, The (2004)**：超级英雄家庭的冒险喜剧，动作与笑料并",
+        "me_status_code": 200,
+        "me_subject_key": "app:36"
+      }
+    },
+    "no_result": {
+      "question": "只要 2029 年上映的 Film-Noir 电影，别的都不要",
+      "status_code": 200,
+      "checks": {
+        "http_200": true,
+        "status_no_result": true,
+        "no_items": true,
+        "warning_explains": true,
+        "answer_not_fabricated": true
+      },
+      "passed": true,
+      "evidence": {
+        "status": "no_result",
+        "warnings": [
+          "工具没有返回任何电影（无结果状态）"
+        ],
+        "answer": "没有找到符合条件的电影——目录里没有 2029 年上映的 Film-Noir 影片。",
+        "tools": [
+          {
+            "tool": "search_movies",
+            "ok": true,
+            "matched": 0
+          }
+        ]
+      }
+    },
+    "bad_input": {
+      "question": "推荐几部 Anime 类型的电影",
+      "status_code": 200,
+      "checks": {
+        "short_question_rejected": true,
+        "bad_limit_rejected": true,
+        "unknown_user_404": true,
+        "invalid_genre_tool_rejected": true,
+        "rejection_is_visible": true,
+        "no_fabricated_items": true
+      },
+      "passed": true,
+      "evidence": {
+        "short_question_status": 422,
+        "bad_limit_status": 422,
+        "unknown_user_status": 404,
+        "warnings": [
+          "有被拒绝的工具调用：search_movies",
+          "工具没有返回任何电影（无结果状态）"
+        ],
+        "tools": [
+          {
+            "tool": "search_movies",
+            "ok": false,
+            "error": "目录里没有这些类型：Anime（可用类型见 /api/v1/genres）"
+          }
+        ],
+        "answer": "“Anime”这个类型在目录里不存在，因此无法按它检索。要不要换成 Animation（动画）类型试试？如果需要，我可以直接查一下。"
+      }
+    },
+    "external_unavailable": {
+      "checks": {
+        "unreachable_is_503": true,
+        "unreachable_reason": true,
+        "missing_key_reason": true,
+        "business_not_broken": true,
+        "restored": true
+      },
+      "passed": true,
+      "evidence": {
+        "cases": [
+          {
+            "case": "network_unreachable",
+            "restart": {
+              "overrides": {
+                "APP_LLM_BASE_URL": "http://127.0.0.1:9"
+              },
+              "exit_code": 0,
+              "ready": true,
+              "stderr_tail": [
+                " Container cinelab-api-1 Recreated ",
+                " Container cinelab-api-1 Starting ",
+                " Container cinelab-api-1 Started"
+              ]
+            },
+            "status_code": 503,
+            "code": "ASSISTANT_UNAVAILABLE",
+            "reason": "network_error",
+            "message": "外部模型不可用：network_error",
+            "business_ok": true
+          },
+          {
+            "case": "missing_key",
+            "restart": {
+              "overrides": {
+                "APP_LLM_KEY_FILE": "/app/llm-key/does-not-exist.txt"
+              },
+              "exit_code": 0,
+              "ready": true,
+              "stderr_tail": [
+                " Container cinelab-api-1 Recreated ",
+                " Container cinelab-api-1 Starting ",
+                " Container cinelab-api-1 Started"
+              ]
+            },
+            "status_code": 503,
+            "code": "ASSISTANT_UNAVAILABLE",
+            "reason": "missing_key",
+            "message": "自然语言助手未配置外部模型 API Key"
+          }
+        ],
+        "restore": {
+          "overrides": {},
+          "exit_code": 0,
+          "ready": true,
+          "stderr_tail": [
+            " Container cinelab-api-1 Recreated ",
+            " Container cinelab-api-1 Starting ",
+            " Container cinelab-api-1 Started"
+          ]
+        },
+        "restored_status": "ready"
+      }
+    }
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "status": "passed",
+  "passed": true,
+  "generated_at": "2026-10-22T08:33:42.952Z",
+  "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值",
+  "beta": 0.5,
+  "account": {
+    "login_name": "lab6adapt10221022163334",
+    "subject_key": "app:43",
+    "action": "register+login"
+  },
+  "writes": [
+    {
+      "movie_id": "1",
+      "rating": "5.0",
+      "status": 200,
+      "response": {
+        "movie_id": "1",
+        "rating": "5.0",
+        "created_at": "2026-10-22T08:33:34.764378Z",
+        "updated_at": "2026-10-22T08:33:34.764378Z",
+        "subject_key": "app:43"
+      }
+    },
+    {
+      "movie_id": "13",
+      "rating": "5.0",
+      "status": 200,
+      "response": {
+        "movie_id": "13",
+        "rating": "5.0",
+        "created_at": "2026-10-22T08:33:34.785140Z",
+        "updated_at": "2026-10-22T08:33:34.785140Z",
+        "subject_key": "app:43"
+      }
+    },
+    {
+      "movie_id": "48",
+      "rating": "4.5",
+      "status": 200,
+      "response": {
+        "movie_id": "48",
+        "rating": "4.5",
+        "created_at": "2026-10-22T08:33:34.803143Z",
+        "updated_at": "2026-10-22T08:33:34.803143Z",
+        "subject_key": "app:43"
+      }
+    },
+    {
+      "movie_id": "12",
+      "rating": "1.0",
+      "status": 200,
+      "response": {
+        "movie_id": "12",
+        "rating": "1.0",
+        "created_at": "2026-10-22T08:33:34.822612Z",
+        "updated_at": "2026-10-22T08:33:34.822612Z",
+        "subject_key": "app:43"
+      }
+    },
+    {
+      "movie_id": "1",
+      "kind": "favorite",
+      "status": 200,
+      "response": {
+        "movie_id": "1",
+        "favorited": true,
+        "created_at": "2026-10-22T08:33:34.841214Z"
+      }
+    }
+  ],
+  "producer": {
+    "sent": 25,
+    "failed": 0,
+    "skipped": 0
+  },
+  "consumer": {
+    "exit_code": 0,
+    "state_version_before": null,
+    "state_version_after": 59,
+    "events_before": 0,
+    "events_after": 5,
+    "expected_events": 5,
+    "last_applied": null
+  },
+  "interest_top_genres": [
+    {
+      "genre": "Animation",
+      "weight": 4.239048
+    },
+    {
+      "genre": "Children",
+      "weight": 4.239048
+    },
+    {
+      "genre": "Adventure",
+      "weight": 3.490993
+    },
+    {
+      "genre": "Fantasy",
+      "weight": 2.493576
+    },
+    {
+      "genre": "Comedy",
+      "weight": 1.496143
+    }
+  ],
+  "cases": [
+    {
+      "label": "默认权重 itemcf=6 als=1",
+      "weights_query": null,
+      "adaptive_off": {
+        "requested": false,
+        "enabled": false,
+        "reason": "未启用（adaptive=0）",
+        "weights": {
+          "itemcf": 6.0,
+          "als": 1.0
+        },
+        "ranking": [
+          "364",
+          "595",
+          "3114",
+          "588",
+          "1270",
+          "260",
+          "1198",
+          "1196",
+          "356",
+          "318"
+        ],
+        "boosts": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.411766,
+          1.411766,
+          1.411766,
+          1.352944,
+          1.088236
+        ]
+      },
+      "adaptive_on": {
+        "requested": true,
+        "enabled": true,
+        "beta": 0.5,
+        "state_version": 59,
+        "weights": {
+          "itemcf": 8.252944,
+          "als": 1.417647
+        },
+        "ranking": [
+          "364",
+          "595",
+          "3114",
+          "588",
+          "1270",
+          "260",
+          "1198",
+          "1196",
+          "356",
+          "318"
+        ],
+        "boosts": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.411766,
+          1.411766,
+          1.411766,
+          1.352944,
+          1.088236
+        ],
+        "sources": {
+          "itemcf": {
+            "base_weight": 6.0,
+            "affinity": 0.750981,
+            "adaptive_weight": 8.252944,
+            "candidates": 30
+          },
+          "als": {
+            "base_weight": 1.0,
+            "affinity": 0.835295,
+            "adaptive_weight": 1.417647,
+            "candidates": 30
+          }
+        },
+        "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值"
+      },
+      "ranking_changed": false
+    },
+    {
+      "label": "等权 1:1",
+      "weights_query": "&weights=1,1",
+      "adaptive_off": {
+        "requested": false,
+        "enabled": false,
+        "reason": "未启用（adaptive=0）",
+        "weights": {
+          "itemcf": 1.0,
+          "als": 1.0
+        },
+        "ranking": [
+          "3114",
+          "595",
+          "364",
+          "588",
+          "4886",
+          "6377",
+          "4306",
+          "260",
+          "1198",
+          "318"
+        ],
+        "boosts": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.411766,
+          1.411766,
+          1.088236
+        ]
+      },
+      "adaptive_on": {
+        "requested": true,
+        "enabled": true,
+        "beta": 0.5,
+        "state_version": 59,
+        "weights": {
+          "itemcf": 1.375491,
+          "als": 1.417647
+        },
+        "ranking": [
+          "3114",
+          "595",
+          "364",
+          "588",
+          "4886",
+          "6377",
+          "4306",
+          "260",
+          "1198",
+          "318"
+        ],
+        "boosts": [
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.411766,
+          1.411766,
+          1.088236
+        ],
+        "sources": {
+          "itemcf": {
+            "base_weight": 1.0,
+            "affinity": 0.750981,
+            "adaptive_weight": 1.375491,
+            "candidates": 30
+          },
+          "als": {
+            "base_weight": 1.0,
+            "affinity": 0.835295,
+            "adaptive_weight": 1.417647,
+            "candidates": 30
+          }
+        },
+        "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值"
+      },
+      "ranking_changed": false
+    },
+    {
+      "label": "popular+itemcf 等权（预期变序）",
+      "weights_query": "&algorithms=popular,itemcf&weights=1,1",
+      "adaptive_off": {
+        "requested": false,
+        "enabled": false,
+        "reason": "未启用（adaptive=0）",
+        "weights": {
+          "popular": 1.0,
+          "itemcf": 1.0
+        },
+        "ranking": [
+          "260",
+          "356",
+          "1270",
+          "1196",
+          "1198",
+          "1210",
+          "296",
+          "318",
+          "2571",
+          "593"
+        ],
+        "boosts": [
+          1.411766,
+          1.352944,
+          1.5,
+          1.411766,
+          1.411766,
+          1.411766,
+          1.264708,
+          1.088236,
+          1.0,
+          1.0
+        ]
+      },
+      "adaptive_on": {
+        "requested": true,
+        "enabled": true,
+        "beta": 0.5,
+        "state_version": 59,
+        "weights": {
+          "popular": 1.210785,
+          "itemcf": 1.375491
+        },
+        "ranking": [
+          "260",
+          "1270",
+          "356",
+          "1196",
+          "1210",
+          "1198",
+          "296",
+          "318",
+          "2571",
+          "593"
+        ],
+        "boosts": [
+          1.411766,
+          1.5,
+          1.352944,
+          1.411766,
+          1.411766,
+          1.411766,
+          1.264708,
+          1.088236,
+          1.0,
+          1.0
+        ],
+        "sources": {
+          "popular": {
+            "base_weight": 1.0,
+            "affinity": 0.42157,
+            "adaptive_weight": 1.210785,
+            "candidates": 30
+          },
+          "itemcf": {
+            "base_weight": 1.0,
+            "affinity": 0.750981,
+            "adaptive_weight": 1.375491,
+            "candidates": 30
+          }
+        },
+        "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值"
+      },
+      "ranking_changed": true
+    }
+  ],
+  "checks": {
+    "events_recorded": true,
+    "consumer_advanced_state": true,
+    "state_not_stale": true,
+    "adaptive_enabled": true,
+    "adaptive_disabled_when_flag_0": true,
+    "guardrail_disabled_path_explained": true,
+    "weights_changed": true,
+    "affinity_differs_across_sources": true,
+    "ranking_reacts_to_weights": true
+  }
+}
