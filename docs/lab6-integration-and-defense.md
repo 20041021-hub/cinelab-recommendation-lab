@@ -78,9 +78,11 @@ D:\Python311\python.exe scripts\lab6_adaptive_check.py --fresh-account   # 创�
 
 ```text
 代码与部署：68299d5  lab6: 接入 S2 自然语言助手与创新点 A 自适应融合权重
-文档与截图：fef4592  docs: 实验六 S2 与创新点 A 的说明、集成检查与答辩提纲
+文档与截图：2308f73  docs: 实验六 S2 与创新点 A 的说明、集成检查与答辩提纲
 仓库：https://github.com/20041021-hub/cinelab-recommendation-lab
 ```
+
+（本文档自身的后续修订会形成新的提交哈希，上面两条即实验六的代码与文档提交。）
 
 ## 3. 答辩提纲
 
