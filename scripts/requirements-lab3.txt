@@ -1,0 +1,14 @@
+# Lab 3 training-side dependencies (host only, never inside the API image).
+#
+# The frozen runtime image ships no Java and no Spark, and the course notes say
+# that adding Java/Spark to the image needs teacher review
+# (docs/Windows实验环境安装与启动指南.md, section on 新增依赖).  ALS training
+# therefore runs on the host, exactly like the course asks ("用 Spark MLlib 训练
+# 真实 ALS 模型，保留真实模型/参数/版本清单"), and the trained factors are what
+# gets committed under models/business/als-v1 and models/evaluation/als-v1.
+#
+# Install on the host:
+#   D:\Python311\python.exe -m pip install -r scripts/requirements-lab3.txt
+# Required Java at training time: Microsoft OpenJDK 11
+#   C:\Program Files\Microsoft\jdk-11.0.16.101-hotspot
+pyspark==3.5.3

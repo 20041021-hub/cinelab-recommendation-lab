@@ -28,10 +28,11 @@ POSITIVE_RATING = 4.0
 MAX_RECOMMENDATIONS = 10
 
 
-@lru_cache(maxsize=4)
-def _load_vectors(path: str) -> dict[str, tuple[float, ...]]:
+@lru_cache(maxsize=8)
+def _load_vectors(path: str) -> tuple[str, dict[str, tuple[float, ...]]]:
     """Load the genre artifact once and turn each movie into a unit vector."""
     artifact = json.loads(Path(path).read_text(encoding="utf-8"))
+    version = str(artifact.get("model_version") or MODEL_VERSION)
     vocabulary = list(artifact["genre_vocabulary"])
     index = {genre: position for position, genre in enumerate(vocabulary)}
     idf = tuple(float(artifact["idf"][genre]) for genre in vocabulary)
@@ -46,7 +47,7 @@ def _load_vectors(path: str) -> dict[str, tuple[float, ...]]:
         norm = math.sqrt(sum(value * value for value in values))
         if norm > 0.0:
             vectors[movie_id] = tuple(value / norm for value in values)
-    return vectors
+    return version, vectors
 
 
 @lru_cache(maxsize=1)
@@ -55,10 +56,10 @@ def _catalog() -> tuple[str, ...]:
     return tuple(sorted(FrozenData().catalog(), key=int))
 
 
-def _empty(request: RecommendationRequest) -> RecommendationResult:
+def _empty(request: RecommendationRequest, version: str = MODEL_VERSION) -> RecommendationResult:
     return RecommendationResult(
         algorithm=ALGORITHM,
-        model_version=MODEL_VERSION,
+        model_version=version,
         dataset_version=request.dataset_version,
         split_version=request.split_version,
         runtime_mode=request.runtime_mode,
@@ -70,21 +71,26 @@ def _empty(request: RecommendationRequest) -> RecommendationResult:
 class ContentProvider:
     """Content-based provider registered by ``recommender.contracts``."""
 
-    def __init__(self, model_manifest_path: str | Path, history_reader=None):
+    def __init__(self, model_manifest_path: str | Path, history_reader=None,
+                 model_version: str | None = None):
         self.model_manifest_path = Path(model_manifest_path)
         self._artifact_path = self.model_manifest_path.with_name("movie-genres.json")
         self._vectors: dict[str, tuple[float, ...]] | None = None
         self._history_reader = history_reader
+        # The version string of the sidecar manifest; evaluation manifests use
+        # their own identifier so business and evaluation fits never mix.
+        self._model_version = model_version or MODEL_VERSION
 
     def _get_vectors(self) -> dict[str, tuple[float, ...]]:
         if self._vectors is None:
-            self._vectors = _load_vectors(str(self._artifact_path))
+            version, vectors = _load_vectors(str(self._artifact_path))
+            self._vectors = vectors if version == self._model_version else {}
         return self._vectors
 
     def recommend(self, request: RecommendationRequest) -> RecommendationResult:
         vectors = self._get_vectors()
         if not vectors:
-            return _empty(request)
+            return _empty(request, self._model_version)
         reader = self._history_reader
         if reader is None:
             # Imported lazily so offline checks can import the provider without
@@ -100,7 +106,7 @@ class ContentProvider:
             if float(feedback.rating) >= POSITIVE_RATING
         ]
         if not positive:
-            return _empty(request)
+            return _empty(request, self._model_version)
 
         dimensions = len(next(iter(vectors.values())))
         profile = [0.0] * dimensions
@@ -114,11 +120,11 @@ class ContentProvider:
                 profile[position] += weight * value
             touched += 1
         if touched == 0:
-            return _empty(request)
+            return _empty(request, self._model_version)
 
         norm = math.sqrt(sum(value * value for value in profile))
         if norm == 0.0:
-            return _empty(request)
+            return _empty(request, self._model_version)
         profile = [value / norm for value in profile]
 
         scored: list[tuple[str, float]] = []
@@ -140,7 +146,7 @@ class ContentProvider:
                 movie_id=movie_id,
                 rank=rank,
                 algorithm=ALGORITHM,
-                model_version=MODEL_VERSION,
+                model_version=self._model_version,
                 score=score,
                 recall_sources=[RECALL_SOURCE],
                 recall_ranks={RECALL_SOURCE: rank},
@@ -151,7 +157,7 @@ class ContentProvider:
         ]
         return RecommendationResult(
             algorithm=ALGORITHM,
-            model_version=MODEL_VERSION,
+            model_version=self._model_version,
             dataset_version=request.dataset_version,
             split_version=request.split_version,
             runtime_mode=request.runtime_mode,

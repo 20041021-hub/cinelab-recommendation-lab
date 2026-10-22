@@ -1,0 +1,42 @@
+{
+  "algorithm": "als",
+  "artifacts": {
+    "als-factors.json": "79b355b9624062abdbe2bde070d705e963849496126a574ab53a41359e52d741"
+  },
+  "dataset_version": "rec-course-v3-train5-1.0.0",
+  "feature_files": {
+    "movies.csv": "99f7951a528890bc6ca088b65987790e926adc8f595971346b5b606e4c71454e",
+    "training-catalog.csv": "3fbb145fdaad3f66e3ca17d0e1c32f385a90c1a465c6a905f17be9fc6a08460c"
+  },
+  "manifest_sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e",
+  "model_version": "als-mllib-v1",
+  "parameters": {
+    "candidate_support_floor": 500,
+    "candidate_support_rule": "item_support counted inside the fit file itself; items below the floor never enter the Top-10 shortlist",
+    "coldStartStrategy": "drop",
+    "fold_in": "rating-weighted mean of item factors for users absent from the fit",
+    "implicitPrefs": false,
+    "maxIter": 15,
+    "positive_rating_threshold": 4.0,
+    "rank": 32,
+    "regParam": 0.05,
+    "seed": 20261022,
+    "tuning": {
+      "note": "tuning performed in evaluation mode; parameters reused"
+    }
+  },
+  "runtime_mode": "business",
+  "schema_version": "student-eight-v3",
+  "split_version": "temporal-v1-cold500-train5-v3",
+  "tool_versions": {
+    "driver_memory": "3g",
+    "generator": "scripts/build_lab3_als.py",
+    "java": "openjdk version \"11.0.16.1\" 2022-08-12 LTS",
+    "pyspark": "3.5.3",
+    "python": "3.11.8",
+    "spark_master": "local[4]"
+  },
+  "training_files": {
+    "business/history_ratings.csv": "b73992a5390d668e80d777bc7425404dd3a850dd5b7eaad5abc7f4cac21ff438"
+  }
+}

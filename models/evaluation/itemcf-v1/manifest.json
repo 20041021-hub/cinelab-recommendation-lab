@@ -1,0 +1,34 @@
+{
+  "algorithm": "itemcf",
+  "artifacts": {
+    "item-similarities.json": "82a8d05548864593b1594495dedd8e613c2e8b716ea65c6f6676e31b97455e1d"
+  },
+  "dataset_version": "rec-course-v3-train5-1.0.0",
+  "feature_files": {
+    "movies.csv": "99f7951a528890bc6ca088b65987790e926adc8f595971346b5b606e4c71454e",
+    "training-catalog.csv": "3fbb145fdaad3f66e3ca17d0e1c32f385a90c1a465c6a905f17be9fc6a08460c"
+  },
+  "manifest_sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e",
+  "model_version": "itemcf-cooccurrence-eval-v1",
+  "parameters": {
+    "fit_file": "evaluation/train.csv",
+    "max_neighbors": 50,
+    "max_recommendations": 10,
+    "min_cooccurrence": 5,
+    "min_item_support": 20,
+    "positive_rating_threshold": 4.0,
+    "similarity": "cosine over binary positive interactions"
+  },
+  "runtime_mode": "evaluation",
+  "schema_version": "student-eight-v3",
+  "split_version": "temporal-v1-cold500-train5-v3",
+  "tool_versions": {
+    "generator": "scripts/build_lab3_evaluation_models.py",
+    "numpy": "2.4.3",
+    "python": "3.11.8",
+    "scipy": "1.17.1"
+  },
+  "training_files": {
+    "evaluation/train.csv": "c07a4c82155b216751129ddf5716717e54bbe2cb772cdf3a44f24e1f3971c342"
+  }
+}

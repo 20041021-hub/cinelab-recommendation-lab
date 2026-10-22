@@ -1,0 +1,33 @@
+{
+  "algorithm": "content",
+  "artifacts": {
+    "movie-genres.json": "fafb94c08e66a53af5b587a85149966e358843e49a5de120eaf8f7909dc67848"
+  },
+  "dataset_version": "rec-course-v3-train5-1.0.0",
+  "feature_files": {
+    "movies.csv": "99f7951a528890bc6ca088b65987790e926adc8f595971346b5b606e4c71454e",
+    "training-catalog.csv": "3fbb145fdaad3f66e3ca17d0e1c32f385a90c1a465c6a905f17be9fc6a08460c"
+  },
+  "manifest_sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e",
+  "model_version": "content-genre-tfidf-eval-v1",
+  "parameters": {
+    "features": "genres Multi-hot with IDF weighting",
+    "max_recommendations": 10,
+    "positive_rating_threshold": 4.0,
+    "profile_weights": "max(rating - 3.0, 0.1)",
+    "rating_file_used": false,
+    "similarity": "cosine on unit genre vectors"
+  },
+  "runtime_mode": "evaluation",
+  "schema_version": "student-eight-v3",
+  "split_version": "temporal-v1-cold500-train5-v3",
+  "tool_versions": {
+    "generator": "scripts/build_lab3_evaluation_models.py",
+    "numpy": "2.4.3",
+    "python": "3.11.8",
+    "scipy": "1.17.1"
+  },
+  "training_files": {
+    "evaluation/train.csv": "c07a4c82155b216751129ddf5716717e54bbe2cb772cdf3a44f24e1f3971c342"
+  }
+}

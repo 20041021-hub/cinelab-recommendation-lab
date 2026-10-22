@@ -1,0 +1,218 @@
+{
+  "algorithm": "als",
+  "artifacts": {
+    "als-factors.json": "2499ba37c1696b13716aeb24167902cb7c3d03a51dea7a7e105085e1758838fa"
+  },
+  "dataset_version": "rec-course-v3-train5-1.0.0",
+  "feature_files": {
+    "movies.csv": "99f7951a528890bc6ca088b65987790e926adc8f595971346b5b606e4c71454e",
+    "training-catalog.csv": "3fbb145fdaad3f66e3ca17d0e1c32f385a90c1a465c6a905f17be9fc6a08460c"
+  },
+  "manifest_sha256": "fcfb9a195a56709773696aab02f769c691778af0eb433a1e0778a71c4b289b9e",
+  "model_version": "als-mllib-eval-v1",
+  "parameters": {
+    "candidate_support_floor": 500,
+    "candidate_support_rule": "item_support counted inside the fit file itself; items below the floor never enter the Top-10 shortlist",
+    "coldStartStrategy": "drop",
+    "final_model_validation_metrics": {
+      "maxIter": 15,
+      "partition": "validation",
+      "precision_at_10": 0.041388,
+      "recall_at_10": 0.067163,
+      "support_floor": 500
+    },
+    "fold_in": "rating-weighted mean of item factors for users absent from the fit",
+    "implicitPrefs": false,
+    "maxIter": 15,
+    "positive_rating_threshold": 4.0,
+    "rank": 32,
+    "regParam": 0.05,
+    "seed": 20261022,
+    "tuning": {
+      "grid": [
+        {
+          "maxIter": 12,
+          "rank": 8,
+          "regParam": 0.05
+        },
+        {
+          "maxIter": 12,
+          "rank": 8,
+          "regParam": 0.1
+        },
+        {
+          "maxIter": 12,
+          "rank": 8,
+          "regParam": 0.2
+        },
+        {
+          "maxIter": 12,
+          "rank": 16,
+          "regParam": 0.05
+        },
+        {
+          "maxIter": 12,
+          "rank": 16,
+          "regParam": 0.1
+        },
+        {
+          "maxIter": 12,
+          "rank": 16,
+          "regParam": 0.2
+        },
+        {
+          "maxIter": 12,
+          "rank": 32,
+          "regParam": 0.05
+        },
+        {
+          "maxIter": 12,
+          "rank": 32,
+          "regParam": 0.1
+        },
+        {
+          "maxIter": 12,
+          "rank": 32,
+          "regParam": 0.2
+        }
+      ],
+      "partition": "validation",
+      "report": [
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.000333,
+          "rank": 8,
+          "recall_at_10": 0.000183,
+          "regParam": 0.05,
+          "seconds": 43.9
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.00057,
+          "rank": 8,
+          "recall_at_10": 0.000432,
+          "regParam": 0.1,
+          "seconds": 33.7
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.00057,
+          "rank": 8,
+          "recall_at_10": 0.000415,
+          "regParam": 0.2,
+          "seconds": 27.1
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.001473,
+          "rank": 16,
+          "recall_at_10": 0.002578,
+          "regParam": 0.05,
+          "seconds": 27.1
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.001307,
+          "rank": 16,
+          "recall_at_10": 0.002078,
+          "regParam": 0.1,
+          "seconds": 28.2
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.000594,
+          "rank": 16,
+          "recall_at_10": 0.000454,
+          "regParam": 0.2,
+          "seconds": 27.0
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.005393,
+          "rank": 32,
+          "recall_at_10": 0.01134,
+          "regParam": 0.05,
+          "seconds": 28.8
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.002257,
+          "rank": 32,
+          "recall_at_10": 0.004605,
+          "regParam": 0.1,
+          "seconds": 29.1
+        },
+        {
+          "maxIter": 12,
+          "precision_at_10": 0.000594,
+          "rank": 32,
+          "recall_at_10": 0.000454,
+          "regParam": 0.2,
+          "seconds": 29.3
+        }
+      ],
+      "selected_rank": 32,
+      "selected_regParam": 0.05,
+      "selected_support_floor": 500,
+      "selection": "macro Precision@10, tie-break Recall@10, then smaller regParam/rank",
+      "support_floor_grid": [
+        0,
+        100,
+        200,
+        300,
+        500
+      ],
+      "support_floor_report": [
+        {
+          "candidates": 8459,
+          "maxIter": 12,
+          "precision_at_10": 0.005393,
+          "recall_at_10": 0.01134,
+          "support_floor": 0
+        },
+        {
+          "candidates": 1418,
+          "maxIter": 12,
+          "precision_at_10": 0.026895,
+          "recall_at_10": 0.041904,
+          "support_floor": 100
+        },
+        {
+          "candidates": 739,
+          "maxIter": 12,
+          "precision_at_10": 0.033737,
+          "recall_at_10": 0.053042,
+          "support_floor": 200
+        },
+        {
+          "candidates": 412,
+          "maxIter": 12,
+          "precision_at_10": 0.037325,
+          "recall_at_10": 0.059135,
+          "support_floor": 300
+        },
+        {
+          "candidates": 193,
+          "maxIter": 12,
+          "precision_at_10": 0.041601,
+          "recall_at_10": 0.068053,
+          "support_floor": 500
+        }
+      ]
+    }
+  },
+  "runtime_mode": "evaluation",
+  "schema_version": "student-eight-v3",
+  "split_version": "temporal-v1-cold500-train5-v3",
+  "tool_versions": {
+    "driver_memory": "3g",
+    "generator": "scripts/build_lab3_als.py",
+    "java": "openjdk version \"11.0.16.1\" 2022-08-12 LTS",
+    "pyspark": "3.5.3",
+    "python": "3.11.8",
+    "spark_master": "local[4]"
+  },
+  "training_files": {
+    "evaluation/train.csv": "c07a4c82155b216751129ddf5716717e54bbe2cb772cdf3a44f24e1f3971c342"
+  }
+}

@@ -50,13 +50,14 @@ const strategy = computed(() => {
   const algorithm = result.value?.algorithm
   const sources = result.value?.items[0]?.recall_sources || []
   if (algorithm === 'cold_start') return sources.includes('cold_start_content') ? '冷启动 · 内容画像' : '冷启动 · 正反馈热度'
-  return ({ content: '个性化 · 类型画像', popular: '非个性化 · 正反馈热度', itemcf: '个性化 · 行为共现' } as Record<string, string>)[algorithm || ''] || '推荐策略'
+  return ({ content: '个性化 · 类型画像', popular: '非个性化 · 正反馈热度', itemcf: '个性化 · 行为共现', als: '个性化 · 隐向量内积' } as Record<string, string>)[algorithm || ''] || '推荐策略'
 })
-const cardLabel = computed(() => ({ content: 'CONTENT MATCH', popular: 'POPULARITY', itemcf: 'ITEMCF', cold_start: 'COLD START' } as Record<string, string>)[result.value?.algorithm || ''] || 'RECOMMENDED')
+const cardLabel = computed(() => ({ content: 'CONTENT MATCH', popular: 'POPULARITY', itemcf: 'ITEMCF', als: 'MATRIX FACTOR', cold_start: 'COLD START' } as Record<string, string>)[result.value?.algorithm || ''] || 'RECOMMENDED')
 const scoreLabel = computed(() => {
   const algorithm = result.value?.algorithm
   const sources = result.value?.items[0]?.recall_sources || []
   if (algorithm === 'itemcf') return '推荐分'
+  if (algorithm === 'als') return '预测分'
   if (algorithm === 'content') return '匹配度'
   if (algorithm === 'cold_start' && sources.includes('cold_start_content')) return '匹配度'
   return '热度'
@@ -65,6 +66,7 @@ const emptyText = computed(() => {
   const algorithm = result.value?.algorithm
   if (algorithm === 'content') return '你的历史里还没有 4 分以上的电影，暂时无法生成类型画像。'
   if (algorithm === 'itemcf') return '你的历史里还没有 4 分以上的电影，无法生成 ItemCF 推荐。'
+  if (algorithm === 'als') return '模型里没有你的隐向量，且你的历史不足以折叠出用户向量。'
   return '暂时没有可推荐的新电影。'
 })
 const footnote = computed(() => {
@@ -73,6 +75,7 @@ const footnote = computed(() => {
   if (algorithm === 'content') return '依据类型 TF-IDF 与你评分为 4 分以上的历史计算，已排除看过的电影。'
   if (algorithm === 'popular') return '按全站 4 分以上正反馈人数排序；已排除你评分或收藏过的电影，本身不是个性化结果。'
   if (algorithm === 'itemcf') return '基于物品共现相似度，从你评分为 4 分以上的电影扩展；已排除看过的电影。'
+  if (algorithm === 'als') return 'Spark MLlib ALS 隐向量内积；候选池已按训练支持度下限过滤冷门电影，并排除看过的电影。'
   if (algorithm === 'cold_start' && sources.includes('cold_start_content')) return '检测到你的正反馈，冷启动已从热门榜切换为类型画像。'
   if (algorithm === 'cold_start') return '没有 4 分以上评分时展示全站正反馈热门榜；这不是个性化结果。'
   return `数据版本 ${result.value?.dataset_version || ''}`
@@ -80,6 +83,7 @@ const footnote = computed(() => {
 function formatScore(score: number | null) {
   if (score === null) return '—'
   if (result.value?.algorithm === 'itemcf') return score.toFixed(3)
+  if (result.value?.algorithm === 'als') return score.toFixed(3)
   return `${(score * 100).toFixed(1)}%`
 }
 </script>

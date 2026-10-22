@@ -53,7 +53,20 @@ ibdata*
 !/models/business/itemcf-v1/**
 !/models/business/cold-start-v1/
 !/models/business/cold-start-v1/**
-/models/evaluation/
+!/models/business/als-v1/
+!/models/business/als-v1/**
+# Lab 3 evaluation-side artifacts live here; they are part of the submission.
+/models/evaluation/*
+!/models/evaluation/content-v1/
+!/models/evaluation/content-v1/**
+!/models/evaluation/popular-v1/
+!/models/evaluation/popular-v1/**
+!/models/evaluation/itemcf-v1/
+!/models/evaluation/itemcf-v1/**
+!/models/evaluation/cold-start-v1/
+!/models/evaluation/cold-start-v1/**
+!/models/evaluation/als-v1/
+!/models/evaluation/als-v1/**
 # Teacher material never belongs in a student repository.
 /teacher/
 /teacher_reference/

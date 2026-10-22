@@ -21,18 +21,16 @@ MIN_POSITIVE_SUPPORT = 20
 MAX_RECOMMENDATIONS = 10
 
 
-@lru_cache(maxsize=4)
-def _load_ranking(path: str) -> tuple[dict, ...]:
+@lru_cache(maxsize=8)
+def _load_ranking(path: str) -> tuple[str, tuple[dict, ...]]:
     artifact = json.loads(Path(path).read_text(encoding="utf-8"))
-    if artifact.get("model_version") != MODEL_VERSION:
-        return ()
-    return tuple(artifact.get("items", []))
+    return str(artifact.get("model_version") or MODEL_VERSION), tuple(artifact.get("items", []))
 
 
-def _empty(request: RecommendationRequest) -> RecommendationResult:
+def _empty(request: RecommendationRequest, version: str = MODEL_VERSION) -> RecommendationResult:
     return RecommendationResult(
         algorithm=ALGORITHM,
-        model_version=MODEL_VERSION,
+        model_version=version,
         dataset_version=request.dataset_version,
         split_version=request.split_version,
         runtime_mode=request.runtime_mode,
@@ -44,21 +42,24 @@ def _empty(request: RecommendationRequest) -> RecommendationResult:
 class PopularProvider:
     """Non-personalised positive-support popularity with per-user filtering."""
 
-    def __init__(self, model_manifest_path: str | Path, history_reader=None):
+    def __init__(self, model_manifest_path: str | Path, history_reader=None,
+                 model_version: str | None = None):
         self.model_manifest_path = Path(model_manifest_path)
         self._artifact_path = self.model_manifest_path.with_name("popular.json")
         self._ranking: tuple[dict, ...] | None = None
         self._history_reader = history_reader
+        self._model_version = model_version or MODEL_VERSION
 
     def _get_ranking(self) -> tuple[dict, ...]:
         if self._ranking is None:
-            self._ranking = _load_ranking(str(self._artifact_path))
+            version, ranking = _load_ranking(str(self._artifact_path))
+            self._ranking = ranking if version == self._model_version else ()
         return self._ranking
 
     def recommend(self, request: RecommendationRequest) -> RecommendationResult:
         ranking = self._get_ranking()
         if not ranking:
-            return _empty(request)
+            return _empty(request, self._model_version)
         reader = self._history_reader
         if reader is None:
             from recommender.business import read_history
@@ -67,11 +68,15 @@ class PopularProvider:
         seen = {feedback.movie_id for feedback in history.ratings} | set(history.favorite_movie_ids)
 
         limit = min(request.limit, MAX_RECOMMENDATIONS)
+        # The published contract orders equal scores by movie_id ascending, so
+        # the displayed score is the primary key and the numeric id breaks ties.
+        # The artifact keeps mean_rating as a diagnostic column only.
+        ranked = sorted(
+            (row for row in ranking if int(row.get("positive_support", 0)) >= MIN_POSITIVE_SUPPORT),
+            key=lambda row: (-float(row["score"]), int(row["movie_id"])),
+        )
         items: list[RecommendationItem] = []
-        for row in ranking:
-            support = int(row.get("positive_support", 0))
-            if support < MIN_POSITIVE_SUPPORT:
-                break
+        for row in ranked:
             movie_id = str(row["movie_id"])
             if movie_id in seen:
                 continue
@@ -80,7 +85,7 @@ class PopularProvider:
                 movie_id=movie_id,
                 rank=rank,
                 algorithm=ALGORITHM,
-                model_version=MODEL_VERSION,
+                model_version=self._model_version,
                 score=float(row["score"]),
                 recall_sources=[RECALL_SOURCE],
                 recall_ranks={RECALL_SOURCE: rank},
@@ -89,7 +94,7 @@ class PopularProvider:
                 break
         return RecommendationResult(
             algorithm=ALGORITHM,
-            model_version=MODEL_VERSION,
+            model_version=self._model_version,
             dataset_version=request.dataset_version,
             split_version=request.split_version,
             runtime_mode=request.runtime_mode,

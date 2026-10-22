@@ -12,3 +12,9 @@
 *.md text eol=lf
 *.json text eol=lf
 Dockerfile text eol=lf
+
+# 模型工件以 SHA-256 记录在清单里，必须逐字节保留：Git 的换行转换会改变摘要，
+# 所以这两个目录（含 manifest.json）按二进制提交，不做任何 eol 转换。
+# 这两条必须放在最后：.gitattributes 以最后一条匹配规则为准。
+/models/business/** -text
+/models/evaluation/** -text
