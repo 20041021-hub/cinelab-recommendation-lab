@@ -161,7 +161,45 @@ curl.exe -s "http://127.0.0.1:8080/api/v1/demo/history-users/14/recommendations/
 - ItemCF 看“哪些电影被同一批人正反馈过”。`Office Space` 与 `ml:14` 看过的喜剧共现更强，所以排在第一；`The Princess Bride`、`American Beauty` 类型并不完全是纯喜剧，却因行为共现进入榜单。
 - 这正是内容相似与行为共现的差异：前者可解释、冷启动友好，后者更贴近群体行为，但需要足够的交互数据，也会受热门度影响。
 
-## 8. 复现与边界
+## 8. 课堂验收记录（2026-10-22）
+
+按任务要求重新运行三种算法，并用全新注册账号验证零行为冷启动。
+
+### 8.1 Popular
+
+`ml:14` 和 `ml:55` 均返回同一组非个性化 Top-10：`318, 296, 356, 2571, 593, 2959, 260, 527, 4993, 50`。工件中每部电影同时记录 `all_support`（历史评分数）、`mean_rating`（平均分）和 `positive_support`（4 分以上人数）；排序先看正反馈人数，再以平均分和 ID 稳定排序。例如 `318` 的 `all_support=2577`、`mean_rating=4.425883`、`positive_support=2234`。
+
+![Popular ml14](images/lab2-popular-ml14.png)
+
+### 8.2 Cold Start
+
+新注册账号 `lab2fresh1022b`（`app:9`），未评分、未收藏：
+
+- `/me/ratings` 与 `/me/favorites` 的 `total` 均为 `0`；
+- `/me/recommendations/cold_start?limit=10` 返回 10 部，来源为 `cold_start_popular`；
+- 页面标签为“冷启动 · 正反馈热度”，底部明确说明这是非个性化热门榜。
+
+![冷启动账号零评分](images/lab2-coldstart-zero.png)
+
+![冷启动 app9](images/lab2-coldstart-app9.png)
+
+### 8.3 ItemCF
+
+`ml:14` 的 Top-10：`2502, 1079, 3039, 3552, 3481, 1197, 2797, 2791, 1307, 2858`，前 3 部分数为 `1.771 / 1.637 / 1.504`。
+
+`ml:55` 的 Top-10：`2000, 2194, 1610, 1370, 457, 1617, 1552, 1674, 1240, 1307`，前 3 部分数为 `2.509 / 2.341 / 2.292`。
+
+两组结果只有 `1307` 一部重合，其余 9 部及排序均不同；两者与各自历史评分的交集均为 0。`ml:14` 的结果偏喜剧/轻松，`ml:55` 的结果偏动作/犯罪/惊悚，说明 ItemCF 确实根据各自历史行为形成了个性化结果。
+
+![ItemCF ml14](images/lab2-itemcf-ml14.png)
+
+![ItemCF ml55](images/lab2-itemcf-ml55.png)
+
+### 8.4 系统集成
+
+推荐实验室的“推荐算法”下拉框可在 `content`、`popular`、`cold_start`、`itemcf` 之间切换；`source=ml` 可选历史用户，`source=app` 使用当前登录账号；四种算法均返回 `ready` 和真实 Top-10。截图中的左侧设置区同时显示用户来源、用户 ID、算法名称，右侧显示模型版本和推荐卡片，满足“切换算法、选择用户、展示真实结果”的集成要求。
+
+## 9. 复现与边界
 
 ```powershell
 # 重新生成三个工件（需要 numpy/scipy）
