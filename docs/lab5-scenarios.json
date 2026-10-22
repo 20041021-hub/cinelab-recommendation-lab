@@ -1,0 +1,543 @@
+{
+  "bad_input": {
+    "cases": [
+      {
+        "case": "电影不存在",
+        "code": "MOVIE_NOT_FOUND",
+        "message": "电影不存在",
+        "path": "/api/v1/me/ratings/999999",
+        "status": 404
+      },
+      {
+        "case": "评分不是半星",
+        "code": "VALIDATION_ERROR",
+        "message": "请求参数不合法",
+        "path": "/api/v1/me/ratings/1",
+        "status": 422
+      },
+      {
+        "case": "评分超范围",
+        "code": "VALIDATION_ERROR",
+        "message": "请求参数不合法",
+        "path": "/api/v1/me/ratings/1",
+        "status": 422
+      },
+      {
+        "case": "收藏不存在的电影",
+        "code": "MOVIE_NOT_FOUND",
+        "message": "电影不存在",
+        "path": "/api/v1/me/favorites/999999",
+        "status": 404
+      }
+    ],
+    "checks": {
+      "all_rejected": true,
+      "no_phantom_event": true
+    },
+    "passed": true,
+    "producer_after": {
+      "bootstrap": "kafka:9092",
+      "enabled": true,
+      "failed": 0,
+      "last_error": null,
+      "last_sent_at": "2026-10-22T07:04:03.046Z",
+      "last_skipped_reason": null,
+      "sent": 12,
+      "skipped": 0,
+      "state": "connected",
+      "timeout_seconds": 2.0,
+      "topic": "cinelab.behavior.business"
+    },
+    "producer_before": {
+      "bootstrap": "kafka:9092",
+      "enabled": true,
+      "failed": 0,
+      "last_error": null,
+      "last_sent_at": "2026-10-22T07:04:03.046Z",
+      "last_skipped_reason": null,
+      "sent": 12,
+      "skipped": 0,
+      "state": "connected",
+      "timeout_seconds": 2.0,
+      "topic": "cinelab.behavior.business"
+    }
+  },
+  "base_url": "http://127.0.0.1:8080",
+  "empty": {
+    "account": {
+      "account": {
+        "account": {
+          "account_id": "32",
+          "login_name": "lab5demoempty1022150402",
+          "subject_key": "app:32"
+        },
+        "csrf_token": "<redacted>"
+      },
+      "action": "register+login",
+      "status": 200
+    },
+    "checks": {
+      "fusion_reports_reason": true,
+      "no_boost_on_items": true,
+      "no_fabricated_interest": true
+    },
+    "fusion": {
+      "interest": {
+        "age_seconds": null,
+        "alpha": null,
+        "enabled": false,
+        "events": null,
+        "half_life_minutes": null,
+        "reason": "短期兴趣状态未就绪（消费端尚未写出该账号的兴趣）",
+        "requested": true,
+        "rule": "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重",
+        "source": "kafka:cinelab.behavior.business",
+        "stale": false,
+        "state_version": null,
+        "top_genres": [],
+        "updated_at": null
+      },
+      "items": 0,
+      "status": 200
+    },
+    "interest": {
+      "consumer": {
+        "alpha": 0.5,
+        "enabled": true,
+        "events_applied": 12,
+        "events_path": "/app/lab5-state/events.jsonl",
+        "generated_at": "2026-10-22T07:04:03.563Z",
+        "group": "lab5-short-term-interest",
+        "half_life_minutes": 30.0,
+        "max_age_seconds": 900.0,
+        "offsets": {
+          "cinelab.behavior.business:1": 4,
+          "cinelab.behavior.business:2": 8
+        },
+        "state_available": true,
+        "state_path": "/app/lab5-state/interest.json",
+        "state_version": 12,
+        "topic": "cinelab.behavior.business"
+      },
+      "events": [],
+      "interest": null,
+      "producer": {
+        "bootstrap": "kafka:9092",
+        "enabled": true,
+        "failed": 0,
+        "last_error": null,
+        "last_sent_at": "2026-10-22T07:04:03.046Z",
+        "last_skipped_reason": null,
+        "sent": 12,
+        "skipped": 0,
+        "state": "connected",
+        "timeout_seconds": 2.0,
+        "topic": "cinelab.behavior.business"
+      },
+      "reason": "消费端还没有写出本账号的短期兴趣（先评分或收藏，再运行消费端）",
+      "subject_key": "app:32"
+    },
+    "interest_status_code": 200,
+    "passed": true
+  },
+  "generated_at": "2026-10-22T07:04:02.708Z",
+  "mode": "full",
+  "normal": {
+    "account": {
+      "account": {
+        "account": {
+          "account_id": "31",
+          "login_name": "lab5demo1022150402",
+          "subject_key": "app:31"
+        },
+        "csrf_token": "<redacted>"
+      },
+      "action": "register+login",
+      "status": 200
+    },
+    "boosted_items": {
+      "1196": 1.5,
+      "1198": 1.5,
+      "1270": 1.5,
+      "260": 1.5,
+      "3114": 1.5,
+      "356": 1.230769,
+      "364": 1.5,
+      "4886": 1.5,
+      "595": 1.5
+    },
+    "checks": {
+      "events_recorded": true,
+      "horror_downweighted": true,
+      "interest_block_enabled": true,
+      "top_genre_is_animation": true
+    },
+    "consumer": {
+      "applied": 0,
+      "command": "D:\\Python311\\python.exe D:\\Personal\\Desktop\\推荐系统\\CineLab-Student-Windows-1.3.0-rc1\\scripts\\run_behavior_consumer.py --max-messages 24 --idle-timeout 4.0 --half-life-minutes 30.0",
+      "consumer_summary": {
+        "consumed": 4,
+        "state_path": "D:\\Personal\\Desktop\\推荐系统\\CineLab-Student-Windows-1.3.0-rc1\\reports\\lab5\\state\\interest.json",
+        "state_version": 12,
+        "status": "consumer_stopped",
+        "subjects": [
+          "app:25",
+          "app:28",
+          "app:31"
+        ]
+      },
+      "exit_code": 0,
+      "last_applied": null,
+      "stderr_tail": []
+    },
+    "fusion_with_interest": {
+      "interest": {
+        "age_seconds": 5.2,
+        "alpha": 0.5,
+        "enabled": true,
+        "events": 4,
+        "half_life_minutes": 30.0,
+        "reason": null,
+        "requested": true,
+        "rule": "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重",
+        "source": "kafka:cinelab.behavior.business",
+        "stale": false,
+        "state_version": 12,
+        "top_genres": [
+          {
+            "genre": "Adventure",
+            "weight": 3.243487
+          },
+          {
+            "genre": "Animation",
+            "weight": 3.243487
+          },
+          {
+            "genre": "Children",
+            "weight": 3.243487
+          },
+          {
+            "genre": "Fantasy",
+            "weight": 2.495
+          },
+          {
+            "genre": "Comedy",
+            "weight": 1.496992
+          }
+        ],
+        "updated_at": "2026-10-22T07:04:03.046Z"
+      },
+      "ranking": [
+        "3114",
+        "364",
+        "595",
+        "260",
+        "1270",
+        "4886",
+        "1198",
+        "1196",
+        "356",
+        "318"
+      ],
+      "status": 200
+    },
+    "fusion_without_interest": {
+      "interest": {
+        "age_seconds": null,
+        "alpha": null,
+        "enabled": false,
+        "events": null,
+        "half_life_minutes": null,
+        "reason": "未启用（interest=0）",
+        "requested": false,
+        "rule": "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重",
+        "source": "kafka:cinelab.behavior.business",
+        "stale": false,
+        "state_version": null,
+        "top_genres": [],
+        "updated_at": null
+      },
+      "ranking": [
+        "3114",
+        "364",
+        "595",
+        "260",
+        "1270",
+        "356",
+        "4886",
+        "1198",
+        "1196",
+        "318"
+      ],
+      "status": 200
+    },
+    "interest": {
+      "consumer": {
+        "alpha": 0.5,
+        "enabled": true,
+        "events_applied": 12,
+        "events_path": "/app/lab5-state/events.jsonl",
+        "generated_at": "2026-10-22T07:04:03.563Z",
+        "group": "lab5-short-term-interest",
+        "half_life_minutes": 30.0,
+        "max_age_seconds": 900.0,
+        "offsets": {
+          "cinelab.behavior.business:1": 4,
+          "cinelab.behavior.business:2": 8
+        },
+        "state_available": true,
+        "state_path": "/app/lab5-state/interest.json",
+        "state_version": 12,
+        "topic": "cinelab.behavior.business"
+      },
+      "events": [
+        {
+          "account_id": "31",
+          "consumed_at": "2026-10-22T07:04:03.560Z",
+          "effect": {
+            "decay_factor": 1.0,
+            "genres": [
+              "Adventure",
+              "Animation",
+              "Children",
+              "Comedy",
+              "Fantasy"
+            ],
+            "increment": 1.0,
+            "subject_key": "app:31"
+          },
+          "event_id": "a9d8b06b928944928b5fca9b26bf0530",
+          "genres": "Adventure|Animation|Children|Comedy|Fantasy",
+          "movie_id": "1",
+          "occurred_at": "2026-10-22T07:04:02.955Z",
+          "offset": 4,
+          "partition": 2,
+          "positive": true,
+          "producer": "backend/app/activity.py",
+          "rating": "5.0",
+          "runtime_mode": "business",
+          "subject_key": "app:31",
+          "topic": "cinelab.behavior.business",
+          "type": "rating"
+        },
+        {
+          "account_id": "31",
+          "consumed_at": "2026-10-22T07:04:03.561Z",
+          "effect": {
+            "decay_factor": 0.999992,
+            "genres": [
+              "Adventure",
+              "Animation",
+              "Children"
+            ],
+            "increment": 0.75,
+            "subject_key": "app:31"
+          },
+          "event_id": "3acd907e31a8451f9b71a1fd8774664f",
+          "genres": "Adventure|Animation|Children",
+          "movie_id": "13",
+          "occurred_at": "2026-10-22T07:04:02.976Z",
+          "offset": 5,
+          "partition": 2,
+          "positive": true,
+          "producer": "backend/app/activity.py",
+          "rating": "4.5",
+          "runtime_mode": "business",
+          "subject_key": "app:31",
+          "topic": "cinelab.behavior.business",
+          "type": "rating"
+        },
+        {
+          "account_id": "31",
+          "consumed_at": "2026-10-22T07:04:03.562Z",
+          "effect": {
+            "decay_factor": 0.999985,
+            "genres": [
+              "Comedy",
+              "Horror"
+            ],
+            "increment": -1.0,
+            "subject_key": "app:31"
+          },
+          "event_id": "2b71a3c705c44b3f99cc9bdd8550531a",
+          "genres": "Comedy|Horror",
+          "movie_id": "12",
+          "occurred_at": "2026-10-22T07:04:03.016Z",
+          "offset": 6,
+          "partition": 2,
+          "positive": false,
+          "producer": "backend/app/activity.py",
+          "rating": "1.0",
+          "runtime_mode": "business",
+          "subject_key": "app:31",
+          "topic": "cinelab.behavior.business",
+          "type": "rating"
+        },
+        {
+          "account_id": "31",
+          "consumed_at": "2026-10-22T07:04:03.563Z",
+          "effect": {
+            "decay_factor": 0.999988,
+            "genres": [
+              "Adventure",
+              "Animation",
+              "Children",
+              "Comedy",
+              "Fantasy"
+            ],
+            "increment": 1.5,
+            "subject_key": "app:31"
+          },
+          "event_id": "5ba14f3e2ad74b3db6efac6a861d6115",
+          "genres": "Adventure|Animation|Children|Comedy|Fantasy",
+          "movie_id": "1",
+          "occurred_at": "2026-10-22T07:04:03.046Z",
+          "offset": 7,
+          "partition": 2,
+          "producer": "backend/app/activity.py",
+          "runtime_mode": "business",
+          "subject_key": "app:31",
+          "topic": "cinelab.behavior.business",
+          "type": "favorite"
+        }
+      ],
+      "interest": {
+        "age_seconds": 4.6,
+        "counts": {
+          "favorite": 1,
+          "rating": 3
+        },
+        "events": 4,
+        "genres": {
+          "Adventure": 3.244211,
+          "Animation": 3.244211,
+          "Children": 3.244211,
+          "Comedy": 1.497326,
+          "Fantasy": 2.495556,
+          "Horror": -0.998227
+        },
+        "group": "lab5-short-term-interest",
+        "half_life_minutes": 30.0,
+        "last_event_at": "2026-10-22T07:04:03.046Z",
+        "max_age_seconds": 900.0,
+        "negative_movies": [
+          "12"
+        ],
+        "positive_movies": [
+          "1",
+          "13"
+        ],
+        "stale": false,
+        "state_version": 12,
+        "subject_key": "app:31",
+        "top_genres": [
+          {
+            "genre": "Adventure",
+            "weight": 3.244211
+          },
+          {
+            "genre": "Animation",
+            "weight": 3.244211
+          },
+          {
+            "genre": "Children",
+            "weight": 3.244211
+          },
+          {
+            "genre": "Fantasy",
+            "weight": 2.495556
+          },
+          {
+            "genre": "Comedy",
+            "weight": 1.497326
+          }
+        ],
+        "topic": "cinelab.behavior.business",
+        "updated_at": "2026-10-22T07:04:03.046Z"
+      },
+      "producer": {
+        "bootstrap": "kafka:9092",
+        "enabled": true,
+        "failed": 0,
+        "last_error": null,
+        "last_sent_at": "2026-10-22T07:04:03.046Z",
+        "last_skipped_reason": null,
+        "sent": 12,
+        "skipped": 0,
+        "state": "connected",
+        "timeout_seconds": 2.0,
+        "topic": "cinelab.behavior.business"
+      },
+      "reason": null,
+      "subject_key": "app:31"
+    },
+    "interest_status_code": 200,
+    "passed": true,
+    "producer_after_writes": {
+      "bootstrap": "kafka:9092",
+      "enabled": true,
+      "failed": 0,
+      "last_error": null,
+      "last_sent_at": "2026-10-22T07:04:03.046Z",
+      "last_skipped_reason": null,
+      "sent": 12,
+      "skipped": 0,
+      "state": "connected",
+      "timeout_seconds": 2.0,
+      "topic": "cinelab.behavior.business"
+    },
+    "ranking_changed": true,
+    "writes": [
+      {
+        "kind": "rating",
+        "movie_id": "1",
+        "rating": "5.0",
+        "response": {
+          "created_at": "2026-10-22T07:04:02.946092Z",
+          "movie_id": "1",
+          "rating": "5.0",
+          "subject_key": "app:31",
+          "updated_at": "2026-10-22T07:04:02.946092Z"
+        },
+        "status": 200
+      },
+      {
+        "kind": "rating",
+        "movie_id": "13",
+        "rating": "4.5",
+        "response": {
+          "created_at": "2026-10-22T07:04:02.964989Z",
+          "movie_id": "13",
+          "rating": "4.5",
+          "subject_key": "app:31",
+          "updated_at": "2026-10-22T07:04:02.964989Z"
+        },
+        "status": 200
+      },
+      {
+        "kind": "rating",
+        "movie_id": "12",
+        "rating": "1.0",
+        "response": {
+          "created_at": "2026-10-22T07:04:03.005871Z",
+          "movie_id": "12",
+          "rating": "1.0",
+          "subject_key": "app:31",
+          "updated_at": "2026-10-22T07:04:03.005871Z"
+        },
+        "status": 200
+      },
+      {
+        "kind": "favorite",
+        "movie_id": "1",
+        "response": {
+          "created_at": "2026-10-22T07:04:03.037102Z",
+          "favorited": true,
+          "movie_id": "1"
+        },
+        "status": 200
+      }
+    ]
+  },
+  "passed": true
+}

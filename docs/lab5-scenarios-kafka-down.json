@@ -1,0 +1,81 @@
+{
+  "base_url": "http://127.0.0.1:8080",
+  "generated_at": "2026-10-22T07:04:20.875Z",
+  "kafka_down": {
+    "account": {
+      "account": {
+        "account": {
+          "account_id": "34",
+          "login_name": "lab5demodown1022150420",
+          "subject_key": "app:34"
+        },
+        "csrf_token": "<redacted>"
+      },
+      "action": "register+login",
+      "status": 200
+    },
+    "checks": {
+      "business_not_broken": true,
+      "failure_visible": true,
+      "recommendation_still_works": true
+    },
+    "fusion": {
+      "interest": {
+        "age_seconds": null,
+        "alpha": null,
+        "enabled": false,
+        "events": null,
+        "half_life_minutes": null,
+        "reason": "短期兴趣状态未就绪（消费端尚未写出该账号的兴趣）",
+        "requested": true,
+        "rule": "score' = score × (1 + alpha × match)，match 为该片类型兴趣权重之和 / 最强类型权重",
+        "source": "kafka:cinelab.behavior.business",
+        "stale": false,
+        "state_version": null,
+        "top_genres": [],
+        "updated_at": null
+      },
+      "items": 10,
+      "status": 200
+    },
+    "interest_reason": "消费端还没有写出本账号的短期兴趣（先评分或收藏，再运行消费端）",
+    "interest_status_code": 200,
+    "passed": true,
+    "producer_after": {
+      "bootstrap": "kafka:9092",
+      "enabled": true,
+      "failed": 1,
+      "last_error": "KafkaTimeoutError: KafkaTimeoutError: Timeout after waiting for 2.0 secs.",
+      "last_sent_at": "2026-10-22T07:04:03.046Z",
+      "last_skipped_reason": null,
+      "sent": 12,
+      "skipped": 0,
+      "state": "cooldown",
+      "timeout_seconds": 2.0,
+      "topic": "cinelab.behavior.business"
+    },
+    "producer_before": {
+      "bootstrap": "kafka:9092",
+      "enabled": true,
+      "failed": 0,
+      "last_error": null,
+      "last_sent_at": "2026-10-22T07:04:03.046Z",
+      "last_skipped_reason": null,
+      "sent": 12,
+      "skipped": 0,
+      "state": "connected",
+      "timeout_seconds": 2.0,
+      "topic": "cinelab.behavior.business"
+    },
+    "rating_response": {
+      "created_at": "2026-10-22T07:04:21.080217Z",
+      "movie_id": "1",
+      "rating": "4.5",
+      "subject_key": "app:34",
+      "updated_at": "2026-10-22T07:04:21.080217Z"
+    },
+    "rating_status": 200
+  },
+  "mode": "kafka_down",
+  "passed": true
+}
