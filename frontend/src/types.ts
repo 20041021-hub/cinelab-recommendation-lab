@@ -24,13 +24,38 @@ export interface InterestBlock {
   age_seconds: number | null; stale: boolean; half_life_minutes: number | null
   events: number | null; top_genres: { genre: string; weight: number }[]; rule: string
 }
+export interface AdaptiveSourceStat {
+  algorithm: string; base_weight: number; affinity: number; adaptive_weight: number; candidates: number
+}
+export interface AdaptiveBlock {
+  requested: boolean; enabled: boolean; reason: string | null; beta: number | null
+  state_version: number | null; stale: boolean; rule: string; sources: AdaptiveSourceStat[]
+}
 export interface FusionResult {
   status: string; algorithm: string; model_version: string; method: string; rrf_k: number
   dataset_version: string; split_version: string; runtime_mode: string; subject_key: string
   generated_at: string; requested_limit: number; candidate_depth: number
   pool_size: number; delivered: number; filtered_seen: number; filtered_out_of_catalog: number
   weights: Record<string, number>; sources: FusionSourceStat[]; interest: InterestBlock
+  adaptive: AdaptiveBlock
   items: { movie_id: string; rank: number; algorithm: string; model_version: string; score: number; recall_sources: string[]; recall_ranks: Record<string, number>; interest_match?: number | null; interest_boost?: number | null }[]
+}
+export interface AssistantToolCall {
+  tool: string; arguments: Record<string, unknown> | null; ok: boolean; matched: number
+  error: string | null; evidence?: Record<string, unknown> | null
+}
+export interface AssistantItem {
+  movie_id: string; title: string; original_title: string; genres: string[]; year: number | null
+  poster_path: string | null; source_tool?: string; rank?: number; score?: number | null
+  model_version?: string; similarity?: number; cooccurrence?: number
+  my_rating?: string; kind?: string
+}
+export interface AssistantResult {
+  status: string; subject_key: string; question: string; answer: string
+  provider: string; model: string; rounds: number
+  usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
+  tool_calls: AssistantToolCall[]; items: AssistantItem[]
+  unverified_mentions: string[]; warnings: string[]; guardrails: string[]; generated_at: string
 }
 export interface BehaviorStatus {
   producer: {

@@ -1,0 +1,42 @@
+# 实验六：挑战版扩展（S2 自然语言助手 + 创新点 A 自适应融合权重）在课程 compose 之上的叠加层
+#
+# 用法（与实验五的 Kafka 叠加层一起用，保持同一 project 名）：
+#
+#   cd frontend && npm run build
+#   docker build -f deployment/lab6/Dockerfile.api -t cinelab-local/api:lab6 .
+#   docker build -f deployment/lab6/Dockerfile.web -t cinelab-local/web:lab6 .
+#   docker compose -f compose.yaml -f deployment/lab5/compose.lab5.yaml -f deployment/lab6/compose.lab6.yaml up -d
+#
+# 说明：
+# * S2 的外部模型 Key **不打进镜像**：从 deployment/private/llm-api-key.txt 以只读方式挂进
+#   容器（该目录已被 .gitignore 的 **/private/ 规则忽略，不会进仓库）。
+#   目录挂载而不是单文件挂载，是为了"Key 还没准备好"时也能正常启动（此时接口返回
+#   503 ASSISTANT_UNAVAILABLE，reason=missing_key，而不是伪造结果）。
+# * 想在没有 Key 的情况下跑自动化管道测试，可以临时设 APP_LLM_MODE=stub（响应里
+#   provider="stub"，只用于测试，不作为真实演示）。
+services:
+  api:
+    image: cinelab-local/api:lab6
+    build:
+      context: .
+      dockerfile: deployment/lab6/Dockerfile.api
+    environment:
+      # 外部模型（OpenAI 兼容）：默认 DeepSeek，可用环境变量覆盖
+      APP_LLM_BASE_URL: ${APP_LLM_BASE_URL:-https://api.deepseek.com}
+      APP_LLM_MODEL: ${APP_LLM_MODEL:-deepseek-chat}
+      APP_LLM_KEY_FILE: ${APP_LLM_KEY_FILE:-/app/llm-key/llm-api-key.txt}
+      APP_LLM_TIMEOUT: "30"
+      APP_LLM_MODE: ${CINELAB_LLM_MODE:-live}
+      # 创新点 A：短期兴趣调整融合权重的强度
+      CINELAB_ADAPTIVE_BETA: ${CINELAB_ADAPTIVE_BETA:-0.5}
+    volumes:
+      - type: bind
+        source: ./deployment/private
+        target: /app/llm-key
+        read_only: true
+
+  web:
+    image: cinelab-local/web:lab6
+    build:
+      context: .
+      dockerfile: deployment/lab6/Dockerfile.web

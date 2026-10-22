@@ -72,6 +72,9 @@ const interest = computed(() => result.value?.interest ?? null)
 const interestApplied = computed(() => Boolean(interest.value?.enabled && !interest.value?.stale))
 const interestGenres = computed(() => (interest.value?.top_genres || []).slice(0, 5))
 const boostedCount = computed(() => (result.value?.items || []).filter(item => (item.interest_boost ?? 1) > 1).length)
+const adaptive = computed(() => result.value?.adaptive ?? null)
+const adaptiveApplied = computed(() => Boolean(adaptive.value?.enabled && !adaptive.value?.stale))
+const adaptiveSources = computed(() => adaptive.value?.sources || [])
 function boostLabel(item: FusionResult['items'][number]) {
   const boost = item.interest_boost ?? 1
   if (boost <= 1.0001) return null
@@ -95,6 +98,7 @@ function boostLabel(item: FusionResult['items'][number]) {
             <span class="strategy-pill">候选池 {{ result.pool_size }}</span>
             <span class="strategy-pill">{{ multiSourceCount }} 部多路命中</span>
             <span v-if="interestApplied" class="interest-pill">短期兴趣已生效 · {{ boostedCount }} 部加权</span>
+            <span v-if="adaptiveApplied" class="adaptive-pill">自适应权重已生效 · β={{ adaptive?.beta }}</span>
             <span class="status-pill">{{ result.items.length }} 部推荐</span>
           </div>
         </div>
@@ -111,6 +115,31 @@ function boostLabel(item: FusionResult['items'][number]) {
               <span v-for="row in interestGenres" :key="row.genre" class="source-chip">{{ row.genre }} {{ row.weight.toFixed(3) }}</span>
             </div>
             <p class="fusion-source-note">{{ interest.rule }}；alpha={{ interest.alpha }}，半衰期 {{ interest.half_life_minutes }} 分钟，状态更新于 {{ interest.updated_at }}（{{ interest.age_seconds?.toFixed(0) }} 秒前）。</p>
+          </template>
+        </div>
+        <div v-if="adaptive?.requested" class="fusion-adaptive-panel">
+          <div class="fusion-interest-head">
+            <span class="source-name">创新点 A · 自适应权重</span>
+            <span v-if="adaptiveApplied" class="adaptive-pill">β={{ adaptive.beta }} · 状态版本 {{ adaptive.state_version }}</span>
+            <span v-else class="status-pill">未生效</span>
+          </div>
+          <p v-if="!adaptiveApplied" class="fusion-source-note">原因：{{ adaptive?.reason || '短期兴趣状态不可用' }}；这次仍使用固定权重。</p>
+          <template v-else>
+            <div class="fusion-source-row is-adaptive">
+              <span class="source-name">来源</span>
+              <span class="source-meta">固定权重</span>
+              <span class="source-meta">兴趣匹配度</span>
+              <span class="source-meta">生效权重</span>
+              <span class="source-meta">候选</span>
+            </div>
+            <div v-for="row in adaptiveSources" :key="row.algorithm" class="fusion-source-row">
+              <span class="source-name">{{ row.algorithm }}</span>
+              <span class="source-meta">×{{ row.base_weight }}</span>
+              <span class="source-meta">{{ (row.affinity * 100).toFixed(1) }}%</span>
+              <span class="source-meta is-strong">×{{ row.adaptive_weight }}</span>
+              <span class="source-meta">{{ row.candidates }}</span>
+            </div>
+            <p class="fusion-source-note">{{ adaptive.rule }}：匹配度是该路候选与短期兴趣类型的平均命中强度，越贴合当前兴趣的召回在融合里权重越高。</p>
           </template>
         </div>
         <div class="fusion-sources-panel">
@@ -176,6 +205,10 @@ function boostLabel(item: FusionResult['items'][number]) {
 .fusion-sources { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 7px; }
 .interest-pill { padding: 4px 9px; border: 1px solid #7a6a3f; border-radius: 999px; background: #2a2418; color: #f0dca8; font-size: 10px; line-height: 1.4; white-space: nowrap; }
 .fusion-interest-panel { display: grid; gap: 6px; padding: 12px 20px; border-bottom: 1px dashed var(--border); background: #1a1f16; }
+.adaptive-pill { padding: 4px 9px; border: 1px solid #3f6a7a; border-radius: 999px; background: #16262a; color: #a8e0f0; font-size: 10px; line-height: 1.4; white-space: nowrap; }
+.fusion-adaptive-panel { display: grid; gap: 6px; padding: 12px 20px; border-bottom: 1px dashed var(--border); background: #141f26; }
+.fusion-source-row.is-adaptive { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.source-meta.is-strong { color: #a8e0f0; }
 .fusion-interest-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 11px; }
 .fusion-interest-genres { display: flex; flex-wrap: wrap; gap: 4px; }
 .fusion-boost { margin-top: 3px; color: #d9c184; font-size: 10px; line-height: 1.5; }

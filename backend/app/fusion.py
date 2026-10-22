@@ -40,6 +40,8 @@ class FusionQuery(BaseModel):
     limit: int = Field(default=10, ge=1, le=50)
     # 实验五 S3：1=按短期兴趣重排（默认），0=纯 RRF（对照实验用，便于证明"行为真的改变了推荐"）
     interest: int = Field(default=1, ge=0, le=1)
+    # 实验六创新点 A：1=用短期兴趣自适应调整**各路权重**，0=固定权重（默认 0，保持实验四/五口径不变）
+    adaptive: int = Field(default=0, ge=0, le=1)
 
 
 class FusionItem(BaseModel):
@@ -86,6 +88,33 @@ class FusionSourceStat(BaseModel):
     best_rank: int | None
 
 
+class AdaptiveSourceStat(BaseModel):
+    """创新点 A 的单路证据：这一路的候选与短期兴趣多亲近、权重被放大/缩小了多少。"""
+
+    algorithm: str
+    base_weight: float
+    affinity: float
+    adaptive_weight: float
+    candidates: int
+
+
+class AdaptiveBlock(BaseModel):
+    """创新点 A：短期兴趣自适应融合权重。
+
+    与 ``interest``（重排分数）不同，这里改的是 RRF 的**权重**——按每一路候选整体
+    与短期兴趣的亲近度 w' = w × (1 + beta × affinity) 重新分配话语权。
+    """
+
+    requested: bool
+    enabled: bool
+    reason: str | None = None
+    beta: float | None = None
+    state_version: int | None = None
+    stale: bool = False
+    rule: str = "w' = w × (1 + beta × affinity)，affinity = 该路候选中与短期兴趣匹配度的均值"
+    sources: list[AdaptiveSourceStat] = []
+
+
 class FusionResult(BaseModel):
     status: str = "ready"
     algorithm: str = rrf.FUSION_LABEL
@@ -107,6 +136,7 @@ class FusionResult(BaseModel):
     weights: dict[str, float]
     sources: list[FusionSourceStat]
     interest: InterestBlock
+    adaptive: AdaptiveBlock
     items: list[FusionItem]
 
 
@@ -141,17 +171,65 @@ def fusion_result(kind: str, uid: int, query: FusionQuery, database=None) -> Fus
                            {"algorithm": algorithm.value}) from None
 
     history = read_history(_request(kind, uid, query.limit), database=database)
-    outcome = rrf.fuse(results, weight_map, query.limit, rrf.exclusion_ids(history), _catalog())
 
     # 实验五 S3：真实行为事件推出的短期兴趣，按固定规则重排（无状态/过期时不加分并说明原因）
     subject_key = f"{kind}:{uid}"
     state = interest.snapshot(subject_key) if query.interest else None
+
+    # 实验六创新点 A：用同一份短期兴趣状态调整**各路权重**（w' = w × (1 + beta × affinity)）。
+    # 只有"真的拿到了未过期的状态"才会改权重，否则保持固定权重并说明原因。
+    if not query.adaptive:
+        adaptive_reason = "未启用（adaptive=0）"
+    elif state is None:
+        adaptive_reason = "需要 interest=1 且该账号的短期兴趣状态可用"
+    elif state.get("stale"):
+        adaptive_reason = (
+            f"短期兴趣状态已过期：{float(state.get('age_seconds') or 0):.0f} 秒没有新事件"
+            f"（上限 {state.get('max_age_seconds')} 秒），这次仍用固定权重")
+    else:
+        adaptive_reason = None
+    adaptive_block = AdaptiveBlock(
+        requested=bool(query.adaptive),
+        enabled=False,
+        reason=adaptive_reason,
+        beta=interest.adaptive_beta() if query.adaptive else None,
+        state_version=state.get("state_version") if state else None,
+        stale=bool(state.get("stale")) if state else False,
+    )
+    effective_weights = dict(weight_map)
+    if query.adaptive and state is not None and not adaptive_block.stale:
+        candidate_genres = interest.genres_for(
+            database, [item.movie_id for result in results.values() for item in result.items])
+        affinities, stats = {}, []
+        for algorithm in sources:
+            name = algorithm.value
+            candidate_ids = [item.movie_id for item in results[name].items]
+            # 每一路只看**这一路自己召回的电影**与短期兴趣有多亲近
+            genres_of_source = {movie_id: candidate_genres.get(movie_id, "")
+                                for movie_id in candidate_ids if movie_id in candidate_genres}
+            attraction = interest.source_affinity(genres_of_source, state)
+            affinities[name] = attraction
+            stats.append(AdaptiveSourceStat(algorithm=name, base_weight=weight_map[name],
+                                            affinity=round(attraction, 6), adaptive_weight=weight_map[name],
+                                            candidates=len(candidate_ids)))
+        effective_weights = interest.adaptive_weights(weight_map, affinities)
+        for stat in stats:
+            stat.adaptive_weight = effective_weights[stat.algorithm]
+        adaptive_block.enabled = True
+        adaptive_block.reason = None
+        adaptive_block.sources = stats
+
+    outcome = rrf.fuse(results, effective_weights, query.limit, rrf.exclusion_ids(history), _catalog())
+
     block = InterestBlock(
         requested=bool(query.interest),
         enabled=bool(state),
-        reason=None if state else ("未启用（interest=0）" if not query.interest else
-                                   ("短期兴趣状态未就绪（消费端尚未写出该账号的兴趣）" if interest.wanted()
-                                    else "短期兴趣功能未启用（CINELAB_INTEREST_ENABLED=0）")),
+        reason=None if state and not state.get("stale") else (
+            "未启用（interest=0）" if not query.interest else
+            (f"短期兴趣状态已过期（{float(state.get('age_seconds') or 0):.0f} 秒前更新，上限 {state.get('max_age_seconds')} 秒）"
+             if state else
+             ("短期兴趣状态未就绪（消费端尚未写出该账号的兴趣）" if interest.wanted()
+              else "短期兴趣功能未启用（CINELAB_INTEREST_ENABLED=0）"))),
         alpha=interest.alpha() if state else None,
         state_version=state.get("state_version") if state else None,
         updated_at=state.get("updated_at") if state else None,
@@ -182,9 +260,13 @@ def fusion_result(kind: str, uid: int, query: FusionQuery, database=None) -> Fus
         delivered=outcome.delivered,
         filtered_seen=outcome.filtered_seen,
         filtered_out_of_catalog=outcome.filtered_out_of_catalog,
-        weights=weight_map,
-        sources=[FusionSourceStat(**stat.__dict__) for stat in outcome.stats],
+        weights=effective_weights,
+        sources=[FusionSourceStat(algorithm=stat.algorithm, weight=effective_weights.get(stat.algorithm, stat.weight),
+                                  model_version=stat.model_version, candidate_count=stat.candidate_count,
+                                  contributed=stat.contributed, best_rank=stat.best_rank)
+                 for stat in outcome.stats],
         interest=block,
+        adaptive=adaptive_block,
         items=items,
     )
 
@@ -199,6 +281,9 @@ def fusion_sources():
             "interest_rerank": {"query_param": "interest=1|0", "alpha": interest.alpha(),
                                 "rule": "score' = score × (1 + alpha × match)",
                                 "state_source": "Kafka 事件 → 消费端 → reports/lab5/state/interest.json"},
+            "adaptive_weights": {"query_param": "adaptive=1|0", "beta": interest.adaptive_beta(),
+                                 "rule": "w' = w × (1 + beta × affinity)，affinity = 该路候选匹配度的均值",
+                                 "state_source": "与 interest_rerank 共用同一份短期兴趣状态"},
             "items": rrf.describe_sources(rrf.SOURCE_ORDER)}
 
 

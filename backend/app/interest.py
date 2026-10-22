@@ -59,6 +59,11 @@ def alpha() -> float:
     return _number("CINELAB_INTEREST_ALPHA", 0.5)
 
 
+def adaptive_beta() -> float:
+    """创新点 A：短期兴趣对融合**权重**的影响强度（与 alpha 分开，便于独立调参）。"""
+    return _number("CINELAB_ADAPTIVE_BETA", 0.5)
+
+
 def max_age_seconds() -> float:
     return _number("CINELAB_INTEREST_MAX_AGE", 900.0)
 
@@ -222,3 +227,37 @@ def rerank(items: list[Any], genres: dict[str, str], state: dict[str, Any]) -> l
     for rank, row in enumerate(scored, start=1):
         row["rank"] = rank
     return scored
+
+
+def match_of(movie_id: str, genres: dict[str, str], state: dict[str, Any]) -> float:
+    """单部电影与账号短期兴趣的匹配度（0..1，规则与 rerank 完全一致）。"""
+    weights = {genre: float(weight) for genre, weight in (state.get("genres") or {}).items()}
+    strongest = max([weight for weight in weights.values() if weight > 0] or [0.0])
+    if strongest <= 0:
+        return 0.0
+    matched = sum(weights.get(genre, 0.0) for genre in movie_genres(genres.get(str(movie_id))))
+    return min(1.0, max(0.0, matched / strongest))
+
+
+def source_affinity(candidate_genres: dict[str, str], state: dict[str, Any]) -> float:
+    """创新点 A：某一路候选整体与该账号短期兴趣的亲近度（候选匹配度的均值）。
+
+    用"这一路召回出来的电影有多少命中短期兴趣"来决定它在融合里的权重，
+    而不是只看最终排序：兴趣在 Comdey 上时，召回一堆 Comedy 的那一路应该更被信任。
+    """
+    matches = [match_of(movie_id, candidate_genres, state) for movie_id in candidate_genres]
+    if not matches:
+        return 0.0
+    return sum(matches) / len(matches)
+
+
+def adaptive_weights(base_weights: dict[str, float], affinities: dict[str, float], beta: float | None = None
+                     ) -> dict[str, float]:
+    """创新点 A 的权重规则：w' = w × (1 + beta × affinity)，结果保留 6 位小数。
+
+    affinity 来自**真实消费端状态**（Kafka 事件推导），不是离线标签；没有状态时
+    调用方不应使用本函数（接口会返回 adaptive.enabled=false 并说明原因）。
+    """
+    factor = adaptive_beta() if beta is None else beta
+    return {name: round(weight * (1.0 + factor * affinities.get(name, 0.0)), 6)
+            for name, weight in base_weights.items()}

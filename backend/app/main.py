@@ -18,6 +18,7 @@ from .activity import router as activity_router
 from .experiments import router as experiments_router
 from .fusion import router as fusion_router
 from .behavior_api import router as behavior_router
+from .assistant import router as assistant_router
 
 log = logging.getLogger("course_api")
 
@@ -112,5 +113,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(fusion_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     # 实验五 S3：行为事件与短期兴趣的只读接口（同样属于学生扩展）
     app.include_router(behavior_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
+    # 实验六 S2：自然语言助手（受控工具调用，只读）
+    app.include_router(assistant_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     app.include_router(experiments_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     return app
