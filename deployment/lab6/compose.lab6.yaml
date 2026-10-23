@@ -29,11 +29,18 @@ services:
       APP_LLM_MODE: ${CINELAB_LLM_MODE:-live}
       # 创新点 A：短期兴趣调整融合权重的强度
       CINELAB_ADAPTIVE_BETA: ${CINELAB_ADAPTIVE_BETA:-0.5}
+      # 真实海报缓存（抓取到的海报落在宿主 posters/，仓库不提交图片）
+      CINELAB_POSTER_DIR: /app/posters
+      CINELAB_POSTER_FETCH: ${CINELAB_POSTER_FETCH:-1}
+      CINELAB_POSTER_TIMEOUT: "8"
     volumes:
       - type: bind
         source: ./deployment/private
         target: /app/llm-key
         read_only: true
+      - type: bind
+        source: ./posters
+        target: /app/posters
 
   web:
     image: cinelab-local/web:lab6

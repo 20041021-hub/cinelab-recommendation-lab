@@ -108,7 +108,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(auth_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     app.include_router(catalog_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
-    # 展示层增强：本地生成海报（只读，不写库，不改冻结数据）
+    # 展示层增强：海报（真实剧照缓存优先，取不到回退本地生成；只读，不写库，不改冻结数据）
     app.include_router(posters_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     app.include_router(activity_router, prefix="/api/v1", dependencies=[Depends(ready_dependency)])
     # Fusion is our own extension; register before experiments so "fusion" in

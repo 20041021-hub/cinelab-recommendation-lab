@@ -147,10 +147,10 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
 .compare-toggle { margin-top: 14px; }
 .evaluation-contract { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 12px; line-height: 1.7; }
 .evaluation-contract p { margin: 0; }
-.evaluation-contract code { padding: 1px 5px; border-radius: 4px; background: #101733; color: var(--text); font-size: 11px; }
+.evaluation-contract code { padding: 1px 5px; border-radius: 4px; background: #eef2f9; color: var(--text); font-size: 11px; }
 .evaluation-tables { display: grid; gap: 18px; padding: 18px; }
 .evaluation-block { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.evaluation-block-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); background: #10173366; }
+.evaluation-block-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); background: #131a2e12; }
 .evaluation-block-head h3 { font-size: 15px; }
 .evaluation-block .form-hint { padding: 10px 16px 0; }
 .evaluation-block :deep(.el-table) { margin-top: 6px; }

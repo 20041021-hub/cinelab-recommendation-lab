@@ -125,14 +125,14 @@ function formatScore(score: number | null) {
 
 <style scoped>
 .recommendation-results { padding: 0; }
-.recommendation-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: #10173366; }
+.recommendation-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: #131a2e12; }
 .recommendation-meta strong { display: block; margin-top: 3px; color: var(--text); font-size: 12px; font-weight: 500; overflow-wrap: anywhere; }
 .recommendation-pills { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; }
-.strategy-pill { padding: 4px 9px; border: 1px solid #3a4676; border-radius: 999px; color: #dce6ff; font-size: 10px; line-height: 1.4; white-space: nowrap; }
+.strategy-pill { padding: 4px 9px; border: 1px solid #cbd5e8; border-radius: 999px; color: #39435d; font-size: 10px; line-height: 1.4; white-space: nowrap; }
 .recommendation-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); gap: 10px; margin: 0; padding: 14px; list-style: none; }
 .recommendation-item { min-width: 0; }
-.recommendation-card { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 11px; align-items: center; height: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: linear-gradient(145deg, #1c2544, #161d38); transition: border-color .18s, transform .18s, background .18s; }
-.recommendation-card:hover { border-color: var(--accent); background: linear-gradient(145deg, #27325a, #1a2342); transform: translateY(-2px); }
+.recommendation-card { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 11px; align-items: center; height: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: linear-gradient(145deg, #f2f5fb, #f6f8fc); transition: border-color .18s, transform .18s, background .18s; }
+.recommendation-card:hover { border-color: var(--accent); background: linear-gradient(145deg, #dbe2f2, #f2f5fb); transform: translateY(-2px); }
 .recommendation-poster-wrap { position: relative; min-width: 0; }
 .recommendation-poster-wrap :deep(.movie-poster) { aspect-ratio: 2 / 3; border-radius: 4px; }
 .recommendation-poster-wrap :deep(.poster-placeholder) { gap: 2px; }
@@ -145,7 +145,7 @@ function formatScore(score: number | null) {
 .recommendation-genres { overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
 .recommendation-score { display: flex; align-items: baseline; gap: 7px; margin-top: 5px; padding-top: 5px; border-top: 1px dashed var(--border); color: var(--muted); font-size: 9.5px; }
 .recommendation-score strong { margin-left: auto; color: var(--accent); font-size: 15px; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
-.recommendation-tag { color: #9fb0e0; font-size: 8.5px; letter-spacing: .12em; }
+.recommendation-tag { color: #4b5773; font-size: 8.5px; letter-spacing: .12em; }
 .recommendation-empty { padding: 22px 18px 6px; color: var(--muted); font-size: 13px; line-height: 1.75; }
 .recommendation-footnote { padding: 0 16px 14px; color: var(--muted); font-size: 11px; line-height: 1.65; }
 @media (max-width: 540px) {

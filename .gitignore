@@ -27,6 +27,8 @@ id_ed25519*
 *.log
 *.log.*
 /reports/
+# Real poster images are fetched at runtime into this cache (third-party artwork, not redistributed).
+/posters/
 # Databases, generated models and dependency/build caches.
 **/mysql_data/
 **/docker-data/
