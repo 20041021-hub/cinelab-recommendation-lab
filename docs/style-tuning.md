@@ -46,3 +46,49 @@
 ## 5. 如何回退
 
 样式改动是纯增量：删除 `frontend/src/style.css` 末尾“排版优化”覆盖块，并还原 `AlgorithmPanel.vue` 卡片样式、`ExperimentsView.vue` 的 `order`/栅格规则与两个 `max-height` 属性、`MoviesView.vue`/`ProfileView.vue` 的 `is-dense` 与分页大小即可；也可直接 `git revert` 本次提交。
+
+## 6. 全站海报与配色（第二轮视觉改造）
+
+### 6.1 本地生成海报
+
+课程数据包不含授权海报文件（`movies.poster_path` 全为 NULL，外部图床在本机网络不可达）。因此新增一个**只读**接口：
+
+- `GET /api/v1/movies/{movie_id}/poster.svg`（`backend/app/posters.py`）——按 `movie_id` 哈希确定性地选配色与构图，用真实元数据（片名 / 年份 / 类型）渲染 360×540 的 SVG；带 `ETag` 与 7 天缓存；只读 `movies` 表，不写任何表、不进入推荐代码路径。
+- 图上固定标注 `CINELAB · LOCAL POSTER` 与 `本地生成`，避免被误当成官方授权海报；片名尾部年份在标题区去掉、只保留在元信息行。
+- 前端 `MoviePoster.vue` 新增 `movie-id` 参数：`poster_path` 合法时仍优先用 TMDB 图（本机不可达时自动回退），否则使用本地生成海报；首页、片库、详情、算法推荐、S1 融合、S2 助手六处调用点全部接入。
+
+### 6.2 配色
+
+`frontend/src/theme.css` 从原来的“墨绿 + 金”整体换成“午夜靛蓝 + 薄荷 + 藤紫”：
+
+| 变量 | 旧值 | 新值 |
+| --- | --- | --- |
+| `--bg` | `#121b1b` | `#0b1020` |
+| `--surface` | `#192424` | `#151c33` |
+| `--accent` | `#dfb76c` | `#5eead4` |
+| `--accent-2` | — | `#a78bfa` |
+| `--border` | `#31413e` | `#2c3763` |
+
+Element Plus 主题变量（`--el-color-primary` 及明暗档、表格头/悬停底色、边框与文字色）同步替换；`style.css` 与 6 个组件里 69 处硬编码的旧色值一次性迁移，页面配色不再依赖历史色。
+
+### 6.3 排布微调
+
+- 实验五“行为事件”由 4 列宽表格改为窄栏内的紧凑列表（`#电影ID · 类型 · 加/减分 · 时间`），消除了横向溢出与截断。
+- 冷启动分区表、融合权重对照表的标题补上“N 行 · 表内滚动”，滚动是有意为之而不是排版事故；海报右上角的“我的评分”徽标不再遮挡海报上的片名与年份。
+
+### 6.4 回归与截图
+
+- 集成检查 `python scripts/lab6_integration_check.py`：**31 项，失败 0 项**（含“前端改造在运行中的网页可见”这一项）。
+- `npm run build`（vue-tsc + vite）通过；`cinelab-local/api:lab6`、`cinelab-local/web:lab6` 重建并替换容器，四个容器 healthy。
+
+| 文件 | 内容 |
+| --- | --- |
+| `docs/images/poster-palette-home.png` | 首页：新配色 hero、两列推荐、本地生成海报的片库卡片 |
+| `docs/images/poster-palette-movies.png` | 电影库：15 部/页，每部一张确定性生成的海报 |
+| `docs/images/poster-palette-detail.png` | 详情页：海报 + 元数据 + 评分控件 |
+| `docs/images/poster-palette-experiments.png` | 推荐实验室：融合、行为紧凑列表、助手、评价表 |
+| `docs/images/poster-palette-coldstart.png` | 冷启动页：热门回退与类型画像切换 |
+
+### 6.5 边界
+
+海报是展示层增强：不修改冻结数据、不改变任何接口返回的字段含义、不参与离线评价；关闭它只需让 `MoviePoster.vue` 不再传 `movie-id`（即回退到原来的占位框）。
