@@ -3,7 +3,7 @@
 - 数据版本：`rec-course-v3-train5-1.0.0`，划分：`temporal-v1-cold500-train5-v3`
 - 正反馈阈值 4.0（评分 ≥ 4.0），Top-10；宏平均（无结果的用户保留在分母中）
 - Precision@10 分母恒为 10；Recall@10 分母为该用户候选集内的相关目标数
-- 生成时间：2026-10-22T09:18:50+08:00
+- 生成时间：2026-10-23T14:44:18+08:00
 - 复现命令：`D:\Python311\python.exe scripts\run_lab3_evaluation.py` 然后 `D:\Python311\python.exe scripts\publish_lab3_metrics.py`
 
 ### 验证集 · 调参与方案选择（4,209 位用户）

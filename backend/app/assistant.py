@@ -10,6 +10,9 @@
   记进 ``tool_calls`` 证据里，**不会**用编造的数据兜底；
 * 返回给前端的 ``items`` 只由工具输出构成（去重、上限截断），模型的话术无法
   凭空插入电影；回答文本里出现但工具没返回过的片名会被记成 ``unverified_mentions``；
+* 调用推荐类工具时，工具证据里带上算法名与该算法实验三的离线评价指标（precision_at_10 /
+  recall_at_10，快照见 ``backend/app/lab3_metrics.json``），模型被要求在回答里如实说明，
+  响应里另有结构化的 ``methods`` 字段，前端不依赖模型措辞也能展示"算法 + 准确率"；
 * 外部模型不可用时返回 503 ``ASSISTANT_UNAVAILABLE``，并给出原因（缺 Key/超时/
   网络/HTTP 错误），绝不静默降级成"假推荐"。
 
@@ -49,6 +52,21 @@ MAX_LIMIT = 10
 ITEM_LIMIT = 20
 EARLIEST_YEAR, LATEST_YEAR = 1888, 2030
 TOOL_NAMES = ("search_movies", "similar_movies", "recommend_movies", "my_history")
+# 卡片排序：用户问的通常是"推荐"，所以推荐结果优先；同类按调用时间倒序（越近的越相关），
+# my_history 只作为解释材料排在最后。
+TOOL_PRIORITY = {"recommend_movies": 0, "similar_movies": 1, "search_movies": 2, "my_history": 3}
+
+# 实验三的离线评价指标（只读快照，由 scripts/publish_lab3_metrics.py 生成）。
+# 它是"数字"不是"模型"：API 不会因此加载任何 evaluation 工件或评价 Provider。
+METRICS_PATH = Path(__file__).resolve().parent / "lab3_metrics.json"
+ALGORITHM_LABELS = {
+    "popular": "热门榜 Popular",
+    "content": "内容推荐 Content",
+    "itemcf": "ItemCF 协同过滤",
+    "als": "Spark ALS 矩阵分解",
+    "cold_start": "冷启动 Cold Start",
+}
+METRICS_PROTOCOL = "冻结验证集 · 4,209 位固定用户 · 正反馈≥4.0 · Top-10 · 宏平均"
 
 SYSTEM_PROMPT = """你是课程系统"CineLab"里的电影推荐助手。
 规则（必须遵守）：
@@ -57,6 +75,7 @@ SYSTEM_PROMPT = """你是课程系统"CineLab"里的电影推荐助手。
 3. 工具返回空结果时，直接说明"没有找到符合条件的电影"，不要用别的电影凑数。
 4. 不要在回答里编造工具没有返回过的电影或年份；不要输出代码块或 JSON。
 5. 当前用户的评分/收藏只能通过 my_history 工具查看。
+6. 只要这次用了 recommend_movies 或 similar_movies，回答里就要写清楚①用了哪个算法（用工具证据里的 algorithm_label）、②它在这批固定用户上的准确率（工具证据里 offline_metrics 的 precision_at_10 与 recall_at_10，按百分比说），并注明这是固定验证集上的算法级离线评价，不是对本次提问的准确率承诺。
 """
 
 TOOLS: list[dict[str, Any]] = [
@@ -99,6 +118,33 @@ def _neighbours() -> dict[str, Any]:
     path = ROOT / "models/business/itemcf-v1/item-similarities.json"
     artifact = json.loads(path.read_text(encoding="utf-8"))
     return artifact.get("items", {})
+
+
+@lru_cache(maxsize=1)
+def _offline_metrics() -> dict[str, dict[str, Any]]:
+    """实验三离线评价（验证集）的只读快照，按算法索引。
+
+    文件缺失时返回空字典：指标只用于"说明清楚"，绝不能因为展示数据而让问答失败。
+    """
+    if not METRICS_PATH.is_file():
+        return {}
+    payload = json.loads(METRICS_PATH.read_text(encoding="utf-8"))
+    return {row["algorithm"]: row for row in payload.get("validation", []) if row.get("algorithm")}
+
+
+def _metrics_for(algorithm: str) -> dict[str, Any] | None:
+    row = _offline_metrics().get(algorithm)
+    if not row:
+        return None
+    return {
+        "partition": row.get("partition", "validation"),
+        "users": row.get("users"),
+        "empty_users": row.get("empty", 0),
+        "precision_at_10": row.get("precision_at_10"),
+        "recall_at_10": row.get("recall_at_10"),
+        "model_version": row.get("model_version"),
+        "protocol": METRICS_PROTOCOL,
+    }
 
 
 def _movie_rows(conn, movie_ids: list[str]) -> dict[str, dict[str, Any]]:
@@ -180,8 +226,12 @@ def _tool_similar_movies(conn, subject, arguments: dict[str, Any]) -> tuple[list
     for row in entry.get("neighbors", [])[:limit]:
         detail = details.get(str(row[0]))
         if detail:
-            items.append({**detail, "similarity": round(float(row[1]), 6), "cooccurrence": int(row[2])})
-    evidence = {"source": "models/business/itemcf-v1（真实共现模型）", "movie_id": movie_id, "matched": len(items)}
+            items.append({**detail, "algorithm": "itemcf", "similarity": round(float(row[1]), 6),
+                          "cooccurrence": int(row[2])})
+    evidence = {"source": "models/business/itemcf-v1（真实共现模型）",
+                "algorithm": "itemcf", "algorithm_label": ALGORITHM_LABELS["itemcf"],
+                "model_version": "itemcf-cooccurrence-v1", "offline_metrics": _metrics_for("itemcf"),
+                "movie_id": movie_id, "matched": len(items)}
     return items, evidence
 
 
@@ -207,9 +257,12 @@ def _tool_recommend_movies(conn, subject, arguments: dict[str, Any]) -> tuple[li
     for item in result.items:
         detail = details.get(item.movie_id)
         if detail:
-            items.append({**detail, "rank": item.rank, "score": item.score, "model_version": result.model_version})
+            items.append({**detail, "algorithm": algorithm, "rank": item.rank, "score": item.score,
+                          "model_version": result.model_version})
     evidence = {"source": f"recommender.contracts.{algorithm}（已注册 Provider）",
-                "model_version": result.model_version, "matched": len(items)}
+                "algorithm": algorithm, "algorithm_label": ALGORITHM_LABELS.get(algorithm, algorithm),
+                "model_version": result.model_version, "offline_metrics": _metrics_for(algorithm),
+                "matched": len(items)}
     return items, evidence
 
 
@@ -354,8 +407,11 @@ def answer_question(subject: tuple[str, int], question: str, limit: int, databas
                         "role": "tool",
                         "tool_call_id": str(call.get("id") or ""),
                         "name": record["tool"],
+                        # evidence 里带着"用了哪个算法、离线准确率多少"，模型才可能
+                        # 在回答里如实说明（规则 6），而不是自己编一个准确率。
                         "content": json.dumps({"ok": record["ok"], "matched": record["matched"],
-                                               "error": record["error"], "items": record.get("items", [])},
+                                               "error": record["error"], "evidence": record.get("evidence"),
+                                               "items": record.get("items", [])},
                                               ensure_ascii=False),
                     })
         except LLMUnavailable as exc:
@@ -366,10 +422,13 @@ def answer_question(subject: tuple[str, int], question: str, limit: int, databas
 
 def _assemble(subject, question, limit, answer_text, rounds, trace, produced, usage=None) -> dict[str, Any]:
     kind, uid = subject
-    # 最近一次工具调用返回的电影排在最前：模型的最终回答通常就是在解释这批结果
-    # （例如先"看看我的历史"再"搜动画片"，用户看到的卡片应当是被解释的那一批）。
+    # 展示顺序：推荐类工具的输出排在前面（回答通常就是在解释这批结果），同类里
+    # 最近一次调用优先，my_history 只作为解释材料排最后；否则"先推荐、再查历史"
+    # 的提问会把用户自己的旧评分当成推荐结果展示出来。
+    ranked = sorted(((TOOL_PRIORITY.get(row.get("tool"), 9), -index, row)
+                     for index, row in enumerate(trace)), key=lambda entry: (entry[0], entry[1]))
     ordered: list[dict[str, Any]] = []
-    for record in reversed(trace):
+    for _, _, record in ranked:
         if record.get("ok"):
             ordered.extend(record.get("items") or [])
     items = _dedupe(ordered or produced, limit)
@@ -389,6 +448,21 @@ def _assemble(subject, question, limit, answer_text, rounds, trace, produced, us
         warnings.append(f"有被拒绝的工具调用：{'、'.join(failed)}")
     if not items:
         warnings.append("工具没有返回任何电影（无结果状态）")
+    # 结构化地给出"本次用了哪些推荐算法、它在这批固定用户上的准确率"：
+    # 不依赖模型是否照规则 6 写进回答，前端也能稳定展示。
+    methods: list[dict[str, Any]] = []
+    for row in trace:
+        evidence = row.get("evidence") or {}
+        metrics = evidence.get("offline_metrics")
+        if not row.get("ok") or not metrics:
+            continue
+        methods.append({
+            "tool": row["tool"],
+            "algorithm": evidence.get("algorithm"),
+            "algorithm_label": evidence.get("algorithm_label") or evidence.get("algorithm"),
+            "model_version": evidence.get("model_version"),
+            "offline_metrics": metrics,
+        })
     return {
         "status": "ready" if items else "no_result",
         "subject_key": f"{kind}:{uid}",
@@ -399,6 +473,7 @@ def _assemble(subject, question, limit, answer_text, rounds, trace, produced, us
         "rounds": rounds,
         "usage": usage or {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
         "tool_calls": trace,
+        "methods": methods,
         "items": items,
         "unverified_mentions": unverified,
         "warnings": warnings,
@@ -435,4 +510,8 @@ def history_assistant(ml_user_id: IdPath, request: Request,
 def assistant_status():
     return {"llm": llm_status(), "tools": [tool["function"]["name"] for tool in TOOLS],
             "tool_schemas": TOOLS, "max_tool_rounds": MAX_TOOL_ROUNDS,
+            "offline_metrics": {"source": "backend/app/lab3_metrics.json",
+                                "partition": "validation",
+                                "protocol": METRICS_PROTOCOL,
+                                "algorithms": sorted(_offline_metrics().keys())},
             "guardrails": ["工具白名单", "参数取值域校验", "只读工具", "items 仅由工具输出构成"]}

@@ -6,6 +6,10 @@ by git).  This script republishes exactly the same numbers as:
 - ``frontend/src/data/lab3-metrics.json`` — bundled into the web build so the
   experiment page can render the table without the business API ever touching
   evaluation data;
+- ``backend/app/lab3_metrics.json`` — a read-only snapshot the API ships, so the
+  lab-6 natural-language assistant can report "which algorithm + how accurate"
+  when it calls a recommender.  It is metrics, not a model: no evaluation
+  provider or evaluation fit file is ever loaded by the API;
 - ``docs/lab3-evaluation-table.md`` — the table quoted in the lab report.
 
 Usage::
@@ -22,6 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SUMMARY = ROOT / "reports" / "lab3" / "summary.json"
 METRICS = ROOT / "frontend" / "src" / "data" / "lab3-metrics.json"
+API_METRICS = ROOT / "backend" / "app" / "lab3_metrics.json"
 DOC_TABLE = ROOT / "docs" / "lab3-evaluation-table.md"
 
 ALGORITHM_ORDER = ("popular", "content", "itemcf", "als", "cold_start")
@@ -102,6 +107,12 @@ def main() -> None:
     METRICS.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {METRICS.relative_to(ROOT)} "
           f"(validation={len(payload['validation'])} test={len(payload['test'])} cold={len(payload['cold'])})")
+
+    # 同一份数字同时给后端一份：实验六助手在调用推荐工具时要回答"用了哪个算法、
+    # 准确率多少"。这只是指标快照，API 依旧不加载任何 evaluation 模型或评价 Provider。
+    API_METRICS.parent.mkdir(parents=True, exist_ok=True)
+    API_METRICS.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {API_METRICS.relative_to(ROOT)}")
 
     doc = ["# 实验三 · 统一离线评价结果", "",
            f"- 数据版本：`{payload['dataset_version']}`，划分：`{payload['split_version']}`",

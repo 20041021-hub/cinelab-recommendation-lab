@@ -66,6 +66,15 @@ function itemNote(item: AssistantResult['items'][number]) {
   if (item.score !== null && item.score !== undefined) return `得分 ${Number(item.score).toFixed(4)}`
   return item.kind === 'favorite' ? '我的收藏' : ''
 }
+const methods = computed(() => result.value?.methods || [])
+function percent(value: number | null | undefined) {
+  if (value === null || value === undefined) return '—'
+  return `${(Number(value) * 100).toFixed(2)}%`
+}
+function userCount(value: number | null | undefined) {
+  if (value === null || value === undefined) return '—'
+  return Number(value).toLocaleString('zh-CN')
+}
 </script>
 
 <template>
@@ -102,6 +111,21 @@ function itemNote(item: AssistantResult['items'][number]) {
           <span class="small-label">{{ result.provider }} · {{ result.model }} · {{ result.rounds }} 轮工具调用<template v-if="result.usage && result.usage.total_tokens"> · {{ result.usage.total_tokens }} tokens（输入 {{ result.usage.prompt_tokens }} / 输出 {{ result.usage.completion_tokens }}）</template></span>
         </div>
         <p class="assistant-answer">{{ result.answer || '（模型没有给出文字回答）' }}</p>
+
+        <div v-if="methods.length" class="assistant-methods">
+          <span class="small-label">推荐所用算法 · 准确率（实验三离线评价）</span>
+          <div v-for="method in methods" :key="`${method.tool}-${method.algorithm}`" class="assistant-method">
+            <span class="status-pill">{{ method.algorithm_label }}</span>
+            <span class="assistant-metric">线上模型 <b>{{ method.model_version || '—' }}</b></span>
+            <span class="assistant-metric">验证集 Precision@10 <b>{{ percent(method.offline_metrics.precision_at_10) }}</b></span>
+            <span class="assistant-metric">Recall@10 <b>{{ percent(method.offline_metrics.recall_at_10) }}</b></span>
+            <span class="assistant-metric">{{ userCount(method.offline_metrics.users) }} 位固定用户</span>
+          </div>
+          <p class="assistant-metric-note">
+            准确率取自实验三的离线评价（{{ methods[0].offline_metrics.protocol }}），是<strong>算法级历史成绩</strong>；
+            上面的片单由线上业务模型 {{ methods.map(method => method.model_version || '—').join(' / ') }} 现场生成，两者不是同一次预测。
+          </p>
+        </div>
 
         <div class="assistant-tools">
           <span class="small-label">工具调用证据</span>
@@ -156,6 +180,11 @@ function itemNote(item: AssistantResult['items'][number]) {
 .assistant-meta, .assistant-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .assistant-answer { margin: 0; padding: 14px 18px; border-left: 2px solid var(--accent, #7aa2a2); background: #0f1b1b66; white-space: pre-wrap; line-height: 1.9; }
 .assistant-tools .status-pill.is-rejected { border-color: #7a3b3b; color: #e0a0a0; }
+.assistant-methods { display: grid; gap: 8px; padding: 12px 14px; border: 1px dashed var(--border); border-radius: 8px; background: #14201f66; }
+.assistant-method { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12px; color: var(--muted); }
+.assistant-metric b { color: var(--accent, #d9c184); font-weight: 600; }
+.assistant-metric-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.assistant-metric-note strong { color: #d9c184; font-weight: 600; }
 .assistant-rejections { margin: 0; padding-left: 18px; color: #e0a0a0; font-size: 12px; line-height: 1.8; }
 .assistant-warnings { display: grid; gap: 4px; padding: 10px 14px; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 12px; }
 .assistant-warnings p { margin: 0; }

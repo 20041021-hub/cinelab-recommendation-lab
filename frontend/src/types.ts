@@ -47,14 +47,23 @@ export interface AssistantToolCall {
 export interface AssistantItem {
   movie_id: string; title: string; original_title: string; genres: string[]; year: number | null
   poster_path: string | null; source_tool?: string; rank?: number; score?: number | null
-  model_version?: string; similarity?: number; cooccurrence?: number
+  model_version?: string; algorithm?: string; similarity?: number; cooccurrence?: number
   my_rating?: string; kind?: string
+}
+export interface AssistantOfflineMetrics {
+  partition: string; users: number | null; empty_users: number | null
+  precision_at_10: number | null; recall_at_10: number | null
+  model_version: string | null; protocol: string
+}
+export interface AssistantMethod {
+  tool: string; algorithm: string; algorithm_label: string
+  model_version: string | null; offline_metrics: AssistantOfflineMetrics
 }
 export interface AssistantResult {
   status: string; subject_key: string; question: string; answer: string
   provider: string; model: string; rounds: number
   usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
-  tool_calls: AssistantToolCall[]; items: AssistantItem[]
+  tool_calls: AssistantToolCall[]; methods?: AssistantMethod[]; items: AssistantItem[]
   unverified_mentions: string[]; warnings: string[]; guardrails: string[]; generated_at: string
 }
 export interface BehaviorStatus {

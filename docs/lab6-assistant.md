@@ -57,6 +57,31 @@
 再加 `warnings`（工具被拒、没有结果、疑似未验证片名）与 `guardrails` 字段，
 前端把 `reason` / `warnings` 原样展示——**没有结果就如实说没有结果**。
 
+### 4.1 回答里说明"用了哪个算法、准确率多少"
+
+用推荐类工具（`recommend_movies`、`similar_movies`）时，工具证据 `evidence` 里会带上：
+
+```json
+{"algorithm": "itemcf", "algorithm_label": "ItemCF 协同过滤",
+ "model_version": "itemcf-cooccurrence-v1",
+ "offline_metrics": {"partition": "validation", "users": 4209,
+                     "precision_at_10": 0.055263, "recall_at_10": 0.09783,
+                     "model_version": "itemcf-cooccurrence-eval-v1",
+                     "protocol": "冻结验证集 · 4,209 位固定用户 · 正反馈≥4.0 · Top-10 · 宏平均"}}
+```
+
+- 这份数字是**实验三离线评价的只读快照**：`backend/app/lab3_metrics.json`，由
+  `scripts/publish_lab3_metrics.py` 从 `reports/lab3/summary.json` 生成（同一份数字也进
+  `frontend/src/data/lab3-metrics.json` 与 `docs/lab3-evaluation-table.md`）。API 不加载任何
+  evaluation 模型或评价 Provider，读到的只是指标。
+- 系统提示第 6 条规定：用到推荐工具时，回答里必须写清算法名与
+  `precision_at_10` / `recall_at_10`（按百分比），并说明这是固定验证集上的**算法级历史评价**，
+  不是对本次提问的准确率承诺。
+- 证据随工具消息回给模型，响应里另有结构化的 `methods` 字段
+  （`tool` / `algorithm` / `algorithm_label` / `model_version` / `offline_metrics`），
+  前端"推荐所用算法 · 准确率"区块直接渲染它，因此**模型措辞变了也不会丢这条信息**。
+- 卡片排序：推荐类工具的输出排最前（用户问的是推荐），`my_history` 只作为解释材料排在最后。
+
 ## 5. 外部模型配置
 
 | 环境变量 | 默认值 | 说明 |
@@ -87,6 +112,12 @@
 rounds=2  tools=search_movies(ok, matched=10)  items=5  status=ready
 answer ≈ 「我从目录里找到了这些动画电影，推荐给你：…」
 ```
+
+正常场景另有 4 项"算法 + 准确率"检查（问法「用 ItemCF 给我推荐 5 部电影，并说明这个算法的准确率」）：
+`algorithm_reported`（`methods[0].algorithm=itemcf`、`model_version=itemcf-cooccurrence-v1`）、
+`accuracy_reported`（`precision_at_10=0.055263`、`recall_at_10=0.09783`、`users=4209`）、
+`accuracy_in_answer`（回答文本里出现准确率表述）、`methods_match_tool_evidence`。
+截图见 `docs/images/lab6-assistant-accuracy.png`。
 
 ## 7. Token 用量（会不会很贵）
 

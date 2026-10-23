@@ -1,7 +1,7 @@
 {
   "dataset_version": "rec-course-v3-train5-1.0.0",
   "split_version": "temporal-v1-cold500-train5-v3",
-  "generated_at": "2026-10-22T09:18:50+08:00",
+  "generated_at": "2026-10-23T14:44:18+08:00",
   "source": "scripts/run_lab3_evaluation.py",
   "note": "由 scripts/publish_lab3_metrics.py 从 reports/lab3/summary.json 生成；评价在独立进程执行，业务 API 不连接 evaluation 数据库。",
   "validation": [

@@ -45,6 +45,7 @@ APP_PASSWORD = "Lab6Check!2026"
 NO_RESULT_QUESTION = "只要 2029 年上映的 Film-Noir 电影，别的都不要"
 BAD_GENRE_QUESTION = "推荐几部 Anime 类型的电影"
 NORMAL_QUESTION = "推荐几部动画电影"
+ALGORITHM_QUESTION = "用 ItemCF 给我推荐 5 部电影，并说明这个算法的准确率"
 
 
 def stamp() -> str:
@@ -111,6 +112,22 @@ def scenario_normal(client) -> dict:
         "items_from_tools": bool(items) and all(row.get("source_tool") for row in items),
         "no_unverified_mentions": not (payload.get("unverified_mentions") or []),
     }
+    # 指定算法的提问：必须报出"用了哪个算法 + 它的离线准确率"（模型回答 + 结构化 methods）
+    algo_status, algo_payload = ask(ALGORITHM_QUESTION, limit=5)
+    algo_payload = algo_payload if isinstance(algo_payload, dict) else {}
+    methods = algo_payload.get("methods") or []
+    method = methods[0] if methods else {}
+    metrics = method.get("offline_metrics") or {}
+    answer_text = algo_payload.get("answer") or ""
+    checks["algorithm_reported"] = (algo_status == 200 and method.get("algorithm") == "itemcf"
+                                   and method.get("model_version") == "itemcf-cooccurrence-v1")
+    checks["accuracy_reported"] = (metrics.get("precision_at_10") == 0.055263
+                                   and metrics.get("recall_at_10") == 0.09783
+                                   and metrics.get("users") == 4209)
+    checks["accuracy_in_answer"] = ("Precision@10" in answer_text or "准确率" in answer_text
+                                    or "5.53" in answer_text)
+    checks["methods_match_tool_evidence"] = bool(tools) and any(
+        (row.get("evidence") or {}).get("offline_metrics") for row in tools) or bool(methods)
     # 登录后的 /me 路径也要真实可用
     login = client.login_or_register(APP_NAME, APP_PASSWORD)
     query = urllib.parse.urlencode({"q": "看看我最近评过什么，再推荐几部", "limit": 5})
@@ -125,6 +142,9 @@ def scenario_normal(client) -> dict:
                 "items": [{"movie_id": row.get("movie_id"), "title": row.get("title"),
                            "source_tool": row.get("source_tool")} for row in items],
                 "answer": (payload.get("answer") or "")[:400],
+                "algorithm_question": ALGORITHM_QUESTION,
+                "algorithm_answer": answer_text[:400],
+                "methods": methods,
                 "me_status_code": me_status,
                 "me_subject_key": (me_payload or {}).get("subject_key")}}
 
