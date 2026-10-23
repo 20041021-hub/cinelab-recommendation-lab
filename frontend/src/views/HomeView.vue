@@ -26,19 +26,19 @@ onMounted(fetchMovies)
 </template>
 
 <style scoped>
-.hero { min-height: 0; padding: 26px 40px; grid-template-columns: 1.5fr .65fr; align-items: center; }
+.hero { min-height: 0; padding: 22px 34px; grid-template-columns: 1.5fr .65fr; align-items: center; }
 .hero h1 { font-size: clamp(30px, 2.7vw, 38px); line-height: 1.3; margin: 12px 0; }
 .hero .eyebrow { margin-bottom: 8px; }
 .hero-description { font-size: 14px; line-height: 1.75; }
 .hero-actions { margin-top: 18px; }
 .hero-footnote { display: none; }
-.hero-art { height: 210px; min-height: 0; transform: none; }
+.hero-art { height: 188px; min-height: 0; transform: none; }
 .film-ticket { transform: scale(.62) rotate(9deg); }
 .orbital { width: 260px; height: 230px; }
 .orbital-two { width: 280px; height: 190px; }
 .art-label { display: none; }
-.recommendation-section { margin-top: 30px; }
-.cold-start-callout { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 18px; padding: 22px 24px; border: 1px solid var(--border); border-radius: 10px; background: linear-gradient(120deg, #1a2a28, #14201f 65%); }
+.recommendation-section { margin-top: 24px; }
+.cold-start-callout { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 14px; padding: 18px 22px; border: 1px solid var(--border); border-radius: 10px; background: linear-gradient(120deg, #1a2a28, #14201f 65%); }
 .cold-start-callout h3 { margin: 5px 0 7px; font-size: 19px; font-weight: 500; }
 .cold-start-callout p:not(.eyebrow) { max-width: 650px; color: var(--muted); font-size: 12px; line-height: 1.8; }
 .cold-start-callout .button { flex: none; }

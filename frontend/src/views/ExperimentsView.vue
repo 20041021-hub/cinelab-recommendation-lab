@@ -104,7 +104,7 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
           <div v-else class="evaluation-tables">
             <div class="evaluation-block"><div class="evaluation-block-head"><h3>验证集 · 调参与方案选择</h3><span class="status-pill">4,209 位固定评价用户</span></div><p class="form-hint">正反馈阈值 4.0（评分 ≥ 4.0），Top-10；候选已排除该用户在 train 中的评分，无结果的用户仍计入宏平均分母。</p><el-table :data="metrics.validation" aria-label="验证集离线指标"><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /><el-table-column prop="model_version" label="模型版本" min-width="210" /></el-table></div>
             <div class="evaluation-block"><div class="evaluation-block-head"><h3>测试集 · 方案冻结后只报一次</h3><span class="status-pill">4,198 位固定评价用户</span></div><p class="form-hint">参数在验证集上选定后不再改动；候选额外排除 validation 中的评分。没有可用的评价指标时请先运行离线评价脚本。</p><el-table :data="metrics.test" aria-label="测试集离线指标"><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /><el-table-column prop="model_version" label="模型版本" min-width="210" /></el-table></div>
-            <div class="evaluation-block"><div class="evaluation-block-head"><h3>冷启动分区 · 每位用户 499 人</h3><span class="status-pill">k = 0 / 1 / 5 / 10</span></div><p class="form-hint">support 只用于逐用户推断，query 只作为标签；k = 0 时热门与冷启动策略都不声称个性化。</p><el-table :data="metrics.cold" aria-label="冷启动分区离线指标"><el-table-column prop="partition" label="分区" width="110" /><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /></el-table></div>
+            <div class="evaluation-block"><div class="evaluation-block-head"><h3>冷启动分区 · 每位用户 499 人</h3><span class="status-pill">k = 0 / 1 / 5 / 10</span></div><p class="form-hint">support 只用于逐用户推断，query 只作为标签；k = 0 时热门与冷启动策略都不声称个性化。</p><el-table :data="metrics.cold" max-height="340" aria-label="冷启动分区离线指标"><el-table-column prop="partition" label="分区" width="110" /><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /></el-table></div>
           </div>
         </StatePanel></section><section class="fusion-study"><div class="section-top"><h2>实验四 · S1 融合权重对照</h2><span class="small-label">VALIDATION · 固定评价用户</span></div>
         <div class="evaluation-contract"><span class="status-pill">{{ fusionMetrics.user_count }} 位验证集用户</span><p>同一批真实候选上只改变权重；单路基线来自实验三评价表，测试集在方案冻结后只报告一次。融合入口：<code>GET /api/v1/experiments/fusion/sources</code> 与 <code>/recommendations/fusion</code>。</p></div>
@@ -113,7 +113,7 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
             <el-table :data="fusionBaselines" aria-label="单路基线指标"><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column></el-table></div>
           <div class="evaluation-block"><div class="evaluation-block-head"><h3>权重对照（按 Precision@10 降序）</h3><span class="status-pill">选定：{{ fusionMetrics.selected?.label || '待发布' }}</span></div>
             <p class="form-hint">{{ fusionMetrics.selection_rule }}</p>
-            <el-table :data="fusionGrid" aria-label="加权 RRF 权重对照表"><el-table-column prop="label" label="权重配置" min-width="235" /><el-table-column label="Precision@10" width="140"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="130"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="multi_source_items" label="多路命中" width="110" /><el-table-column prop="empty_users" label="空结果用户" width="120" /></el-table></div>
+            <el-table :data="fusionGrid" max-height="420" aria-label="加权 RRF 权重对照表"><el-table-column prop="label" label="权重配置" min-width="235" /><el-table-column label="Precision@10" width="140"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="130"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="multi_source_items" label="多路命中" width="110" /><el-table-column prop="empty_users" label="空结果用户" width="120" /></el-table></div>
           <div v-if="fusionMetrics.test" class="evaluation-block"><div class="evaluation-block-head"><h3>测试集 · 方案冻结后单次报告</h3><span class="status-pill">{{ fusionMetrics.test.partition }} · {{ fusionMetrics.test.user_count }} 位用户</span></div>
             <el-table :data="[fusionMetrics.test]" aria-label="融合测试集单次报告"><el-table-column prop="label" label="权重配置" min-width="235" /><el-table-column label="Precision@10" width="140"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="130"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="empty_users" label="空结果用户" width="120" /></el-table></div>
           <p class="form-hint">数据由 <code>scripts/publish_lab4_metrics.py</code> 生成：<code>frontend/src/data/lab4-fusion.json</code>。</p>
@@ -148,9 +148,22 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
 .evaluation-block .form-hint { padding: 10px 16px 0; }
 .evaluation-block :deep(.el-table) { margin-top: 6px; }
 .lab-result-grid.is-comparing, .lab-result-grid.is-multi { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; align-items: start; }
-.fusion-study { margin-top: 26px; }
-.behavior-panel { margin-top: 26px; }
-.assistant-section { margin-top: 26px; }
+.fusion-study, .behavior-panel, .assistant-section { margin-top: 0; }
+.lab-result-grid { order: 0; }
+.fusion-study { order: 1; }
+.behavior-panel { order: 2; }
+.assistant-section { order: 3; }
+.history-panel { order: 4; }
+.evaluation-panel { order: 5; }
+.evaluation-tables { gap: 14px; padding: 16px; }
+.evaluation-block-head { padding: 11px 14px; }
+.evaluation-block .form-hint { padding: 8px 14px 0; }
+@media (min-width: 1280px) {
+  .lab-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
+  .lab-result-grid, .fusion-study, .history-panel, .evaluation-panel { grid-column: 1 / -1; }
+  .behavior-panel { grid-column: 1; }
+  .assistant-section { grid-column: 2; }
+}
 .assistant-section .evaluation-contract { border: 1px solid var(--border); border-radius: 8px; }
 .assistant-section :deep(.assistant-panel) { padding: 18px; }
 .behavior-genres { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }

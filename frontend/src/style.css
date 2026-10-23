@@ -7,3 +7,44 @@
 @media(max-width:780px){.header-inner{height:auto;min-height:80px;padding:18px 24px 0;flex-wrap:wrap;gap:12px}.brand{font-size:21px}.brand-mark{height:36px;width:34px}.account-nav{margin-left:auto}.header-inner nav{order:3;width:100%;gap:30px;justify-content:center}.header-inner nav a{min-height:48px;padding-bottom:12px}.page{padding:32px 24px 56px}.home-page{padding-top:24px}.hero{grid-template-columns:1fr 210px;padding:32px 24px;gap:8px;min-height:380px}.hero h1{font-size:36px}.hero-art{transform:scale(.7);transform-origin:center;min-width:0}.hero-actions{gap:10px}.hero-actions .button{padding:10px 14px}.hero-footnote{margin-top:22px}.intro-strip>a{display:none}.movie-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 16px}.movie-poster{aspect-ratio:2/2.7}.recommendation-columns{grid-template-columns:1fr}.site-footer{margin-inline:24px}.section-heading h2{font-size:24px}.filter-bar{flex-wrap:wrap;padding:18px}.search-field{flex-basis:100%}.genre-field{flex:1}.detail-layout{grid-template-columns:180px minmax(0,1fr);gap:26px}.detail-content h1{font-size:28px}.film-facts{grid-template-columns:1fr;gap:12px}.rating-panel .section-top{padding:18px}.rating-panel form{padding:18px}.auth-page{grid-template-columns:1fr;max-width:600px;padding-top:40px}.auth-intro{margin-bottom:32px}.auth-intro .auth-decoration,.auth-intro>p.muted{display:none}.auth-intro h1{font-size:32px}.auth-card{padding:28px}.lab-layout{grid-template-columns:1fr}.lab-controls{display:grid;grid-template-columns:1fr;gap:0}.lab-notice{align-items:start}.lab-notice p{font-size:12px}.lab-notice .status-pill{margin-top:3px}.result-caption{gap:12px}.result-caption span:last-child{font-size:11px}.section-heading{gap:12px}.section-heading .text-link{white-space:nowrap}.film-ticket{flex-shrink:0}.art-label{display:none}}
 @media(max-width:540px){.header-inner{padding-inline:18px}.header-inner nav{font-size:13px;gap:32px}.account-nav{gap:4px}.account-link span{max-width:84px;font-size:12px}.login-link{font-size:12px}.account-nav .el-button{padding-inline:10px}.page{padding-inline:18px}.hero{grid-template-columns:1fr;padding:32px 24px}.hero-art{display:none}.hero h1{font-size:37px}.hero-description{font-size:14px}.hero .eyebrow{font-size:9px}.hero-footnote{margin-top:28px}.hero-actions{margin-top:24px}.intro-strip{gap:14px;padding-block:20px}.intro-strip p{font-size:11px;gap:8px}.intro-strip p strong{font-weight:400}.section-heading{align-items:start}.section-heading .text-link{font-size:11px}.section-heading .muted{font-size:12px}.browse-section,.recommendation-section{margin-top:36px}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px}.movie-card h3{font-size:13px}.movie-card p{font-size:11px}.poster-placeholder>.el-icon{font-size:36px}.poster-placeholder small{font-size:7px;letter-spacing:.12em}.frame-corner.top{top:14px;left:14px}.frame-corner.bottom{bottom:14px;right:14px}.movie-id{font-size:9px;left:8px;top:8px}.pagination{flex-wrap:wrap;justify-content:center;gap:16px}.pagination>.muted{width:100%;text-align:center}.site-footer{margin-inline:18px;flex-direction:column;padding:26px 0}.footer-meta{align-items:start}.page-heading h1{font-size:34px}.page-heading>p:last-child{font-size:13px}.filter-bar>.el-button{padding-inline:18px}.genre-field{width:auto;min-width:150px}.detail-layout{grid-template-columns:1fr;gap:24px}.detail-layout>aside{width:185px;margin:auto}.detail-content h1{font-size:30px}.film-facts{grid-template-columns:1fr 1fr;gap:12px}.film-facts>div{flex-direction:column;gap:4px}.film-facts .wide{flex-direction:row;gap:16px}.rating-controls .el-button{padding-inline:13px}.rating-controls .el-input-number{width:140px}.rating-controls .el-button+.el-button{margin-left:0}.auth-card{padding:24px}.auth-intro h1{font-size:32px}.auth-intro p{font-size:13px}.auth-page{padding-top:32px}.profile-heading{gap:16px}.profile-heading h1{font-size:26px}.avatar{width:60px;height:60px}.profile-heading .eyebrow{font-size:9px}.lab-notice{flex-direction:column;gap:10px}.section-top .small-label{font-size:8px}.history-panel .section-top{gap:10px}.algorithm-empty h3{line-height:1.5}.algorithm-symbol{width:36px;height:36px;font-size:20px}.algorithm-empty{gap:12px}.algorithm-empty>div:nth-child(2){min-width:150px}.model-info{gap:7px}.record-action{flex-wrap:wrap}.global-notice{padding:14px 18px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+/* —— 排版优化：收敛留白、加密片库网格，页面结构与功能不变 —— */
+.page{padding:36px 48px 64px;min-height:calc(100vh - 232px)}
+.page-heading{margin:4px 0 22px}
+.page-heading>p:last-child{margin-top:12px;max-width:780px}
+.browse-section,.recommendation-section{margin-top:34px}
+.section-heading{margin-bottom:16px}
+.section-heading .muted{margin-top:7px}
+.movie-grid{gap:22px 18px}
+.movie-grid.is-dense{grid-template-columns:repeat(5,minmax(0,1fr));gap:20px 16px}
+.movie-poster{aspect-ratio:3/3.35}
+.movie-card h3{margin-top:10px;font-size:14px}
+.movie-card p{margin-top:4px;font-size:11.5px}
+.movie-grid.is-dense .movie-card h3{font-size:13px}
+.movie-grid.is-dense .poster-placeholder>.el-icon{font-size:30px;opacity:.6}
+.movie-grid.is-dense .poster-placeholder small{display:none}
+.movie-grid.is-dense .movie-id{top:8px;left:8px;padding:1px 5px;font-size:9px}
+.filter-bar{padding:16px 18px;gap:14px}
+.result-caption{margin:16px 0}
+.intro-strip{padding:18px 0}
+.profile-heading{margin:4px 0 20px;gap:18px}
+.record-action{margin-top:8px}
+.lab-layout{grid-template-columns:296px minmax(0,1fr);gap:22px}
+.lab-controls{padding:20px;position:sticky;top:18px;max-height:calc(100vh - 132px);overflow:auto}
+.lab-controls h2{font-size:18px;margin-bottom:14px}
+.lab-controls>label{margin:16px 0 8px}
+.lab-results{gap:18px}
+.section-top{padding:15px 19px}
+.el-table .el-table__cell{padding:7px 0}
+.el-table .cell{line-height:1.5}
+@media(min-width:1500px){.movie-poster{aspect-ratio:3/3.5}}
+@media(max-width:1100px){
+.movie-grid.is-dense{grid-template-columns:repeat(4,minmax(0,1fr))}
+.lab-layout{grid-template-columns:260px minmax(0,1fr)}
+.page{padding-inline:32px}}
+@media(max-width:780px){
+.page{padding:28px 24px 52px}
+.movie-grid,.movie-grid.is-dense{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 14px}
+.lab-controls{position:static;max-height:none;overflow:visible}}
+@media(max-width:540px){
+.movie-grid,.movie-grid.is-dense{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px}
+.movie-poster{aspect-ratio:2/2.8}}

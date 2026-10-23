@@ -110,10 +110,9 @@ function formatScore(score: number | null) {
                 <span class="rank-badge">{{ String(item.rank).padStart(2, '0') }}</span>
               </div>
               <div class="recommendation-copy">
-                <p class="small-label">{{ cardLabel }}</p>
                 <h4>{{ movieTitle(item.movie_id) }}</h4>
                 <p class="recommendation-genres">{{ movieGenres(item.movie_id) }}</p>
-                <div class="recommendation-score"><span>{{ scoreLabel }}</span><strong>{{ formatScore(item.score) }}</strong></div>
+                <div class="recommendation-score"><span class="recommendation-tag">{{ cardLabel }}</span><span>{{ scoreLabel }}</span><strong>{{ formatScore(item.score) }}</strong></div>
               </div>
             </RouterLink>
           </li>
@@ -126,27 +125,32 @@ function formatScore(score: number | null) {
 
 <style scoped>
 .recommendation-results { padding: 0; }
-.recommendation-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 20px; border-bottom: 1px solid var(--border); background: #0f1b1b66; }
-.recommendation-meta strong { display: block; margin-top: 4px; color: var(--text); font-size: 12px; font-weight: 500; overflow-wrap: anywhere; }
+.recommendation-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: #0f1b1b66; }
+.recommendation-meta strong { display: block; margin-top: 3px; color: var(--text); font-size: 12px; font-weight: 500; overflow-wrap: anywhere; }
 .recommendation-pills { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; }
 .strategy-pill { padding: 4px 9px; border: 1px solid #4d6f68; border-radius: 999px; color: #d8e8df; font-size: 10px; line-height: 1.4; white-space: nowrap; }
-.recommendation-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 0; padding: 16px; list-style: none; }
+.recommendation-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); gap: 10px; margin: 0; padding: 14px; list-style: none; }
 .recommendation-item { min-width: 0; }
-.recommendation-card { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 13px; height: 100%; padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: linear-gradient(145deg, #1d2c2b, #172322); transition: border-color .18s, transform .18s, background .18s; }
+.recommendation-card { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 11px; align-items: center; height: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: linear-gradient(145deg, #1d2c2b, #172322); transition: border-color .18s, transform .18s, background .18s; }
 .recommendation-card:hover { border-color: var(--accent); background: linear-gradient(145deg, #223432, #192725); transform: translateY(-2px); }
 .recommendation-poster-wrap { position: relative; min-width: 0; }
-.recommendation-poster-wrap :deep(.movie-poster) { aspect-ratio: 2 / 3; border-radius: 5px; }
-.rank-badge { position: absolute; top: 7px; left: 7px; z-index: 1; padding: 2px 6px; border-radius: 3px; background: var(--accent); color: var(--ink); font-size: 10px; font-weight: 700; letter-spacing: .08em; line-height: 1.5; }
-.recommendation-copy { display: flex; flex-direction: column; min-width: 0; padding: 3px 1px; }
-.recommendation-copy .small-label { font-size: 8px; letter-spacing: .16em; }
-.recommendation-copy h4 { display: -webkit-box; overflow: hidden; margin: 6px 0 4px; font-size: 14px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.recommendation-poster-wrap :deep(.movie-poster) { aspect-ratio: 2 / 3; border-radius: 4px; }
+.recommendation-poster-wrap :deep(.poster-placeholder) { gap: 2px; }
+.recommendation-poster-wrap :deep(.poster-placeholder > .el-icon) { font-size: 18px; opacity: .6; }
+.recommendation-poster-wrap :deep(.poster-placeholder > span:not(.frame-corner)) { display: none; }
+.recommendation-poster-wrap :deep(.poster-placeholder small) { display: none; }
+.rank-badge { position: absolute; top: 4px; left: 4px; z-index: 1; padding: 1px 5px; border-radius: 3px; background: var(--accent); color: var(--ink); font-size: 9px; font-weight: 700; letter-spacing: .06em; line-height: 1.5; }
+.recommendation-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 0; }
+.recommendation-copy h4 { overflow: hidden; margin: 0; font-size: 13.5px; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
 .recommendation-genres { overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
-.recommendation-score { display: flex; align-items: end; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--border); color: var(--muted); font-size: 10px; }
-.recommendation-score strong { color: var(--accent); font-size: 17px; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
-.recommendation-empty { padding: 26px 20px 8px; color: var(--muted); font-size: 13px; line-height: 1.8; }
-.recommendation-footnote { padding: 0 20px 18px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.recommendation-score { display: flex; align-items: baseline; gap: 7px; margin-top: 5px; padding-top: 5px; border-top: 1px dashed var(--border); color: var(--muted); font-size: 9.5px; }
+.recommendation-score strong { margin-left: auto; color: var(--accent); font-size: 15px; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
+.recommendation-tag { color: #8fb0a6; font-size: 8.5px; letter-spacing: .12em; }
+.recommendation-empty { padding: 22px 18px 6px; color: var(--muted); font-size: 13px; line-height: 1.75; }
+.recommendation-footnote { padding: 0 16px 14px; color: var(--muted); font-size: 11px; line-height: 1.65; }
 @media (max-width: 540px) {
   .recommendation-list { grid-template-columns: 1fr; padding: 12px; }
-  .recommendation-card { grid-template-columns: 82px minmax(0, 1fr); }
+  .recommendation-card { grid-template-columns: 46px minmax(0, 1fr); }
+  .recommendation-copy h4 { font-size: 13px; }
 }
 </style>
