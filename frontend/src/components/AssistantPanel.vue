@@ -146,7 +146,7 @@ function userCount(value: number | null | undefined) {
 
         <ol v-if="result.items.length" class="assistant-items">
           <li v-for="item in result.items" :key="item.movie_id" class="assistant-card">
-            <MoviePoster :path="item.poster_path" :title="item.title" />
+            <MoviePoster :path="item.poster_path" :movie-id="item.movie_id" :title="item.title" />
             <div class="assistant-card-body">
               <RouterLink :to="`/movies/${item.movie_id}`" class="text-link">{{ item.title }}</RouterLink>
               <p class="assistant-card-genres">{{ item.genres.slice(0, 3).join(' · ') || '未标注类型' }}<span v-if="item.year"> · {{ item.year }}</span></p>
@@ -173,19 +173,19 @@ function userCount(value: number | null | undefined) {
 .assistant-ask { display: flex; gap: 10px; align-items: center; }
 .assistant-ask :deep(.el-input) { flex: 1; }
 .assistant-presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.assistant-error { display: grid; gap: 8px; padding: 16px 18px; border: 1px solid #7a3b3b; border-radius: 8px; background: #2a1717aa; }
+.assistant-error { display: grid; gap: 8px; padding: 16px 18px; border: 1px solid #7a3b5b; border-radius: 8px; background: #2a1730aa; }
 .assistant-error p { margin: 0; }
 .assistant-error small { color: var(--muted); }
 .assistant-result { display: grid; gap: 12px; }
 .assistant-meta, .assistant-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-.assistant-answer { margin: 0; padding: 14px 18px; border-left: 2px solid var(--accent, #7aa2a2); background: #0f1b1b66; white-space: pre-wrap; line-height: 1.9; }
-.assistant-tools .status-pill.is-rejected { border-color: #7a3b3b; color: #e0a0a0; }
-.assistant-methods { display: grid; gap: 8px; padding: 12px 14px; border: 1px dashed var(--border); border-radius: 8px; background: #14201f66; }
+.assistant-answer { margin: 0; padding: 14px 18px; border-left: 2px solid var(--accent, #7aa2c8); background: #10173366; white-space: pre-wrap; line-height: 1.9; }
+.assistant-tools .status-pill.is-rejected { border-color: #7a3b5b; color: #f0a8c0; }
+.assistant-methods { display: grid; gap: 8px; padding: 12px 14px; border: 1px dashed var(--border); border-radius: 8px; background: #131a3066; }
 .assistant-method { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12px; color: var(--muted); }
-.assistant-metric b { color: var(--accent, #d9c184); font-weight: 600; }
+.assistant-metric b { color: var(--accent, #a78bfa); font-weight: 600; }
 .assistant-metric-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
-.assistant-metric-note strong { color: #d9c184; font-weight: 600; }
-.assistant-rejections { margin: 0; padding-left: 18px; color: #e0a0a0; font-size: 12px; line-height: 1.8; }
+.assistant-metric-note strong { color: #a78bfa; font-weight: 600; }
+.assistant-rejections { margin: 0; padding-left: 18px; color: #f0a8c0; font-size: 12px; line-height: 1.8; }
 .assistant-warnings { display: grid; gap: 4px; padding: 10px 14px; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 12px; }
 .assistant-warnings p { margin: 0; }
 .assistant-items { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }

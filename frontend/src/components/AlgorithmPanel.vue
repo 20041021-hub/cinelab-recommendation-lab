@@ -106,7 +106,7 @@ function formatScore(score: number | null) {
           <li v-for="item in result.items" :key="item.movie_id" class="recommendation-item">
             <RouterLink :to="`/movies/${item.movie_id}`" class="recommendation-card" :aria-label="`第 ${item.rank} 名：${movieTitle(item.movie_id)}`">
               <div class="recommendation-poster-wrap">
-                <MoviePoster :path="movies[item.movie_id]?.poster_path" :title="movieTitle(item.movie_id)" />
+                <MoviePoster :path="movies[item.movie_id]?.poster_path" :movie-id="item.movie_id" :title="movieTitle(item.movie_id)" />
                 <span class="rank-badge">{{ String(item.rank).padStart(2, '0') }}</span>
               </div>
               <div class="recommendation-copy">
@@ -125,14 +125,14 @@ function formatScore(score: number | null) {
 
 <style scoped>
 .recommendation-results { padding: 0; }
-.recommendation-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: #0f1b1b66; }
+.recommendation-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: #10173366; }
 .recommendation-meta strong { display: block; margin-top: 3px; color: var(--text); font-size: 12px; font-weight: 500; overflow-wrap: anywhere; }
 .recommendation-pills { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; }
-.strategy-pill { padding: 4px 9px; border: 1px solid #4d6f68; border-radius: 999px; color: #d8e8df; font-size: 10px; line-height: 1.4; white-space: nowrap; }
+.strategy-pill { padding: 4px 9px; border: 1px solid #3a4676; border-radius: 999px; color: #dce6ff; font-size: 10px; line-height: 1.4; white-space: nowrap; }
 .recommendation-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); gap: 10px; margin: 0; padding: 14px; list-style: none; }
 .recommendation-item { min-width: 0; }
-.recommendation-card { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 11px; align-items: center; height: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: linear-gradient(145deg, #1d2c2b, #172322); transition: border-color .18s, transform .18s, background .18s; }
-.recommendation-card:hover { border-color: var(--accent); background: linear-gradient(145deg, #223432, #192725); transform: translateY(-2px); }
+.recommendation-card { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 11px; align-items: center; height: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: linear-gradient(145deg, #1c2544, #161d38); transition: border-color .18s, transform .18s, background .18s; }
+.recommendation-card:hover { border-color: var(--accent); background: linear-gradient(145deg, #27325a, #1a2342); transform: translateY(-2px); }
 .recommendation-poster-wrap { position: relative; min-width: 0; }
 .recommendation-poster-wrap :deep(.movie-poster) { aspect-ratio: 2 / 3; border-radius: 4px; }
 .recommendation-poster-wrap :deep(.poster-placeholder) { gap: 2px; }
@@ -145,7 +145,7 @@ function formatScore(score: number | null) {
 .recommendation-genres { overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
 .recommendation-score { display: flex; align-items: baseline; gap: 7px; margin-top: 5px; padding-top: 5px; border-top: 1px dashed var(--border); color: var(--muted); font-size: 9.5px; }
 .recommendation-score strong { margin-left: auto; color: var(--accent); font-size: 15px; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
-.recommendation-tag { color: #8fb0a6; font-size: 8.5px; letter-spacing: .12em; }
+.recommendation-tag { color: #9fb0e0; font-size: 8.5px; letter-spacing: .12em; }
 .recommendation-empty { padding: 22px 18px 6px; color: var(--muted); font-size: 13px; line-height: 1.75; }
 .recommendation-footnote { padding: 0 16px 14px; color: var(--muted); font-size: 11px; line-height: 1.65; }
 @media (max-width: 540px) {

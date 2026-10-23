@@ -38,7 +38,7 @@ onMounted(fetchMovies)
 .orbital-two { width: 280px; height: 190px; }
 .art-label { display: none; }
 .recommendation-section { margin-top: 24px; }
-.cold-start-callout { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 14px; padding: 18px 22px; border: 1px solid var(--border); border-radius: 10px; background: linear-gradient(120deg, #1a2a28, #14201f 65%); }
+.cold-start-callout { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 14px; padding: 18px 22px; border: 1px solid var(--border); border-radius: 10px; background: linear-gradient(120deg, #1b2547, #131a30 65%); }
 .cold-start-callout h3 { margin: 5px 0 7px; font-size: 19px; font-weight: 500; }
 .cold-start-callout p:not(.eyebrow) { max-width: 650px; color: var(--muted); font-size: 12px; line-height: 1.8; }
 .cold-start-callout .button { flex: none; }

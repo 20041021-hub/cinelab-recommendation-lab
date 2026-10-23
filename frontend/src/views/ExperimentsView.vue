@@ -104,14 +104,14 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
           <div v-else class="evaluation-tables">
             <div class="evaluation-block"><div class="evaluation-block-head"><h3>验证集 · 调参与方案选择</h3><span class="status-pill">4,209 位固定评价用户</span></div><p class="form-hint">正反馈阈值 4.0（评分 ≥ 4.0），Top-10；候选已排除该用户在 train 中的评分，无结果的用户仍计入宏平均分母。</p><el-table :data="metrics.validation" aria-label="验证集离线指标"><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /><el-table-column prop="model_version" label="模型版本" min-width="210" /></el-table></div>
             <div class="evaluation-block"><div class="evaluation-block-head"><h3>测试集 · 方案冻结后只报一次</h3><span class="status-pill">4,198 位固定评价用户</span></div><p class="form-hint">参数在验证集上选定后不再改动；候选额外排除 validation 中的评分。没有可用的评价指标时请先运行离线评价脚本。</p><el-table :data="metrics.test" aria-label="测试集离线指标"><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /><el-table-column prop="model_version" label="模型版本" min-width="210" /></el-table></div>
-            <div class="evaluation-block"><div class="evaluation-block-head"><h3>冷启动分区 · 每位用户 499 人</h3><span class="status-pill">k = 0 / 1 / 5 / 10</span></div><p class="form-hint">support 只用于逐用户推断，query 只作为标签；k = 0 时热门与冷启动策略都不声称个性化。</p><el-table :data="metrics.cold" max-height="340" aria-label="冷启动分区离线指标"><el-table-column prop="partition" label="分区" width="110" /><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /></el-table></div>
+            <div class="evaluation-block"><div class="evaluation-block-head"><h3>冷启动分区 · 每位用户 499 人</h3><span class="status-pill">k = 0 / 1 / 5 / 10</span><span class="status-pill">{{ metrics.cold.length }} 行 · 表内滚动</span></div><p class="form-hint">support 只用于逐用户推断，query 只作为标签；k = 0 时热门与冷启动策略都不声称个性化。</p><el-table :data="metrics.cold" max-height="340" aria-label="冷启动分区离线指标"><el-table-column prop="partition" label="分区" width="110" /><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="users" label="有效用户" width="110" /><el-table-column prop="empty" label="空结果" width="100" /></el-table></div>
           </div>
         </StatePanel></section><section class="fusion-study"><div class="section-top"><h2>实验四 · S1 融合权重对照</h2><span class="small-label">VALIDATION · 固定评价用户</span></div>
         <div class="evaluation-contract"><span class="status-pill">{{ fusionMetrics.user_count }} 位验证集用户</span><p>同一批真实候选上只改变权重；单路基线来自实验三评价表，测试集在方案冻结后只报告一次。融合入口：<code>GET /api/v1/experiments/fusion/sources</code> 与 <code>/recommendations/fusion</code>。</p></div>
         <div class="evaluation-tables">
           <div class="evaluation-block"><div class="evaluation-block-head"><h3>单路基线 · 实验三口径</h3><span class="status-pill">Top-10 · 正反馈 4.0</span></div>
             <el-table :data="fusionBaselines" aria-label="单路基线指标"><el-table-column prop="algorithm" label="算法" width="120" /><el-table-column label="Precision@10" width="150"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="140"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column></el-table></div>
-          <div class="evaluation-block"><div class="evaluation-block-head"><h3>权重对照（按 Precision@10 降序）</h3><span class="status-pill">选定：{{ fusionMetrics.selected?.label || '待发布' }}</span></div>
+          <div class="evaluation-block"><div class="evaluation-block-head"><h3>权重对照（按 Precision@10 降序）</h3><span class="status-pill">选定：{{ fusionMetrics.selected?.label || '待发布' }}</span><span class="status-pill">{{ fusionGrid.length }} 行 · 表内滚动</span></div>
             <p class="form-hint">{{ fusionMetrics.selection_rule }}</p>
             <el-table :data="fusionGrid" max-height="420" aria-label="加权 RRF 权重对照表"><el-table-column prop="label" label="权重配置" min-width="235" /><el-table-column label="Precision@10" width="140"><template #default="scope">{{ formatMetric(scope.row.precision_at_10) }}</template></el-table-column><el-table-column label="Recall@10" width="130"><template #default="scope">{{ formatMetric(scope.row.recall_at_10) }}</template></el-table-column><el-table-column prop="multi_source_items" label="多路命中" width="110" /><el-table-column prop="empty_users" label="空结果用户" width="120" /></el-table></div>
           <div v-if="fusionMetrics.test" class="evaluation-block"><div class="evaluation-block-head"><h3>测试集 · 方案冻结后单次报告</h3><span class="status-pill">{{ fusionMetrics.test.partition }} · {{ fusionMetrics.test.user_count }} 位用户</span></div>
@@ -123,7 +123,14 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
           <div class="evaluation-block"><div class="evaluation-block-head"><h3>{{ myInterest.data.value?.subject_key || '当前账号' }} 的短期兴趣</h3><span class="status-pill">{{ myInterest.data.value?.interest ? `事件 ${myInterest.data.value.interest.events} 条` : '暂无状态' }}</span></div>
             <p class="form-hint">{{ myInterest.data.value?.reason || `状态更新于 ${myInterest.data.value?.interest?.updated_at}，半衰期 ${myInterest.data.value?.interest?.stale ? '已过期' : '30 分钟'}。` }}</p>
             <div v-if="interestGenres.length" class="behavior-genres"><span v-for="row in interestGenres" :key="row.genre" class="status-pill">{{ row.genre }} {{ row.weight.toFixed(3) }}</span></div>
-            <el-table :data="myInterest.data.value?.events || []" aria-label="最近的行为事件"><el-table-column prop="movie_id" label="电影ID" width="100" /><el-table-column prop="genres" label="类型" min-width="220" /><el-table-column label="方向" width="90"><template #default="scope">{{ scope.row.positive ? '加分' : '减分' }}</template></el-table-column><el-table-column prop="occurred_at" label="发生时间" width="230" /></el-table>
+            <ul v-if="(myInterest.data.value?.events || []).length" class="behavior-events">
+              <li v-for="(row, index) in (myInterest.data.value?.events || []).slice(0, 8)" :key="`${row.movie_id}-${index}`">
+                <span class="event-id">#{{ row.movie_id }}</span>
+                <span class="event-genres">{{ (row.genres || '').split('|').slice(0, 2).join(' / ') || '未收录类型' }}</span>
+                <span class="event-direction" :class="{ 'is-down': !row.positive }">{{ row.positive ? '加分' : '减分' }}</span>
+                <time>{{ (row.occurred_at || '').slice(5, 16).replace('T', ' ') }}</time>
+              </li>
+            </ul>
           </div>
         </StatePanel></section>
       <section class="assistant-section"><div class="section-top"><h2>实验六 · S2 自然语言助手</h2><span class="small-label">受控工具调用 · 数据必须来自真实接口</span></div>
@@ -140,10 +147,10 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
 .compare-toggle { margin-top: 14px; }
 .evaluation-contract { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 12px; line-height: 1.7; }
 .evaluation-contract p { margin: 0; }
-.evaluation-contract code { padding: 1px 5px; border-radius: 4px; background: #0f1b1b; color: var(--text); font-size: 11px; }
+.evaluation-contract code { padding: 1px 5px; border-radius: 4px; background: #101733; color: var(--text); font-size: 11px; }
 .evaluation-tables { display: grid; gap: 18px; padding: 18px; }
 .evaluation-block { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.evaluation-block-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); background: #0f1b1b66; }
+.evaluation-block-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); background: #10173366; }
 .evaluation-block-head h3 { font-size: 15px; }
 .evaluation-block .form-hint { padding: 10px 16px 0; }
 .evaluation-block :deep(.el-table) { margin-top: 6px; }
@@ -167,5 +174,12 @@ watch(() => auth.account?.subject_key, () => { void fetchBehavior() })
 .assistant-section .evaluation-contract { border: 1px solid var(--border); border-radius: 8px; }
 .assistant-section :deep(.assistant-panel) { padding: 18px; }
 .behavior-genres { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.behavior-events { margin: 10px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--border); }
+.behavior-events li { display: grid; grid-template-columns: 50px minmax(0, 1fr) 40px 76px; align-items: baseline; gap: 8px; padding: 7px 14px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+.behavior-events .event-id { color: var(--accent); font-variant-numeric: tabular-nums; }
+.behavior-events .event-genres { overflow: hidden; color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
+.behavior-events .event-direction { color: var(--accent); }
+.behavior-events .event-direction.is-down { color: var(--danger); }
+.behavior-events time { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
 @media (max-width: 1100px) { .lab-result-grid.is-comparing, .lab-result-grid.is-multi { grid-template-columns: 1fr; } }
 </style>

@@ -37,9 +37,9 @@ const refreshKey = ref(0)
 </template>
 <style scoped>
 .cold-start-grid { display: grid; grid-template-columns: minmax(220px, .72fr) minmax(0, 1.6fr); gap: 22px; align-items: start; }
-.cold-start-notes { padding: 22px; border: 1px solid var(--border); border-radius: 10px; background: #14201f; }
+.cold-start-notes { padding: 22px; border: 1px solid var(--border); border-radius: 10px; background: #131a30; }
 .cold-start-notes ol { display: grid; gap: 18px; margin: 18px 0; padding: 0; list-style: none; }
-.cold-start-notes li { display: grid; gap: 4px; padding-left: 16px; border-left: 1px solid #36514c; }
+.cold-start-notes li { display: grid; gap: 4px; padding-left: 16px; border-left: 1px solid #3b4a80; }
 .cold-start-notes li strong { color: var(--text); font-size: 13px; font-weight: 500; }
 .cold-start-notes li span { color: var(--muted); font-size: 12px; line-height: 1.75; }
 .cold-start-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
