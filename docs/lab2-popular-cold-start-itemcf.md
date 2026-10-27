@@ -217,3 +217,16 @@ powershell -ExecutionPolicy Bypass -File deployment/build.ps1 -Target backend
 - 尚未接入离线 Precision@10 / Recall@10，实验三完成；
 - ItemCF 使用固定 top-50 邻居，未做 ANN 或增量更新；
 - `cold_start` 的“主动收集偏好”采用真实评分触发，不伪造问卷或前端假数据。
+
+## 10. 首页第一栏接入冷启动入口（2026-10-27）
+
+课堂任务「首页推荐接入」的口径是“登录用户看到与本人相关的真实推荐结果；新用户可以采用 Cold Start 或 Popular 策略”。据此把首页「为你推荐」面板的接口从 `/me/recommendations/content` 换成 `/me/recommendations/cold_start`（`frontend/src/views/HomeView.vue:23`），第二栏「热门推荐」仍为 `/me/recommendations/popular`。面板文案同步改为“评分留下口味线索；还没有评分时，先由冷启动给出全站正反馈热门榜。”
+
+改动后同一面板对两类账号都成立：
+
+- 新注册账号（无 ≥4 分评分）：第一眼就有 10 条结果，来源 `cold_start_popular`，页面标签“冷启动 · 正反馈热度”，徽标 `COLD START`，明确标注这是非个性化热门回退；
+- 出现 ≥4 分评分后：同一面板自动切换为类型画像（来源 `cold_start_content`），老用户看到的仍是个性化结果，与实验一的验证路径一致。
+
+零历史账号 `lab6empty1022`（`app:37`）实测（2026-10-27）：页面实际发出 `200 /api/v1/me/recommendations/cold_start`，第一栏 10 条、模型版本 `coldstart-popular-content-v1`；第二栏 `200 /api/v1/me/recommendations/popular`，模型版本 `popular-business-v1`。
+
+![首页第一栏冷启动](images/home-coldstart-first-panel.png)

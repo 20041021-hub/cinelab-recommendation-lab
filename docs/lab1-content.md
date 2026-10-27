@@ -74,6 +74,8 @@ curl.exe -sS "http://127.0.0.1:8080/api/v1/demo/history-users/55/recommendations
 
 当前测试账号 `lab1test_1021` 对《Toy Story》评了 4.5 分，首页会显示《Antz》《Toy Story 2》等 Adventure / Animation / Children 类型电影。两部电影共享这三个类型，因此内容相似度高；这与“按类型 TF-IDF 余弦相似度”的解释一致。
 
+> 2026-10-27 起，首页「为你推荐」面板改由冷启动入口承接（`/me/recommendations/cold_start`）：账号出现 ≥4 分评分后，冷启动会切换到本节的类型画像（来源标记 `cold_start_content`），因此上面的验证路径与结果不变；新账号则会先看到非个性化的正反馈热门榜（来源 `cold_start_popular`）。详见 `docs/lab2-popular-cold-start-itemcf.md` 第 10 节。
+
 ### 4. 前端改动可见
 
 首页“为你推荐”现在显示真实推荐卡片，包含：
